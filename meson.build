@@ -88,6 +88,7 @@ cinnamon= dependency('cinnamon-desktop',            version: '>=4.8.0')
 gail    = dependency('gail-3.0')
 x11     = dependency('x11')
 xapp    = dependency('xapp',                        version: '>=2.0.0')
+vte     = dependency('vte-2.91',                    version: '>=0.40')
 
 # Facultative dependencies
 
@@ -168,14 +169,14 @@ configure_file(
 ################################################################################
 
 rootInclude = include_directories('.')
-nemoDataPath      = join_paths(get_option('prefix'), get_option('datadir'), 'nolphin')
+nolphinDataPath      = join_paths(get_option('prefix'), get_option('datadir'), 'nolphin')
 libExecPath       = join_paths(get_option('prefix'), get_option('libexecdir'))
 # Keep this constant, in case some extensions are behind in being updated...
-nemoExtensionPath = join_paths(get_option('prefix'), get_option('libdir'), 'nolphin', 'extensions-3.0')
+nolphinExtensionPath = join_paths(get_option('prefix'), get_option('libdir'), 'nolphin', 'extensions-3.0')
 
 nolphin_definitions =  [
-  '-DNOLPHIN_DATADIR="@0@"'.format(nemoDataPath),
-  '-DNOLPHIN_EXTENSIONDIR="@0@"'.format(nemoExtensionPath),
+  '-DNOLPHIN_DATADIR="@0@"'.format(nolphinDataPath),
+  '-DNOLPHIN_EXTENSIONDIR="@0@"'.format(nolphinExtensionPath),
   '-DLIBEXECDIR="@0@"'.format(libExecPath),
   '-DG_LOG_DOMAIN="Nolphin"'
 ]

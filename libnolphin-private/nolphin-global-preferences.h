@@ -111,6 +111,8 @@ typedef enum
 /* Which views should be displayed for new windows */
 #define NOLPHIN_WINDOW_STATE_START_WITH_STATUS_BAR		"start-with-status-bar"
 #define NOLPHIN_WINDOW_STATE_START_WITH_SIDEBAR		"start-with-sidebar"
+#define NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL		"start-with-terminal"
+#define NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT			"terminal-height"
 #define NOLPHIN_WINDOW_STATE_START_WITH_TOOLBAR		"start-with-toolbar"
 #define NOLPHIN_WINDOW_STATE_START_WITH_MENU_BAR           "start-with-menu-bar"
 #define NOLPHIN_WINDOW_STATE_SIDE_PANE_VIEW                    "side-pane-view"

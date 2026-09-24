@@ -95,6 +95,12 @@ struct NolphinWindowDetails
         /* split view */
         GtkWidget *split_view_hpane;
 
+        /* integrated terminal (F4) */
+        GtkWidget *terminal_vpaned;
+        GtkWidget *terminal;
+        gboolean show_terminal;
+        guint terminal_height_handler_id;
+
         // A closed pane's location, valid until the remaining pane
         // location changes.
         GFile *secondary_pane_last_location;

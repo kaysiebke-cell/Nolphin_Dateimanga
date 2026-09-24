@@ -45,6 +45,7 @@
 #include "nolphin-window-bookmarks.h"
 #include "nolphin-window-slot.h"
 #include "nolphin-window-menus.h"
+#include "nolphin-terminal.h"
 #include "nolphin-icon-view.h"
 #include "nolphin-list-view.h"
 #include "nolphin-statusbar.h"
@@ -381,6 +382,56 @@ save_sidebar_width_cb (gpointer user_data)
 	return FALSE;
 }
 
+static gboolean
+save_terminal_height_cb (gpointer user_data)
+{
+	NolphinWindow *window = user_data;
+	gint height, total, position;
+
+	window->details->terminal_height_handler_id = 0;
+
+	/* "position" is the height GTK gives the TOP child (the file
+	 * view); the terminal is pack2 (bottom), so its actual height is
+	 * total - position. Store the terminal's own height, since that's
+	 * the size-independent quantity worth remembering across window
+	 * sizes and sessions. */
+	total = gtk_widget_get_allocated_height (window->details->terminal_vpaned);
+	position = gtk_paned_get_position (GTK_PANED (window->details->terminal_vpaned));
+	height = total - position;
+
+	if (height <= 1 || total <= 1) {
+		return FALSE;
+	}
+
+	DEBUG ("Saving terminal height: %d", height);
+
+	g_settings_set_int (nolphin_window_state,
+			    NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT,
+			    height);
+
+	return FALSE;
+}
+
+static void
+terminal_size_allocate_callback (GtkWidget *widget,
+				 GtkAllocation *allocation,
+				 gpointer user_data)
+{
+	NolphinWindow *window = user_data;
+
+	if (!gtk_widget_get_visible (widget)) {
+		return;
+	}
+
+	if (window->details->terminal_height_handler_id != 0) {
+		g_source_remove (window->details->terminal_height_handler_id);
+		window->details->terminal_height_handler_id = 0;
+	}
+
+	window->details->terminal_height_handler_id =
+		g_timeout_add (100, save_terminal_height_cb, window);
+}
+
 /* side pane helpers */
 static void
 side_pane_size_allocate_callback (GtkWidget *widget,
@@ -698,9 +749,31 @@ nolphin_window_constructed (GObject *self)
 	gtk_widget_show (vbox);
 
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_box_pack_start (GTK_BOX (vbox), hpaned, TRUE, TRUE, 0);
 	gtk_widget_show (hpaned);
 	window->details->split_view_hpane = hpaned;
+
+	/* integrated terminal (F4): file view on top, terminal on the
+	 * bottom, height adjustable via the paned handle. The terminal
+	 * child starts hidden; nolphin_window_set_show_terminal() is
+	 * called once construction is far enough along to reveal it if
+	 * the user's default is to start with it open. */
+	window->details->terminal_vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
+	gtk_box_pack_start (GTK_BOX (vbox), window->details->terminal_vpaned, TRUE, TRUE, 0);
+	gtk_widget_show (window->details->terminal_vpaned);
+
+	gtk_paned_pack1 (GTK_PANED (window->details->terminal_vpaned), hpaned, TRUE, FALSE);
+
+	window->details->terminal = nolphin_terminal_new ();
+	gtk_paned_pack2 (GTK_PANED (window->details->terminal_vpaned), window->details->terminal, FALSE, TRUE);
+	window->details->show_terminal = FALSE;
+	/* The paned "position" (= height of the file-view area above it)
+	 * can only be set meaningfully once the window has a real
+	 * allocation, so it's computed from the stored terminal height in
+	 * nolphin_window_set_show_terminal() at the moment the terminal
+	 * is actually revealed, not here. */
+
+	g_signal_connect (window->details->terminal, "size-allocate",
+			  G_CALLBACK (terminal_size_allocate_callback), window);
 
 	pane = nolphin_window_pane_new (window);
 	window->details->panes = g_list_prepend (window->details->panes, pane);
@@ -746,6 +819,10 @@ nolphin_window_constructed (GObject *self)
 	/* this has to be done after the location bar has been set up,
 	 * but before menu stuff is being called */
 	nolphin_window_set_active_pane (window, pane);
+
+	nolphin_window_set_show_terminal (window,
+					  g_settings_get_boolean (nolphin_window_state,
+								   NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL));
 
 	side_pane_id_changed (window);
 
@@ -2553,6 +2630,79 @@ gboolean
 nolphin_window_split_view_showing (NolphinWindow *window)
 {
 	return g_list_length (NOLPHIN_WINDOW (window)->details->panes) > 1;
+}
+
+void
+nolphin_window_set_show_terminal (NolphinWindow *window,
+				  gboolean        show)
+{
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (show == window->details->show_terminal) {
+		return;
+	}
+
+	window->details->show_terminal = show;
+
+	if (show) {
+		gint total, wanted_height;
+
+		/* By now the window is realized (this is only reachable
+		 * via construction-time startup or the F4 action on an
+		 * already-shown window), so the paned has a real
+		 * allocation to compute the split from. */
+		total = gtk_widget_get_allocated_height (window->details->terminal_vpaned);
+		if (total > 1) {
+			wanted_height = g_settings_get_int (nolphin_window_state,
+							    NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT);
+			gtk_paned_set_position (GTK_PANED (window->details->terminal_vpaned),
+						MAX (total - wanted_height, 1));
+		}
+
+		gtk_widget_show (window->details->terminal);
+		nolphin_window_sync_terminal_location (window);
+		nolphin_terminal_grab_focus (NOLPHIN_TERMINAL (window->details->terminal));
+	} else {
+		gtk_widget_hide (window->details->terminal);
+	}
+
+	g_settings_set_boolean (nolphin_window_state,
+				NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL,
+				show);
+}
+
+gboolean
+nolphin_window_terminal_showing (NolphinWindow *window)
+{
+	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), FALSE);
+
+	return window->details->show_terminal;
+}
+
+void
+nolphin_window_sync_terminal_location (NolphinWindow *window)
+{
+	NolphinWindowSlot *slot;
+	GFile *location;
+
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (!window->details->show_terminal) {
+		return;
+	}
+
+	slot = nolphin_window_get_active_slot (window);
+	if (slot == NULL) {
+		return;
+	}
+
+	location = nolphin_window_slot_get_location (slot);
+	if (location == NULL) {
+		return;
+	}
+
+	nolphin_terminal_set_location (NOLPHIN_TERMINAL (window->details->terminal), location);
+	g_object_unref (location);
 }
 
 void

@@ -10,6 +10,6 @@ helpers = [
 
 install_data(
     helpers,
-    install_dir: join_paths(nemoDataPath, 'search-helpers')
+    install_dir: join_paths(nolphinDataPath, 'search-helpers')
 )
 

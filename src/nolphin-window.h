@@ -157,6 +157,11 @@ void     nolphin_window_split_view_on        (NolphinWindow *window);
 void     nolphin_window_split_view_off       (NolphinWindow *window);
 gboolean nolphin_window_split_view_showing   (NolphinWindow *window);
 
+void     nolphin_window_set_show_terminal    (NolphinWindow *window,
+                                               gboolean        show);
+gboolean nolphin_window_terminal_showing     (NolphinWindow *window);
+void     nolphin_window_sync_terminal_location (NolphinWindow *window);
+
 gboolean nolphin_window_disable_chrome_mapping (GValue *value,
                                                  GVariant *variant,
                                                  gpointer user_data);

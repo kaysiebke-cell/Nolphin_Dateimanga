@@ -669,6 +669,16 @@
       <summary>Show side pane in new windows</summary>
       <description>If set to true, newly opened windows will have the side pane visible.</description>
     </key>
+    <key name="start-with-terminal" type="b">
+      <default>false</default>
+      <summary>Show terminal panel in new windows</summary>
+      <description>If set to true, newly opened windows will have the integrated terminal panel visible.</description>
+    </key>
+    <key name="terminal-height" type="i">
+      <default>200</default>
+      <summary>Height of the terminal panel</summary>
+      <description>The default height in pixels of the integrated terminal panel.</description>
+    </key>
     <key name="start-with-menu-bar" type="b">
       <default>true</default>
       <summary>Show menu bar in new windows</summary>

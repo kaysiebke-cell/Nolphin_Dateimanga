@@ -32,7 +32,7 @@ install_data(
     'mso-ppt.nolphin_search_helper',
     'mso-xls.nolphin_search_helper',
     'odf.nolphin_search_helper',
-    install_dir: join_paths(nemoDataPath, 'search-helpers')
+    install_dir: join_paths(nolphinDataPath, 'search-helpers')
 )
 
 install_data(

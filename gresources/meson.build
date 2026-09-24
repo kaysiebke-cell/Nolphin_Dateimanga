@@ -11,5 +11,5 @@ layout_editor_gresources = gnome.compile_resources(
   source_dir: '.',
   gresource_bundle: true,
   install: true,
-  install_dir: nemoDataPath
+  install_dir: nolphinDataPath
 )

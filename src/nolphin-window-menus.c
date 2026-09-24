@@ -663,6 +663,25 @@ action_split_view_callback (GtkAction *action,
 }
 
 static void
+action_show_hide_terminal_callback (GtkAction *action,
+				    gpointer   user_data)
+{
+	NolphinWindow *window;
+	gboolean is_active;
+
+	if (NOLPHIN_IS_DESKTOP_WINDOW (user_data)) {
+		return;
+	}
+
+	window = NOLPHIN_WINDOW (user_data);
+
+	is_active = gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action));
+	if (is_active != nolphin_window_terminal_showing (window)) {
+		nolphin_window_set_show_terminal (window, is_active);
+	}
+}
+
+static void
 sidebar_radio_entry_changed_cb (GtkAction *action,
                 GtkRadioAction *current,
                 gpointer user_data)
@@ -792,6 +811,13 @@ nolphin_window_update_show_hide_ui_elements (NolphinWindow *window)
     gtk_action_block_activate (action);
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
 				      nolphin_window_split_view_showing (window));
+    gtk_action_unblock_activate (action);
+
+	action = gtk_action_group_get_action (action_group,
+					      NOLPHIN_ACTION_SHOW_HIDE_TERMINAL);
+    gtk_action_block_activate (action);
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+				      nolphin_window_terminal_showing (window));
     gtk_action_unblock_activate (action);
 
 	nolphin_window_update_split_view_actions_sensitivity (window);
@@ -1573,6 +1599,11 @@ static const GtkToggleActionEntry main_toggle_entries[] = {
   /* label, accelerator */   N_("E_xtra Pane"), "F3",
   /* tooltip */              N_("Open an extra folder view side-by-side"),
                              G_CALLBACK (action_split_view_callback),
+  /* is_active */            FALSE },
+  /* name, stock id */     { NOLPHIN_ACTION_SHOW_HIDE_TERMINAL, NULL,
+  /* label, accelerator */   N_("_Terminal"), "F4",
+  /* tooltip */              N_("Open an integrated terminal in the current directory"),
+                             G_CALLBACK (action_show_hide_terminal_callback),
   /* is_active */            FALSE },
     /* name, stock id */         { NOLPHIN_ACTION_SHOW_THUMBNAILS, NULL,
   /* label, accelerator */       N_("Show _Thumbnails"), NULL,

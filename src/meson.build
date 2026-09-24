@@ -6,7 +6,7 @@ dbusBuiltSources = gnome.gdbus_codegen(
   object_manager: true
 )
 
-nemoBuiltSources = gnome.gdbus_codegen(
+nolphinBuiltSources = gnome.gdbus_codegen(
   'nolphin-cinnamon-dbus',
   join_paths(meson.project_source_root(), 'data', 'org.Cinnamon.xml'),
   interface_prefix: 'org.',
@@ -14,9 +14,9 @@ nemoBuiltSources = gnome.gdbus_codegen(
   object_manager: true
 )
 
-nemoCommon_sources = [
+nolphinCommon_sources = [
   dbusBuiltSources,
-  nemoBuiltSources,
+  nolphinBuiltSources,
   'nolphin-action-config-widget.c',
   'nolphin-application.c',
   'nolphin-blank-desktop-window.c',
@@ -73,26 +73,27 @@ nemoCommon_sources = [
   'nolphin-window-manage-views.c',
   'nolphin-window-menus.c',
   'nolphin-window-pane.c',
+  'nolphin-terminal.c',
   'nolphin-window-slot-dnd.c',
   'nolphin-window-slot.c',
   'nolphin-window.c',
   'nolphin-x-content-bar.c',
 ]
 
-nemoWindow_sources = [
+nolphinWindow_sources = [
   'nolphin-main-application.c',
   'nolphin-main.c',
 ]
-nemoWindow_headers = [
+nolphinWindow_headers = [
   'nolphin-main-application.h',
 ]
 
-nemoDesktop_sources = [
+nolphinDesktop_sources = [
   'nolphin-desktop-application.c',
   'nolphin-desktop-icon-view.c',
   'nolphin-desktop-main.c',
 ]
-nemoDesktop_headers = [
+nolphinDesktop_headers = [
   'nolphin-desktop-application.h',
   'nolphin-desktop-overlay.h',
   'nolphin-desktop-icon-view.h',
@@ -100,11 +101,11 @@ nemoDesktop_headers = [
 
 
 if enableEmptyView
-  nemoCommon_sources += 'nolphin-empty-view.c'
+  nolphinCommon_sources += 'nolphin-empty-view.c'
 endif
 
 nolphin_deps = [ cinnamon, gail, glib, gtk, math,
-  egg, nolphin_extension, nolphin_private, xapp ]
+  egg, nolphin_extension, nolphin_private, xapp, vte ]
 
 if exempi_enabled
   nolphin_deps += exempi
@@ -120,15 +121,15 @@ if gtk_layer_shell_enabled
 endif
 
 nolphin = executable('nolphin',
-  nemoCommon_sources + nemoWindow_sources,
+  nolphinCommon_sources + nolphinWindow_sources,
   include_directories: [ rootInclude ],
   c_args: nolphin_definitions,
   dependencies: nolphin_deps,
   install: true
 )
 
-nemoDesktop = executable('nolphin-desktop',
-  nemoCommon_sources + nemoDesktop_sources,
+nolphinDesktop = executable('nolphin-desktop',
+  nolphinCommon_sources + nolphinDesktop_sources,
   include_directories: [ rootInclude],
   c_args: nolphin_definitions,
   dependencies: nolphin_deps,
