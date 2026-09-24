@@ -310,6 +310,15 @@ init_icons_and_styles (void)
     gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
                        NOLPHIN_DATADIR G_DIR_SEPARATOR_S "icons");
 
+    /* Nolphin's own icons are also bundled straight into the binary
+     * as a GResource (see gresources/nolphin.gresource.xml) so they
+     * are found even when running an uninstalled build - the line
+     * above only helps once `ninja install` has actually put files
+     * under NOLPHIN_DATADIR/icons, which a plain build/src/nolphin
+     * never has. */
+    gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (),
+                       "/org/nolphin/icons");
+
     gtk_icon_size_register (NOLPHIN_STATUSBAR_ICON_SIZE_NAME,
                             NOLPHIN_STATUSBAR_ICON_SIZE,
                             NOLPHIN_STATUSBAR_ICON_SIZE);
