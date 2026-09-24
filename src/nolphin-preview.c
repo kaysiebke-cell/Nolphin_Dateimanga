@@ -24,6 +24,7 @@
 
 #include <glib/gi18n.h>
 #include <libnolphin-private/nolphin-global-preferences.h>
+#include <libnolphin-private/nolphin-cad.h>
 
 #define PREVIEW_IMAGE_SIZE 256
 
@@ -43,11 +44,34 @@ struct _NolphinPreview
     NolphinFile *watched_file;
     gulong changed_handler_id;
     gulong deep_count_handler_id;
+
+    /* §29: 3D/CAD metadata for watched_file, filled in asynchronously
+     * (nolphin_cad_get_info_async runs a background thread - see
+     * nolphin-cad.c). cad_info_file marks which file the two fields
+     * below apply to (may be an attempt that failed, cad_info_error
+     * set instead of cad_info) - NULL when nothing has been requested
+     * yet for the current watched_file. */
+    GCancellable *cad_cancellable;
+    NolphinFile *cad_info_file;
+    NolphinCadInfo *cad_info;
+    gchar *cad_info_error;
 };
 
 G_DEFINE_TYPE (NolphinPreview, nolphin_preview, GTK_TYPE_BOX)
 
 static void display_subject (NolphinPreview *preview, NolphinFile *file);
+
+static void
+clear_cad_state (NolphinPreview *preview)
+{
+    if (preview->cad_cancellable != NULL) {
+        g_cancellable_cancel (preview->cad_cancellable);
+        g_clear_object (&preview->cad_cancellable);
+    }
+    g_clear_pointer (&preview->cad_info, nolphin_cad_info_free);
+    g_clear_pointer (&preview->cad_info_error, g_free);
+    g_clear_pointer (&preview->cad_info_file, nolphin_file_unref);
+}
 
 static void
 stop_watching_file (NolphinPreview *preview)
@@ -64,6 +88,8 @@ stop_watching_file (NolphinPreview *preview)
         g_signal_handler_disconnect (preview->watched_file, preview->deep_count_handler_id);
         preview->deep_count_handler_id = 0;
     }
+
+    clear_cad_state (preview);
 
     nolphin_file_unref (preview->watched_file);
     preview->watched_file = NULL;
@@ -114,6 +140,89 @@ clear_grid (GtkGrid *grid)
         gtk_widget_destroy (GTK_WIDGET (l->data));
     }
     g_list_free (children);
+}
+
+typedef struct {
+    NolphinPreview *preview; /* reffed, so this stays valid even if the
+                               * panel is torn down mid-request */
+    NolphinFile *file;       /* reffed - the subject this analysis is for */
+} CadRequest;
+
+static void
+cad_request_free (CadRequest *req)
+{
+    g_object_unref (req->preview);
+    nolphin_file_unref (req->file);
+    g_free (req);
+}
+
+static void
+cad_info_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    CadRequest *req = user_data;
+    GError *error = NULL;
+    NolphinCadInfo *info = nolphin_cad_get_info_finish (result, &error);
+
+    /* Only apply the result if this is still the file the panel is
+     * showing - otherwise the user has already moved on and this is a
+     * stale, possibly-cancelled request that arrived late. */
+    if (req->file == req->preview->watched_file) {
+        g_clear_pointer (&req->preview->cad_info, nolphin_cad_info_free);
+        g_clear_pointer (&req->preview->cad_info_error, g_free);
+        g_clear_pointer (&req->preview->cad_info_file, nolphin_file_unref);
+
+        req->preview->cad_info_file = nolphin_file_ref (req->file);
+        if (info != NULL) {
+            req->preview->cad_info = info;
+        } else {
+            req->preview->cad_info_error = g_strdup (error != NULL ? error->message : _("Unknown error"));
+        }
+
+        /* Re-render: display_single_file() will now find the cache
+         * populated and show the real rows instead of re-requesting. */
+        display_subject (req->preview, req->file);
+    } else {
+        nolphin_cad_info_free (info);
+    }
+
+    g_clear_error (&error);
+    cad_request_free (req);
+}
+
+static void
+add_cad_info_rows (GtkGrid *grid, gint *row, NolphinCadInfo *info)
+{
+    gchar *text;
+
+    switch (info->format) {
+        case NOLPHIN_CAD_FORMAT_STL:
+            add_info_row (grid, (*row)++, _("STL type:"),
+                          info->stl_is_binary ? _("Binary") : _("ASCII"));
+            if (info->stl_triangle_count_known) {
+                text = g_strdup_printf ("%" G_GUINT64_FORMAT, info->stl_triangle_count);
+                add_info_row (grid, (*row)++, _("Triangles:"), text);
+                g_free (text);
+            } else {
+                add_info_row (grid, (*row)++, _("Triangles:"), _("not counted (file too large)"));
+            }
+            break;
+        case NOLPHIN_CAD_FORMAT_STEP:
+            add_info_row (grid, (*row)++, _("STEP description:"), info->step_description);
+            add_info_row (grid, (*row)++, _("STEP file name:"), info->step_file_name);
+            add_info_row (grid, (*row)++, _("STEP timestamp:"), info->step_timestamp);
+            add_info_row (grid, (*row)++, _("STEP author:"), info->step_author);
+            add_info_row (grid, (*row)++, _("STEP schema:"), info->step_schema);
+            break;
+        case NOLPHIN_CAD_FORMAT_FCSTD:
+            add_info_row (grid, (*row)++, _("FreeCAD comment:"), info->fcstd_comment);
+            add_info_row (grid, (*row)++, _("FreeCAD author:"), info->fcstd_author);
+            add_info_row (grid, (*row)++, _("FreeCAD company:"), info->fcstd_company);
+            add_info_row (grid, (*row)++, _("FreeCAD created:"), info->fcstd_created_date);
+            add_info_row (grid, (*row)++, _("FreeCAD modified:"), info->fcstd_last_modified_date);
+            break;
+        default:
+            break;
+    }
 }
 
 static void
@@ -179,6 +288,52 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
         g_free (text);
     }
 
+    /* §29: 3D/CAD metadata. Detection itself is free (just an
+     * extension check); the actual read happens in a background
+     * thread and is cached per-file so re-rendering (e.g. once the
+     * result arrives) doesn't re-request it. */
+    {
+        GFile *location = nolphin_file_get_location (file);
+        NolphinCadFormat cad_format = nolphin_cad_detect_format (location);
+
+        if (cad_format == NOLPHIN_CAD_FORMAT_UNKNOWN) {
+            g_object_unref (location);
+        } else if (!nolphin_cad_format_has_backend (cad_format)) {
+            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
+            add_info_row (grid, row++, _("3D/CAD preview:"),
+                          _("No backend available for this format on this system"));
+            g_object_unref (location);
+        } else if (preview->cad_info_file == file) {
+            /* Already attempted for this exact file - show the cached
+             * outcome instead of asking again. */
+            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
+            if (preview->cad_info != NULL) {
+                add_cad_info_rows (grid, &row, preview->cad_info);
+            } else {
+                add_info_row (grid, row++, _("3D/CAD preview:"), preview->cad_info_error);
+            }
+            g_object_unref (location);
+        } else {
+            CadRequest *req;
+
+            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
+            add_info_row (grid, row++, _("3D/CAD preview:"), _("Analyzing…"));
+
+            if (preview->cad_cancellable != NULL) {
+                g_cancellable_cancel (preview->cad_cancellable);
+                g_object_unref (preview->cad_cancellable);
+            }
+            preview->cad_cancellable = g_cancellable_new ();
+
+            req = g_new0 (CadRequest, 1);
+            req->preview = g_object_ref (preview);
+            req->file = nolphin_file_ref (file);
+
+            nolphin_cad_get_info_async (location, preview->cad_cancellable, cad_info_ready_cb, req);
+            g_object_unref (location);
+        }
+    }
+
     /* Image preview. Skip large files rather than decode them
      * synchronously - nolphin_file_get_icon_pixbuf() returns whatever
      * is already cached/generated (falling back to a generic mime
@@ -199,6 +354,20 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
         }
     } else {
         gtk_image_clear (GTK_IMAGE (preview->image));
+    }
+
+    /* If FreeCAD embedded a thumbnail in this .FCStd, prefer showing
+     * that actual preview over the generic file-type icon above. */
+    if (preview->cad_info_file == file && preview->cad_info != NULL &&
+        preview->cad_info->fcstd_thumbnail_png != NULL) {
+        GInputStream *stream = g_memory_input_stream_new_from_bytes (preview->cad_info->fcstd_thumbnail_png);
+        GdkPixbuf *thumb = gdk_pixbuf_new_from_stream (stream, NULL, NULL);
+
+        g_object_unref (stream);
+        if (thumb != NULL) {
+            gtk_image_set_from_pixbuf (GTK_IMAGE (preview->image), thumb);
+            g_object_unref (thumb);
+        }
     }
 
     if (is_dir) {
