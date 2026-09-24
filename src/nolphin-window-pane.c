@@ -1256,6 +1256,21 @@ nolphin_window_pane_close_slot (NolphinWindowPane *pane,
 	if (!window)
 		return;
 
+	if (slot->location != NULL) {
+		const guint max_closed_tab_history = 10;
+
+		window->details->closed_tab_locations =
+			g_list_prepend (window->details->closed_tab_locations,
+					g_object_ref (slot->location));
+
+		if (g_list_length (window->details->closed_tab_locations) > max_closed_tab_history) {
+			GList *last = g_list_last (window->details->closed_tab_locations);
+			g_object_unref (G_FILE (last->data));
+			window->details->closed_tab_locations =
+				g_list_delete_link (window->details->closed_tab_locations, last);
+		}
+	}
+
 	if (pane->active_slot == slot) {
 		NolphinWindowSlot *next_slot;
 		next_slot = get_next_or_previous_slot (NOLPHIN_WINDOW_PANE (pane));

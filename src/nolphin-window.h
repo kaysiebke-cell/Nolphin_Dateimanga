@@ -120,6 +120,10 @@ void             nolphin_window_go_to_full           (NolphinWindow    *window,
                                                        NolphinWindowGoToCallback callback,
                                                        gpointer           user_data);
 void             nolphin_window_new_tab              (NolphinWindow    *window);
+void             nolphin_window_duplicate_tab        (NolphinWindow    *window);
+void             nolphin_window_close_all_tabs       (NolphinWindow    *window);
+gboolean         nolphin_window_has_closed_tab_history (NolphinWindow  *window);
+void             nolphin_window_restore_closed_tab   (NolphinWindow    *window);
 
 GtkUIManager *   nolphin_window_get_ui_manager       (NolphinWindow    *window);
 GtkActionGroup * nolphin_window_get_main_action_group (NolphinWindow   *window);

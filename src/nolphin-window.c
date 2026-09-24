@@ -252,6 +252,85 @@ nolphin_window_new_tab (NolphinWindow *window)
 	}
 }
 
+/* "Tab duplizieren": currently identical to New Tab, since New Tab
+ * already opens at the current tab's location (see above). Kept as
+ * its own, separately-labeled action for discoverability, and as a
+ * home for future per-tab state cloning (selection, sort, view mode)
+ * that New Tab intentionally doesn't carry over. */
+void
+nolphin_window_duplicate_tab (NolphinWindow *window)
+{
+	nolphin_window_new_tab (window);
+}
+
+void
+nolphin_window_close_all_tabs (NolphinWindow *window)
+{
+	NolphinWindowPane *pane;
+	GList *slots_snapshot, *l;
+
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	pane = nolphin_window_get_active_pane (window);
+	if (pane == NULL) {
+		return;
+	}
+
+	/* nolphin_window_pane_close_slot() mutates pane->slots as it goes
+	 * (and may close the pane/window once the last one is gone), so
+	 * iterate over a snapshot rather than the live list. */
+	slots_snapshot = g_list_copy (pane->slots);
+	for (l = slots_snapshot; l != NULL; l = l->next) {
+		nolphin_window_pane_close_slot (pane, NOLPHIN_WINDOW_SLOT (l->data));
+	}
+	g_list_free (slots_snapshot);
+}
+
+gboolean
+nolphin_window_has_closed_tab_history (NolphinWindow *window)
+{
+	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), FALSE);
+
+	return window->details->closed_tab_locations != NULL;
+}
+
+void
+nolphin_window_restore_closed_tab (NolphinWindow *window)
+{
+	NolphinWindowSlot *current_slot, *new_slot;
+	GFile *location;
+	NolphinWindowOpenFlags flags;
+	gint new_slot_position;
+
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (window->details->closed_tab_locations == NULL) {
+		return;
+	}
+
+	location = G_FILE (window->details->closed_tab_locations->data);
+	window->details->closed_tab_locations =
+		g_list_delete_link (window->details->closed_tab_locations,
+				    window->details->closed_tab_locations);
+
+	current_slot = nolphin_window_get_active_slot (window);
+	if (current_slot == NULL) {
+		g_object_unref (location);
+		return;
+	}
+
+	flags = 0;
+	new_slot_position = g_settings_get_enum (nolphin_preferences, NOLPHIN_PREFERENCES_NEW_TAB_POSITION);
+	if (new_slot_position == NOLPHIN_NEW_TAB_POSITION_END) {
+		flags = NOLPHIN_WINDOW_OPEN_SLOT_APPEND;
+	}
+
+	new_slot = nolphin_window_pane_open_slot (current_slot->pane, flags);
+	nolphin_window_set_active_slot (window, new_slot);
+	nolphin_window_slot_open_location (new_slot, location, 0);
+	g_object_unref (location);
+}
+
 static void
 update_cursor (NolphinWindow *window)
 {
@@ -1007,6 +1086,9 @@ nolphin_window_finalize (GObject *object)
 		g_source_remove (window->details->sidebar_width_handler_id);
 		window->details->sidebar_width_handler_id = 0;
 	}
+
+	g_list_free_full (window->details->closed_tab_locations, g_object_unref);
+	window->details->closed_tab_locations = NULL;
 
     g_signal_handlers_disconnect_by_func (nolphin_preferences,
                                           nolphin_window_sync_thumbnail_action,

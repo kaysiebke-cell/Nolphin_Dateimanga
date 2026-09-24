@@ -107,6 +107,10 @@ struct NolphinWindowDetails
         gboolean show_preview;
         guint preview_width_handler_id;
 
+        /* stack of recently-closed tab locations (most recent first),
+         * for restoring the last closed tab. Owns a ref on each GFile. */
+        GList *closed_tab_locations;
+
         // A closed pane's location, valid until the remaining pane
         // location changes.
         GFile *secondary_pane_last_location;

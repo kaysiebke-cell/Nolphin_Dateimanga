@@ -102,6 +102,33 @@ action_close_window_slot_callback (GtkAction *action,
 }
 
 static void
+action_duplicate_tab_callback (GtkAction *action,
+			       gpointer   user_data)
+{
+	if (!NOLPHIN_IS_DESKTOP_WINDOW (user_data)) {
+		nolphin_window_duplicate_tab (NOLPHIN_WINDOW (user_data));
+	}
+}
+
+static void
+action_close_all_tabs_callback (GtkAction *action,
+				gpointer   user_data)
+{
+	if (!NOLPHIN_IS_DESKTOP_WINDOW (user_data)) {
+		nolphin_window_close_all_tabs (NOLPHIN_WINDOW (user_data));
+	}
+}
+
+static void
+action_restore_closed_tab_callback (GtkAction *action,
+				    gpointer   user_data)
+{
+	if (!NOLPHIN_IS_DESKTOP_WINDOW (user_data)) {
+		nolphin_window_restore_closed_tab (NOLPHIN_WINDOW (user_data));
+	}
+}
+
+static void
 action_connect_to_server_callback (GtkAction *action,
 				   gpointer user_data)
 {
@@ -1466,6 +1493,18 @@ static const GtkActionEntry main_entries[] = {
   /* label, accelerator */       N_("Split View _Horizontally"), "<shift>F3",
   /* tooltip */                  N_("Open an extra folder view stacked below (or re-orient an open extra pane)"),
                                  G_CALLBACK (action_split_view_horizontal_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_DUPLICATE_TAB, NULL,
+  /* label, accelerator */       N_("Duplicate _Tab"), NULL,
+  /* tooltip */                  N_("Open a new tab at the same location as this one"),
+                                 G_CALLBACK (action_duplicate_tab_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_CLOSE_ALL_TABS, NULL,
+  /* label, accelerator */       N_("Close _All Tabs"), NULL,
+  /* tooltip */                  N_("Close every tab in this window"),
+                                 G_CALLBACK (action_close_all_tabs_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RESTORE_CLOSED_TAB, NULL,
+  /* label, accelerator */       N_("Reopen Closed _Tab"), "<control><shift>T",
+  /* tooltip */                  N_("Reopen the most recently closed tab"),
+                                 G_CALLBACK (action_restore_closed_tab_callback) },
 #ifdef TEXT_CHANGE_UNDO
   /* name, stock id, label */  { "Undo", NULL, N_("_Undo"),
                                  "<control>Z", N_("Undo the last text change"),
