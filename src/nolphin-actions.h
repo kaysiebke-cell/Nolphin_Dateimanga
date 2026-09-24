@@ -155,6 +155,9 @@
 #define NOLPHIN_ACTION_OPEN_IN_TERMINAL "OpenInTerminal"
 #define NOLPHIN_ACTION_FOLLOW_SYMLINK "FollowSymbolicLink"
 #define NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER "OpenContainingFolder"
+#define NOLPHIN_ACTION_COMPRESS "Compress"
+#define NOLPHIN_ACTION_EXTRACT_HERE "ExtractHere"
+#define NOLPHIN_ACTION_TEST_ARCHIVE "TestArchive"
 
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 

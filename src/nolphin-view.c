@@ -30,6 +30,7 @@
 #include <config.h>
 
 #include "nolphin-view.h"
+#include "nolphin-application.h"
 
 #include "nolphin-actions.h"
 #include "nolphin-desktop-icon-view.h"
@@ -74,6 +75,7 @@
 #include <libnolphin-private/nolphin-file-changes-queue.h>
 #include <libnolphin-private/nolphin-file-dnd.h>
 #include <libnolphin-private/nolphin-file-operations.h>
+#include <libnolphin-private/nolphin-archive.h>
 #include <libnolphin-private/nolphin-file-utilities.h>
 #include <libnolphin-private/nolphin-malloc-utils.h>
 #include <libnolphin-private/fzy-match.h>
@@ -7344,6 +7346,225 @@ action_follow_symlink_callback (GtkAction *action,
     nolphin_file_list_free (selection);
 }
 
+/* Returns a child of @parent named @base_name if that's free, otherwise
+ * "@base_name (1)@suffix", "@base_name (2)@suffix", etc. @suffix (may be
+ * "") is kept at the end, e.g. for "archive.zip" -> "archive (1).zip". */
+static GFile *
+find_unique_destination (GFile *parent, const gchar *base_name, const gchar *suffix)
+{
+    GFile *candidate;
+    gint n;
+
+    candidate = g_file_get_child (parent, base_name);
+    if (!g_file_query_exists (candidate, NULL)) {
+        return candidate;
+    }
+    g_object_unref (candidate);
+
+    for (n = 1; n < 1000; n++) {
+        gchar *name = g_strdup_printf ("%s (%d)%s", base_name, n, suffix);
+        candidate = g_file_get_child (parent, name);
+        g_free (name);
+        if (!g_file_query_exists (candidate, NULL)) {
+            return candidate;
+        }
+        g_object_unref (candidate);
+    }
+
+    /* Give up gracefully rather than looping forever or overwriting. */
+    return NULL;
+}
+
+static void
+send_archive_notification (const gchar *title, gboolean success, const gchar *detail_on_error)
+{
+    GNotification *notification = g_notification_new (title);
+
+    if (success) {
+        g_notification_set_body (notification, _("Completed successfully."));
+    } else {
+        gchar *body = g_strdup_printf (_("Failed: %s"), detail_on_error);
+        g_notification_set_body (notification, body);
+        g_free (body);
+    }
+
+    g_application_send_notification (G_APPLICATION (nolphin_application_get_singleton ()), NULL, notification);
+    g_object_unref (notification);
+}
+
+static void
+compress_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_archive_compress_finish (result, &error);
+
+    send_archive_notification (_("Compress"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+static void
+action_compress_callback (GtkAction *action,
+                          gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    GList *sources = NULL;
+    GList *l;
+    NolphinFile *dir_file;
+    GFile *dir_location;
+    gchar *first_name;
+    gchar *base_name;
+    GFile *destination;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (selection == NULL) {
+        return;
+    }
+
+    dir_file = nolphin_view_get_directory_as_file (view);
+    if (dir_file == NULL) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+    dir_location = nolphin_file_get_location (dir_file);
+
+    first_name = nolphin_file_get_display_name (NOLPHIN_FILE (selection->data));
+    base_name = g_strconcat (first_name, g_list_length (selection) > 1 ? " et al" : "", NULL);
+    g_free (first_name);
+
+    destination = find_unique_destination (dir_location, base_name, ".zip");
+    g_free (base_name);
+    g_object_unref (dir_location);
+
+    if (destination == NULL) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    for (l = selection; l != NULL; l = l->next) {
+        sources = g_list_prepend (sources, nolphin_file_get_location (NOLPHIN_FILE (l->data)));
+    }
+    sources = g_list_reverse (sources);
+
+    /* Always ZIP in this first pass - no format-picker dialog yet,
+     * see the archive feature's commit message for what's deferred. */
+    nolphin_archive_compress_async (sources, destination, NOLPHIN_ARCHIVE_FORMAT_ZIP,
+                                    NULL, compress_finished_cb, NULL);
+
+    g_list_free_full (sources, g_object_unref);
+    g_object_unref (destination);
+    nolphin_file_list_free (selection);
+}
+
+static void
+extract_here_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_archive_extract_finish (result, &error);
+
+    send_archive_notification (_("Extract"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+static void
+action_extract_here_callback (GtkAction *action,
+                              gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    GFile *archive_location;
+    GFile *parent;
+    NolphinArchiveFormat format;
+    gchar *base_name;
+    const gchar *ext;
+    GFile *destination;
+    GError *error = NULL;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (g_list_length (selection) != 1) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    archive_location = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
+    format = nolphin_archive_detect_format (archive_location);
+    if (format == NOLPHIN_ARCHIVE_FORMAT_UNKNOWN) {
+        g_object_unref (archive_location);
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    parent = g_file_get_parent (archive_location);
+    base_name = g_file_get_basename (archive_location);
+    ext = nolphin_archive_format_get_extension (format);
+    if (g_str_has_suffix (base_name, ext)) {
+        base_name[strlen (base_name) - strlen (ext)] = '\0';
+    }
+
+    destination = find_unique_destination (parent, base_name, "");
+    g_free (base_name);
+    g_object_unref (parent);
+
+    if (destination == NULL || !g_file_make_directory (destination, NULL, &error)) {
+        send_archive_notification (_("Extract"), FALSE,
+                                   error ? error->message : _("Could not create a destination folder."));
+        g_clear_error (&error);
+        g_clear_object (&destination);
+        g_object_unref (archive_location);
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    nolphin_archive_extract_async (archive_location, destination, NULL, extract_here_finished_cb, NULL);
+
+    g_object_unref (destination);
+    g_object_unref (archive_location);
+    nolphin_file_list_free (selection);
+}
+
+static void
+test_archive_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_archive_test_finish (result, &error);
+
+    send_archive_notification (_("Test Archive"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+static void
+action_test_archive_callback (GtkAction *action,
+                              gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    GFile *archive_location;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (g_list_length (selection) != 1) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    archive_location = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
+    if (nolphin_archive_detect_format (archive_location) == NOLPHIN_ARCHIVE_FORMAT_UNKNOWN) {
+        g_object_unref (archive_location);
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    nolphin_archive_test_async (archive_location, NULL, test_archive_finished_cb, NULL);
+
+    g_object_unref (archive_location);
+    nolphin_file_list_free (selection);
+}
+
 static void
 action_open_containing_folder_callback (GtkAction *action,
                                         gpointer callback_data)
@@ -8361,6 +8582,18 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Open containing folder"), "<control><alt>O",
   /* tooltip */                  N_("Navigate to the folder that the selected item is stored in"),
                  G_CALLBACK (action_open_containing_folder_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_COMPRESS, NULL,
+  /* label, accelerator */       N_("Com_press..."), NULL,
+  /* tooltip */                  N_("Create a ZIP archive of the selected items"),
+                 G_CALLBACK (action_compress_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_EXTRACT_HERE, NULL,
+  /* label, accelerator */       N_("_Extract Here"), NULL,
+  /* tooltip */                  N_("Extract the archive into a new folder next to it"),
+                 G_CALLBACK (action_extract_here_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_TEST_ARCHIVE, NULL,
+  /* label, accelerator */       N_("_Test Archive"), NULL,
+  /* tooltip */                  N_("Check the archive for errors without extracting it"),
+                 G_CALLBACK (action_test_archive_callback) },
   /* name, stock id */         { "OtherApplication1", NULL,
   /* label, accelerator */       N_("Other _Application..."), NULL,
   /* tooltip */                  N_("Choose another application with which to open the selected item"),
@@ -10102,6 +10335,28 @@ real_update_menus (NolphinView *view)
                             selection_count == 1 &&
                             nolphin_file_is_symbolic_link (selection->data) &&
                             !selection_contains_favorites);
+
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_COMPRESS);
+    gtk_action_set_visible (action, selection_count >= 1);
+
+    {
+        gboolean is_archive = FALSE;
+
+        if (selection_count == 1) {
+            GFile *loc = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
+            is_archive = nolphin_archive_detect_format (loc) != NOLPHIN_ARCHIVE_FORMAT_UNKNOWN;
+            g_object_unref (loc);
+        }
+
+        action = gtk_action_group_get_action (view->details->dir_action_group,
+                                              NOLPHIN_ACTION_EXTRACT_HERE);
+        gtk_action_set_visible (action, is_archive);
+
+        action = gtk_action_group_get_action (view->details->dir_action_group,
+                                              NOLPHIN_ACTION_TEST_ARCHIVE);
+        gtk_action_set_visible (action, is_archive);
+    }
 
     action = gtk_action_group_get_action (view->details->dir_action_group,
                                           NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER);
