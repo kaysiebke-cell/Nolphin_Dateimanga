@@ -111,6 +111,18 @@ main (int argc, char *argv[])
 		eel_make_warnings_and_criticals_stop_in_debugger ();
 	}
 	
+	/* Force German regardless of the session's own locale - see the
+	 * matching comment in nolphin-main.c for why. */
+	if (g_getenv ("NOLPHIN_LANG_AUTO") == NULL) {
+		if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL &&
+		    setlocale (LC_ALL, "de_DE.utf8") == NULL &&
+		    setlocale (LC_ALL, "de_DE") == NULL) {
+			setlocale (LC_ALL, "de");
+		}
+	} else {
+		setlocale (LC_ALL, "");
+	}
+
 	/* Initialize gettext support */
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
