@@ -895,24 +895,24 @@ nolphin_drag_drop_action_ask (GtkWidget *widget,
 	menu = gtk_menu_new ();
 	gtk_menu_set_screen (GTK_MENU (menu), gtk_widget_get_screen (widget));
 	
-	append_drop_action_menu_item (menu, _("_Move Here"),
+	append_drop_action_menu_item (menu, _("Hierher _verschieben"),
 				      GDK_ACTION_MOVE,
 				      (actions & GDK_ACTION_MOVE) != 0,
 				      &damd);
 
-	append_drop_action_menu_item (menu, _("_Copy Here"),
+	append_drop_action_menu_item (menu, _("Hierher _kopieren"),
 				      GDK_ACTION_COPY,
 				      (actions & GDK_ACTION_COPY) != 0,
 				      &damd);
 	
-	append_drop_action_menu_item (menu, _("_Link Here"),
+	append_drop_action_menu_item (menu, _("_Hierher verknüpfen"),
 				      GDK_ACTION_LINK,
 				      (actions & GDK_ACTION_LINK) != 0,
 				      &damd);
 
 	eel_gtk_menu_append_separator (GTK_MENU (menu));
 	
-	menu_item = gtk_menu_item_new_with_mnemonic (_("Cancel"));
+	menu_item = gtk_menu_item_new_with_mnemonic (_("Abbrechen"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 	gtk_widget_show (menu_item);
 	

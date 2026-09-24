@@ -255,11 +255,11 @@ nolphin_desktop_application_local_command_line (GApplication *application,
 
     const GOptionEntry options[] = {
         { "version", '\0', 0, G_OPTION_ARG_NONE, &version,
-          N_("Show the version of the program."), NULL },
+          N_("Die Programmversion anzeigen"), NULL },
         { "debug", 0, 0, G_OPTION_ARG_NONE, &debug,
           "Enable debugging code.  Example usage: 'NOLPHIN_DEBUG=Desktop,Actions nolphin-desktop --debug'.  Use NOLPHIN_DEBUG=all for more topics.", NULL },
         { "quit", 'q', 0, G_OPTION_ARG_NONE, &kill_shell, 
-          N_("Quit Nolphin Desktop."), NULL },
+          N_("Nolphin-Schreibtisch beenden."), NULL },
         { NULL }
     };
 
@@ -270,7 +270,7 @@ nolphin_desktop_application_local_command_line (GApplication *application,
 
     *exit_status = EXIT_SUCCESS;
 
-    context = g_option_context_new (_("\n\nManage the desktop with the file manager"));
+    context = g_option_context_new (_("\n\nDen Schreibtisch mit der Dateiverwaltung handhaben"));
     g_option_context_add_main_entries (context, options, NULL);
     g_option_context_add_group (context, gtk_get_option_group (TRUE));
 

@@ -144,52 +144,51 @@ file_list_ready_cb (GList *files,
 	if (dest_is_dir) {
 		if (source_is_dir) {
 			primary_text = g_strdup_printf
-				(_("Merge folder \"%s\"?"),
+				(_("Ordner »%s« zusammenführen?"),
 				 dest_name);
 
 			message_extra = 
-				_("Merging will ask for confirmation before replacing any files in "
-				  "the folder that conflict with the files being copied.");
+				_("Es wird beim Zusammenführen von Dateien gefragt, bevor Dateien überschrieben werden, welche im Konflikt mit den zu kopierenden Dateien stehen.");
 
 			if (src_mtime > dest_mtime) {
 				message = g_strdup_printf (
-					_("An older folder with the same name already exists in \"%s\"."),
+					_("Ein älterer Ordner gleichen Namens existiert bereits in »%s«."),
 					dest_dir_name);
 			} else if (src_mtime < dest_mtime) {
 				message = g_strdup_printf (
-					_("A newer folder with the same name already exists in \"%s\"."),
+					_("Ein neuerer Ordner gleichen Namens existiert bereits in »%s«."),
 					dest_dir_name);
 			} else {
 				message = g_strdup_printf (
-					_("Another folder with the same name already exists in \"%s\"."),
+					_("Ein Ordner gleichen Namens existiert bereits in »%s«."),
 					dest_dir_name);
 			}
 		} else {
 			message_extra =
-				_("Replacing it will remove all files in the folder.");
+				_("Ersetzen führt zur Löschung aller vorhandenen Dateien in diesem Ordner.");
 			primary_text = g_strdup_printf
-				(_("Replace folder \"%s\"?"), dest_name);
+				(_("Ordner »%s« ersetzen?"), dest_name);
 			message = g_strdup_printf
-				(_("A folder with the same name already exists in \"%s\"."),
+				(_("Ein Ordner gleichen Namens existiert bereits in »%s«."),
 				 dest_dir_name);
 		}
 	} else {
 		primary_text = g_strdup_printf
-			(_("Replace file \"%s\"?"), dest_name);
+			(_("Datei »%s« ersetzen?"), dest_name);
 
-		message_extra = _("Replacing it will overwrite its content.");
+		message_extra = _("Ersetzen wird den gesamten Inhalt überschreiben.");
 
 		if (src_mtime > dest_mtime) {
 			message = g_strdup_printf (
-				_("An older file with the same name already exists in \"%s\"."),
+				_("Eine ältere Datei mit dem selben Namen existiert bereits in »%s«."),
 				dest_dir_name);
 		} else if (src_mtime < dest_mtime) {
 			message = g_strdup_printf (
-				_("A newer file with the same name already exists in \"%s\"."),
+				_("Eine neuere Datei mit dem selben Namen existiert bereits in »%s«."),
 				dest_dir_name);
 		} else {
 			message = g_strdup_printf (
-				_("Another file with the same name already exists in \"%s\"."),
+				_("Eine weitere Datei mit dem gleichen Namen existiert bereits in »%s«."),
 				dest_dir_name);
 		}
 	}
@@ -267,14 +266,14 @@ file_list_ready_cb (GList *files,
 	}
 
 	str = g_string_new (NULL);
-	g_string_append_printf (str, "<b>%s</b>\n", _("Original file"));
-	g_string_append_printf (str, "<i>%s</i> %s\n", _("Size:"), size);
+	g_string_append_printf (str, "<b>%s</b>\n", _("Originaldatei"));
+	g_string_append_printf (str, "<i>%s</i> %s\n", _("Größe:"), size);
 
 	if (should_show_type) {
-		g_string_append_printf (str, "<i>%s</i> %s\n", _("Type:"), type);
+		g_string_append_printf (str, "<i>%s</i> %s\n", _("Typ:"), type);
 	}
 
-	g_string_append_printf (str, "<i>%s</i> %s", _("Last modified:"), date);
+	g_string_append_printf (str, "<i>%s</i> %s", _("Zuletzt geändert:"), date);
 
 	label_text = str->str;
 	gtk_label_set_markup (GTK_LABEL (label),
@@ -299,14 +298,14 @@ file_list_ready_cb (GList *files,
 		type = nolphin_file_get_string_attribute (src, "type");
 	}
 
-	g_string_append_printf (str, "<b>%s</b>\n", _("Replace with"));
-	g_string_append_printf (str, "<i>%s</i> %s\n", _("Size:"), size);
+	g_string_append_printf (str, "<b>%s</b>\n", _("Ersetzen mit"));
+	g_string_append_printf (str, "<i>%s</i> %s\n", _("Größe:"), size);
 
 	if (should_show_type) {
-		g_string_append_printf (str, "<i>%s</i> %s\n", _("Type:"), type);
+		g_string_append_printf (str, "<i>%s</i> %s\n", _("Typ:"), type);
 	}
 
-	g_string_append_printf (str, "<i>%s</i> %s", _("Last modified:"), date);
+	g_string_append_printf (str, "<i>%s</i> %s", _("Zuletzt geändert:"), date);
 	label_text = g_string_free (str, FALSE);
 
 	gtk_label_set_markup (GTK_LABEL (label),
@@ -328,7 +327,7 @@ file_list_ready_cb (GList *files,
 
 	if (source_is_dir && dest_is_dir) {
 		gtk_button_set_label (GTK_BUTTON (details->replace_button),
-				      _("Merge"));
+				      _("Zusammenführen"));
 	}
 
 	nolphin_file_monitor_add (src, fcd, NOLPHIN_FILE_ATTRIBUTES_FOR_ICON);
@@ -545,7 +544,7 @@ nolphin_file_conflict_dialog_init (NolphinFileConflictDialog *fcd)
 	details->second_hbox = hbox;
 
 	/* Setup the expander for the rename action */
-	details->expander = gtk_expander_new_with_mnemonic (_("_Select a new name for the destination"));
+	details->expander = gtk_expander_new_with_mnemonic (_("Einen neuen Namen für das Ziel w_ählen"));
 	gtk_box_pack_start (GTK_BOX (vbox2), details->expander, FALSE, FALSE, 0);
 	g_signal_connect (details->expander, "activate",
 			  G_CALLBACK (expander_activated_cb), dialog);
@@ -559,7 +558,7 @@ nolphin_file_conflict_dialog_init (NolphinFileConflictDialog *fcd)
 	g_signal_connect (widget, "changed",
 			  G_CALLBACK (entry_text_changed_cb), dialog);
 
-	widget = gtk_button_new_with_label (_("Reset"));
+	widget = gtk_button_new_with_label (_("Zurücksetzen"));
 	gtk_button_set_image (GTK_BUTTON (widget),
 			      gtk_image_new_from_icon_name ("xsi-edit-undo-symbolic",
 							GTK_ICON_SIZE_MENU));
@@ -571,7 +570,7 @@ nolphin_file_conflict_dialog_init (NolphinFileConflictDialog *fcd)
 
 
 	/* Setup the checkbox to apply the action to all files */
-	widget = gtk_check_button_new_with_mnemonic (_("Apply this action to all files"));
+	widget = gtk_check_button_new_with_mnemonic (_("Diese Aktion auf alle Dateien anwenden"));
 	gtk_box_pack_start (GTK_BOX (vbox),
 			    widget, FALSE, FALSE, 0);
 	details->checkbox = widget;
@@ -580,24 +579,24 @@ nolphin_file_conflict_dialog_init (NolphinFileConflictDialog *fcd)
 
 	/* Add buttons */
 
-    gtk_dialog_add_button (dialog, _("_Cancel"),  GTK_RESPONSE_CANCEL);
-    gtk_dialog_add_button (dialog, _("_Skip"),  CONFLICT_RESPONSE_SKIP);
+    gtk_dialog_add_button (dialog, _("_Abbrechen"),  GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button (dialog, _("_Überspringen"),  CONFLICT_RESPONSE_SKIP);
 
 	details->auto_rename_button =
 		gtk_dialog_add_button (dialog,
-					   _("D_uplicate"),
+					   _("Ver_doppeln"),
 					   CONFLICT_RESPONSE_AUTO_RENAME);
 
 	details->rename_button =
 		gtk_dialog_add_button (dialog,
-				       _("Re_name"),
+				       _("_Umbenennen"),
 				       CONFLICT_RESPONSE_RENAME);
 	gtk_widget_hide (details->rename_button);
 	gtk_widget_set_no_show_all(details->rename_button, TRUE);
 
 	details->replace_button =
 		gtk_dialog_add_button (dialog,
-				       _("Replace"),
+				       _("Ersetzen"),
 				       CONFLICT_RESPONSE_REPLACE);
 
 	/* Until file_list_ready_cb() runs the dialog is only partially
@@ -682,7 +681,7 @@ nolphin_file_conflict_dialog_new (GtkWindow *parent,
 	GtkWidget *dialog;
 	
 	dialog = GTK_WIDGET (g_object_new (NOLPHIN_TYPE_FILE_CONFLICT_DIALOG,
-					   "title", _("File conflict"),
+					   "title", _("Dateikonflikt"),
 					   NULL));
 	set_source_and_destination (dialog,
 				    source,

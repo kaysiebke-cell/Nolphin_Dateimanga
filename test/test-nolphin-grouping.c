@@ -174,19 +174,19 @@ check_size_grouping (void)
 	wait_until_info_ready (dir);
 
 	key = nolphin_file_get_group_key (dir, NOLPHIN_FILE_SORT_BY_SIZE);
-	if (g_strcmp0 (key, "Folders") != 0) {
+	if (g_strcmp0 (key, "Ordner") != 0) {
 		fail ("expected a directory to group under 'Folders' for size grouping");
 	}
 	g_free (key);
 
 	key = nolphin_file_get_group_key (tiny, NOLPHIN_FILE_SORT_BY_SIZE);
-	if (strstr (key, "Tiny") == NULL) {
+	if (strstr (key, "Winzig") == NULL) {
 		fail ("expected a 17-byte file to land in the 'Tiny' size bucket");
 	}
 	g_free (key);
 
 	key = nolphin_file_get_group_key (big, NOLPHIN_FILE_SORT_BY_SIZE);
-	if (strstr (key, "Small") == NULL) {
+	if (strstr (key, "Klein") == NULL) {
 		fail ("expected a 200 KB file to land in the 'Small' size bucket");
 	}
 	g_free (key);
@@ -227,7 +227,7 @@ check_type_grouping (void)
 	wait_until_info_ready (file);
 
 	dir_key = nolphin_file_get_group_key (dir, NOLPHIN_FILE_SORT_BY_TYPE);
-	if (g_strcmp0 (dir_key, "Folders") != 0) {
+	if (g_strcmp0 (dir_key, "Ordner") != 0) {
 		fail ("expected a directory to group under 'Folders' for type grouping");
 	}
 
@@ -265,7 +265,7 @@ check_mtime_grouping (void)
 	wait_until_info_ready (today);
 
 	key = nolphin_file_get_group_key (today, NOLPHIN_FILE_SORT_BY_MTIME);
-	if (g_strcmp0 (key, "Today") != 0) {
+	if (g_strcmp0 (key, "Heute") != 0) {
 		fail ("expected a just-written file to group under 'Today'");
 	}
 	g_free (key);

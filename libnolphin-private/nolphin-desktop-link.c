@@ -115,7 +115,7 @@ nolphin_desktop_link_new (NolphinDesktopLinkType type)
 	switch (type) {
 	case NOLPHIN_DESKTOP_LINK_HOME:
 		link->details->filename = g_strdup ("home");
-		link->details->display_name = g_strdup (_("Home"));
+		link->details->display_name = g_strdup (_("Persönlicher Ordner"));
 		link->details->activation_location = g_file_new_for_path (g_get_home_dir ());
 		link->details->icon = g_themed_icon_new (NOLPHIN_ICON_HOME);
 		
@@ -123,7 +123,7 @@ nolphin_desktop_link_new (NolphinDesktopLinkType type)
 
 	case NOLPHIN_DESKTOP_LINK_COMPUTER:
 		link->details->filename = g_strdup ("computer");
-		link->details->display_name = g_strdup (_("Computer"));
+		link->details->display_name = g_strdup (_("Rechner"));
 		link->details->activation_location = g_file_new_for_uri ("computer:///");
 		/* TODO: This might need a different icon: */
 		link->details->icon = g_themed_icon_new (NOLPHIN_ICON_COMPUTER);
@@ -132,7 +132,7 @@ nolphin_desktop_link_new (NolphinDesktopLinkType type)
 
 	case NOLPHIN_DESKTOP_LINK_TRASH:
 		link->details->filename = g_strdup ("trash");
-		link->details->display_name = g_strdup (_("Trash"));
+		link->details->display_name = g_strdup (_("Papierkorb"));
 		link->details->activation_location = g_file_new_for_uri (EEL_TRASH_URI);
 		link->details->icon = nolphin_trash_monitor_get_icon ();
 
@@ -143,7 +143,7 @@ nolphin_desktop_link_new (NolphinDesktopLinkType type)
 
 	case NOLPHIN_DESKTOP_LINK_NETWORK:
 		link->details->filename = g_strdup ("network");
-		link->details->display_name = g_strdup (_("Network"));
+		link->details->display_name = g_strdup (_("Netzwerk"));
 		link->details->activation_location = g_file_new_for_uri ("network:///");
 		link->details->icon = g_themed_icon_new (NOLPHIN_ICON_NETWORK);
 		

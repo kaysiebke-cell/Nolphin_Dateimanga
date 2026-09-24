@@ -810,13 +810,13 @@ do_cmdline_sanity_checks (NolphinMainApplication *self,
 
 	if (perform_self_check && (remaining != NULL || kill_shell)) {
 		g_printerr ("%s\n",
-			    _("--check cannot be used with other options."));
+			    _("--check kann nicht zusammen mit anderen Optionen verwendet werden."));
 		goto out;
 	}
 
 	if (kill_shell && remaining != NULL) {
 		g_printerr ("%s\n",
-			    _("--quit cannot be used with URIs."));
+			    _("--quit kann nicht mit Adressen benutzt werden."));
 		goto out;
 	}
 
@@ -824,7 +824,7 @@ do_cmdline_sanity_checks (NolphinMainApplication *self,
 	    !open_in_tabs &&
 	    remaining != NULL && remaining[0] != NULL && remaining[1] != NULL) {
 		g_printerr ("%s\n",
-			    _("--geometry cannot be used with more than one URI."));
+			    _("--geometry kann nicht mit mehr als einer Adresse benutzt werden."));
 		goto out;
 	}
 
@@ -875,33 +875,32 @@ nolphin_main_application_local_command_line (GApplication *application,
 	const GOptionEntry options[] = {
 #ifndef NOLPHIN_OMIT_SELF_CHECK
 		{ "check", 'c', 0, G_OPTION_ARG_NONE, &perform_self_check, 
-		  N_("Perform a quick set of self-check tests."), NULL },
+		  N_("Eine Reihe schneller Selbsttests durchführen."), NULL },
 #endif
 		/* dummy, only for compatibility reasons */
 		{ "browser", '\0', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &browser,
 		  NULL, NULL },
 		{ "version", '\0', 0, G_OPTION_ARG_NONE, &version,
-		  N_("Show the version of the program."), NULL },
+		  N_("Die Programmversion anzeigen"), NULL },
 		{ "geometry", 'g', 0, G_OPTION_ARG_STRING, &self->priv->geometry,
-		  N_("Create the initial window with the given geometry. "
-             "Examples: nolphin --geometry=+100+100, nolphin --geometry=600x400, nolphin --geometry=600x400+100+100."), N_("GEOMETRY") },
+		  N_("Das Anfangsfenster mit der angegebenen Geometrie erstellen. Beispiele: nolphin --geometry=+100+100, nolphin --geometry=600x400, nolphin --geometry=600x400+100+100."), N_("GEOMETRIE") },
 		{ "no-default-window", 'n', 0, G_OPTION_ARG_NONE, &no_default_window,
-		  N_("Only create windows for explicitly specified URIs."), NULL },
+		  N_("Nur für ausdrücklich angegebene Adressen die Fenster erstellen."), NULL },
         { "no-desktop", '\0', 0, G_OPTION_ARG_NONE, &no_desktop_ignored,
-          N_("Ignored argument - left for compatibility only."), NULL },
+          N_("Ignorierter Ausdruck – wird nur zur Kompatibilität zugelassen."), NULL },
 		{ "tabs", 't', 0, G_OPTION_ARG_NONE, &open_in_tabs,
-		  N_("Open URIs in tabs."), NULL },
+		  N_("Adressen in Reitern öffnen."), NULL },
 		{ "existing-window", 0, 0, G_OPTION_ARG_NONE, &open_in_existing_window,
-		  N_("Open URIs in an existing window."), NULL },
+		  N_("Adressen in einem bestehenden Fenster öffnen."), NULL },
 		{ "select", 's', 0, G_OPTION_ARG_NONE, &select,
-		  N_("Show URI's parent and select the URI."), NULL },
+		  N_("Den übergeordneten Ordner der Adresse anzeigen und die Adresse auswählen."), NULL },
 		{ "fix-cache", '\0', 0, G_OPTION_ARG_NONE, &fix_cache,
-		  N_("Repair the user thumbnail cache - this can be useful if you're having trouble with file thumbnails.  Must be run as root"), NULL },
+		  N_("Bitte den Benutzervorschaubildpuffer reparieren - das kann nützlich sein, wenn Sie Probleme mit den Vorschaubildern haben. Muss als Systemverwalter ausgeführt werden."), NULL },
         { "debug", 0, 0, G_OPTION_ARG_NONE, &debug,
           "Enable debugging code.  Example usage: 'NOLPHIN_DEBUG=Actions,Window nolphin --debug'.  Use NOLPHIN_DEBUG=help for more topics.", NULL },
 		{ "quit", 'q', 0, G_OPTION_ARG_NONE, &kill_shell, 
-		  N_("Quit Nolphin."), NULL },
-		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining, NULL,  N_("[URI...]") },
+		  N_("Nolphin beenden."), NULL },
+		{ G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining, NULL,  N_("[Adresse …]") },
 
 		{ NULL }
 	};
@@ -912,7 +911,7 @@ nolphin_main_application_local_command_line (GApplication *application,
 
 	*exit_status = EXIT_SUCCESS;
 
-	context = g_option_context_new (_("\n\nBrowse the file system with the file manager"));
+	context = g_option_context_new (_("\n\nDas Dateisystem mit Hilfe der Dateiverwaltung durchsuchen"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
 
@@ -1036,7 +1035,7 @@ post_registration:
 	}
 
 	if (select && len == 0) {
-		g_printerr ("%s\n", _("--select must be used with at least one URI."));
+		g_printerr ("%s\n", _("--select muss mit mindestens einer Adresse verwendet werden."));
 		*exit_status = EXIT_FAILURE;
 		goto out;
 	}
@@ -1109,21 +1108,17 @@ menu_state_changed_callback (NolphinMainApplication *self)
                                          GTK_DIALOG_MODAL,
                                          GTK_MESSAGE_INFO,
                                          GTK_BUTTONS_OK,
-                                         _("Nolphin's main menu is now hidden"));
+                                         _("Nolphins Hauptmenü ist nun ausgeblendet"));
 
         gchar *secondary;
-        secondary = g_strdup_printf (_("You have chosen to hide the main menu.  You can get it back temporarily by:\n\n"
-                                     "- Tapping the <Alt> key\n"
-                                     "- Right-clicking an empty region of the main toolbar\n"
-                                     "- Right-clicking an empty region of the status bar.\n\n"
-                                     "You can restore it permanently by selecting this option again from the View menu."));
+        secondary = g_strdup_printf (_("Sie haben sich entschieden, das Hauptmenü auszublenden. Sie können es vorübergehend wieder einblenden, indem Sie:\n\n- die Taste <Alt> drücken\n- durch Rechtsklick auf einen leeren Bereich der Hauptwerkzeugleiste\n- durch Rechtsklick auf einen leeren Bereich der Statusleiste.\n\nSie können das Hauptmenü dauerhaft wieder einblenden, indem Sie diese Option im Ansicht-Menü auswählen."));
         g_object_set (dialog,
                       "secondary-text", secondary,
                       NULL);
         g_free (secondary);
 
         msg_area = gtk_message_dialog_get_message_area (GTK_MESSAGE_DIALOG (dialog));
-        checkbox = gtk_check_button_new_with_label (_("Don't show this message again."));
+        checkbox = gtk_check_button_new_with_label (_("Diesen Hinweis nicht wieder anzeigen."));
         gtk_box_pack_start (GTK_BOX (msg_area), checkbox, TRUE, TRUE, 2);
 
         g_settings_bind (nolphin_preferences,

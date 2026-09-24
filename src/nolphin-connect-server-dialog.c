@@ -125,16 +125,16 @@ get_method_description (struct MethodInfo *meth)
 		return _("SSH");
 	} else if (strcmp (meth->scheme, "ftp") == 0) {
 		if (meth->flags & IS_ANONYMOUS) {
-			return _("Public FTP");
+			return _("Öffentlicher FTP");
 		} else {
-			return _("FTP (with login)");
+			return _("FTP (mit Anmeldung)");
 		}
 	} else if (strcmp (meth->scheme, "smb") == 0) {
-		return _("Windows share");
+		return _("Windows-Freigabe");
 	} else if (strcmp (meth->scheme, "dav") == 0) {
 		return _("WebDAV (HTTP)");
 	} else if (strcmp (meth->scheme, "davs") == 0) {
-		return _("Secure WebDAV (HTTPS)");
+		return _("Sicheres WebDAV (HTTPS)");
 
 	/* No descriptive text */
 	} else {
@@ -181,7 +181,7 @@ connect_dialog_set_connecting (NolphinConnectServerDialog *dialog)
 	gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 6);
 	gtk_widget_show (widget);
 
-	widget = gtk_label_new (_("Connecting..."));
+	widget = gtk_label_new (_("Verbindungsaufbau …"));
 	gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 6);
 	gtk_widget_show (widget);
 
@@ -205,8 +205,7 @@ connect_dialog_gvfs_error (NolphinConnectServerDialog *dialog)
 	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 6);
 	gtk_widget_show (image);
 
-	label = gtk_label_new (_("Can't load the supported server method list.\n"
-				 "Please check your gvfs installation."));
+	label = gtk_label_new (_("Die Liste der unterstützten Servermethoden kann nicht geladen werden.\nBitte überprüfen Sie Ihre gvfs-Installation."));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 6);
 	gtk_widget_show (label);
 
@@ -283,7 +282,7 @@ connect_dialog_set_info_bar_error (NolphinConnectServerDialog *dialog,
 	case G_IO_ERROR_NOT_FOUND:
 		folder = gtk_entry_get_text (GTK_ENTRY (dialog->details->folder_entry));
 		server = gtk_entry_get_text (GTK_ENTRY (dialog->details->server_entry));
-		str = g_strdup_printf (_("The folder \"%s\" cannot be opened on \"%s\"."),
+		str = g_strdup_printf (_("Der Ordner »%s« auf »%s« kann nicht geöffnet werden."),
 				       folder, server);
 		label = gtk_label_new (str);
 		entry = dialog->details->folder_entry;
@@ -293,7 +292,7 @@ connect_dialog_set_info_bar_error (NolphinConnectServerDialog *dialog,
 		break;
 	case G_IO_ERROR_HOST_NOT_FOUND:
 		server = gtk_entry_get_text (GTK_ENTRY (dialog->details->server_entry));
-		str = g_strdup_printf (_("The server at \"%s\" cannot be found."), server);
+		str = g_strdup_printf (_("Der Server unter »%s« kann nicht gefunden werden."), server);
 		label = gtk_label_new (str);
 		entry = dialog->details->server_entry;
 
@@ -328,7 +327,7 @@ connect_dialog_set_info_bar_error (NolphinConnectServerDialog *dialog,
 	dialog->details->info_bar_content = hbox;
 
 	gtk_button_set_label (GTK_BUTTON (dialog->details->connect_button),
-			      _("Try Again"));
+			      _("Erneut versuchen"));
 	gtk_widget_set_sensitive (dialog->details->connect_button, TRUE);
 }
 
@@ -393,7 +392,7 @@ connect_dialog_request_additional_details (NolphinConnectServerDialog *self,
 	gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 6);
 	gtk_widget_show (icon);
 
-	label = gtk_label_new (_("Please verify your user details."));
+	label = gtk_label_new (_("Bitte überprüfen Sie Ihre Angaben."));
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 6);
 	gtk_widget_show (label);
 
@@ -423,7 +422,7 @@ connect_dialog_request_additional_details (NolphinConnectServerDialog *self,
 
 	gtk_widget_set_sensitive (self->details->connect_button, TRUE);
 	gtk_button_set_label (GTK_BUTTON (self->details->connect_button),
-			      _("Continue"));
+			      _("Fortsetzen"));
 
 	if (!(flags & G_ASK_PASSWORD_SAVING_SUPPORTED)) {
 		g_signal_handler_disconnect (self->details->password_entry,
@@ -697,7 +696,7 @@ connect_dialog_cleanup (NolphinConnectServerDialog *dialog)
 
 	/* set the connect button label back to 'Connect' */
 	gtk_button_set_label (GTK_BUTTON (dialog->details->connect_button),
-			      _("C_onnect"));
+			      _("_Verbinden"));
 
 	/* if there was a pending mount operation, cancel it. */
 	connect_dialog_abort_mount_operation (dialog);
@@ -826,7 +825,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 
 	/* set dialog properties */
-	gtk_window_set_title (GTK_WINDOW (dialog), _("Connect to Server"));
+	gtk_window_set_title (GTK_WINDOW (dialog), _("Mit Server verbinden"));
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_box_set_spacing (GTK_BOX (content_area), 2);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
@@ -844,7 +843,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 
 	/* server settings label */
 	label = gtk_label_new (NULL);
-	str = g_strdup_printf ("<b>%s</b>", _("Server Details"));
+	str = g_strdup_printf ("<b>%s</b>", _("Serverdetails"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -907,7 +906,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	gtk_widget_show (dialog->details->port_spinbutton);
 
 	/* second row: type combobox */
-	label = gtk_label_new_with_mnemonic (_("_Type:"));
+	label = gtk_label_new_with_mnemonic (_("_Typ:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 	gtk_size_group_add_widget (dialog->details->labels_size_group, label);
@@ -977,7 +976,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 				  dialog);
 
 	/* third row: share entry */
-	label = gtk_label_new_with_mnemonic (_("Sh_are:"));
+	label = gtk_label_new_with_mnemonic (_("_Freigabe:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 	gtk_size_group_add_widget (dialog->details->labels_size_group, label);
@@ -992,7 +991,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	bind_visibility (dialog, dialog->details->share_entry, label);
 
 	/* fourth row: folder entry */
-	label = gtk_label_new_with_mnemonic (_("_Folder:"));
+	label = gtk_label_new_with_mnemonic (_("_Ordner:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 	gtk_size_group_add_widget (dialog->details->labels_size_group, label);
@@ -1010,7 +1009,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 
 	/* user details label */
 	label = gtk_label_new (NULL);
-	str = g_strdup_printf ("<b>%s</b>", _("User Details"));
+	str = g_strdup_printf ("<b>%s</b>", _("Benutzerdetails"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -1034,7 +1033,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	gtk_widget_show (grid);
 
 	/* first row: domain entry */
-	label = gtk_label_new_with_mnemonic (_("_Domain name:"));
+	label = gtk_label_new_with_mnemonic (_("_Domäne:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 
@@ -1049,7 +1048,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	bind_visibility (dialog, dialog->details->domain_entry, label);
 
 	/* second row: username entry */
-	label = gtk_label_new_with_mnemonic (_("_User name:"));
+	label = gtk_label_new_with_mnemonic (_("_Benutzername:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 	gtk_size_group_add_widget (dialog->details->labels_size_group, label);
@@ -1064,7 +1063,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	bind_visibility (dialog, dialog->details->user_entry, label);
 
 	/* third row: password entry */
-	label = gtk_label_new_with_mnemonic (_("Pass_word:"));
+	label = gtk_label_new_with_mnemonic (_("_Passwort:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_container_add (GTK_CONTAINER (grid), label);
 	gtk_size_group_add_widget (dialog->details->labels_size_group, label);
@@ -1080,7 +1079,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 	bind_visibility (dialog, dialog->details->password_entry, label);
 
 	/* fourth row: remember checkbox */
-	checkbox = gtk_check_button_new_with_mnemonic (_("_Remember this password"));
+	checkbox = gtk_check_button_new_with_mnemonic (_("Dieses Passwort _merken"));
 	gtk_grid_attach_next_to (GTK_GRID (grid), checkbox, dialog->details->password_entry,
 				 GTK_POS_BOTTOM, 1, 1);
 	dialog->details->remember_checkbox = checkbox;
@@ -1091,7 +1090,7 @@ nolphin_connect_server_dialog_init (NolphinConnectServerDialog *dialog)
 			       "_Cancel",
 			       GTK_RESPONSE_CANCEL);
 	connect_button = gtk_dialog_add_button (GTK_DIALOG (dialog),
-						_("C_onnect"),
+						_("_Verbinden"),
 						RESPONSE_CONNECT);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 					 RESPONSE_CONNECT);
@@ -1177,7 +1176,7 @@ nolphin_connect_server_dialog_fill_details_async (NolphinConnectServerDialog *se
 		g_simple_async_report_error_in_idle (G_OBJECT (self),
 						     callback, user_data,
 						     G_IO_ERROR, G_IO_ERROR_CANCELLED,
-						     "%s", _("Operation cancelled"));
+						     "%s", _("Vorgang abgebrochen"));
 
 		return;
 	}

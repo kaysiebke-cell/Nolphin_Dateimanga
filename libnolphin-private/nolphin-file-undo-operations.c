@@ -144,17 +144,17 @@ nolphin_file_undo_info_strings_func (NolphinFileUndoInfo *self,
 				      gchar **redo_description)
 {
 	if (undo_label != NULL) {
-		*undo_label = g_strdup (_("Undo"));
+		*undo_label = g_strdup (_("Rückgängig machen"));
 	}
 	if (undo_description != NULL) {
-		*undo_description = g_strdup (_("Undo last action"));
+		*undo_description = g_strdup (_("Letzte Aktion zurücknehmen"));
 	}
 
 	if (redo_label != NULL) {
-		*redo_label = g_strdup (_("Redo"));
+		*redo_label = g_strdup (_("Wiederherstellen"));
 	}
 	if (redo_description != NULL) {
-		*redo_description = g_strdup (_("Redo last undone action"));
+		*redo_description = g_strdup (_("Die zuletzt rückgängig gemachte Aktion wiederholen"));
 	}
 }
 
@@ -375,100 +375,100 @@ ext_strings_func (NolphinFileUndoInfo *info,
 
 	if (op_type == NOLPHIN_FILE_UNDO_OP_MOVE) {
 		if (count > 1) {
-			*undo_description = g_strdup_printf (ngettext ("Move %d item back to '%s'",
-								       "Move %d items back to '%s'", count),
+			*undo_description = g_strdup_printf (ngettext ("%d Objekt zurück nach »%s« verschieben",
+								       "%d Objekte zurück nach »%s« verschieben", count),
 							     count, source);
-			*redo_description = g_strdup_printf (ngettext ("Move %d item to '%s'",
-								       "Move %d items to '%s'", count),
+			*redo_description = g_strdup_printf (ngettext ("%d Objekt nach »%s« verschieben",
+								       "%d Objekte nach »%s« verschieben", count),
 							     count, destination);
 
-			*undo_label = g_strdup_printf (ngettext ("_Undo Move %d item",
-								 "_Undo Move %d items", count),
+			*undo_label = g_strdup_printf (ngettext ("Verschieben von %d Objekt _rückgängig machen",
+								 "Verschieben von %d Objekten _rückgängig machen", count),
 						       count);
-			*redo_label = g_strdup_printf (ngettext ("_Redo Move %d item",
-								 "_Redo Move %d items", count),
+			*redo_label = g_strdup_printf (ngettext ("Verschieben von %d Objekt _wiederholen",
+								 "Verschieben von %d Objekten _wiederholen", count),
 						       count);
 		} else {
-			*undo_description = g_strdup_printf (_("Move '%s' back to '%s'"), name, source);
-			*redo_description = g_strdup_printf (_("Move '%s' to '%s'"), name, destination);
+			*undo_description = g_strdup_printf (_("»%s« zurück nach »%s« verschieben"), name, source);
+			*redo_description = g_strdup_printf (_("»%s« nach »%s« verschieben"), name, destination);
 
-			*undo_label = g_strdup (_("_Undo Move"));
-			*redo_label = g_strdup (_("_Redo Move"));
+			*undo_label = g_strdup (_("Verschieben _rückgängig machen"));
+			*redo_label = g_strdup (_("Verschieben _wiederholen"));
 		}
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_RESTORE_FROM_TRASH)  {
-		*undo_label = g_strdup (_("_Undo Restore from Trash"));
-		*redo_label = g_strdup (_("_Redo Restore from Trash"));
+		*undo_label = g_strdup (_("Wiederherstellung aus dem Papierkorb _rückgängig machen"));
+		*redo_label = g_strdup (_("Wiederherstellung aus dem Papierkorb _wiederholen"));
 
 		if (count > 1) {
-			*undo_description = g_strdup_printf (ngettext ("Move %d item back to trash",
-								       "Move %d items back to trash", count),
+			*undo_description = g_strdup_printf (ngettext ("%d Objekt zurück in den Papierkorb verschieben",
+								       "%d Objekte zurück in den Papierkorb verschieben", count),
 							     count);
-			*redo_description = g_strdup_printf (ngettext ("Restore %d item from trash",
-								       "Restore %d items from trash", count),
+			*redo_description = g_strdup_printf (ngettext ("%d Objekt aus dem Papierkorb wiederherstellen",
+								       "%d Objekte aus dem Papierkorb wiederherstellen", count),
 							     count);
 		} else {
-			*undo_description = g_strdup_printf (_("Move '%s' back to trash"), name);
-			*redo_description = g_strdup_printf (_("Restore '%s' from trash"), name);
+			*undo_description = g_strdup_printf (_("»%s« zurück in den Papierkorb verschieben"), name);
+			*redo_description = g_strdup_printf (_("»%s« aus dem Papierkorb wiederherstellen"), name);
 		}
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_COPY) {
 		if (count > 1) {
-			*undo_description = g_strdup_printf (ngettext ("Delete %d copied item",
-								       "Delete %d copied items", count),
+			*undo_description = g_strdup_printf (ngettext ("%d kopiertes Objekt löschen",
+								       "%d kopierte Objekte löschen", count),
 							     count);
-			*redo_description = g_strdup_printf (ngettext ("Copy %d item to '%s'",
-								       "Copy %d items to '%s'", count),
+			*redo_description = g_strdup_printf (ngettext ("%d Objekt nach »%s« kopieren",
+								       "%d Objekte nach »%s« kopieren", count),
 							     count, destination);
 
-			*undo_label = g_strdup_printf (ngettext ("_Undo Copy %d item",
-								 "_Undo Copy %d items", count),
+			*undo_label = g_strdup_printf (ngettext ("Kopieren von %d Objekt _rückgängig machen",
+								 "Kopieren von %d Objekten _rückgängig machen", count),
 						       count);
-			*redo_label = g_strdup_printf (ngettext ("_Redo Copy %d item",
-								 "_Redo Copy %d items", count),
+			*redo_label = g_strdup_printf (ngettext ("Kopieren von %d Objekt _wiederholen",
+								 "Kopieren von %d Objekten _wiederholen", count),
 						       count);
 		} else {
-			*undo_description = g_strdup_printf (_("Delete '%s'"), name);
-			*redo_description = g_strdup_printf (_("Copy '%s' to '%s'"), name, destination);
+			*undo_description = g_strdup_printf (_("»%s« löschen"), name);
+			*redo_description = g_strdup_printf (_("»%s« nach »%s« kopieren"), name, destination);
 
-			*undo_label = g_strdup (_("_Undo Copy"));
-			*redo_label = g_strdup (_("_Redo Copy"));
+			*undo_label = g_strdup (_("Kopieren _rückgängig machen"));
+			*redo_label = g_strdup (_("Kopieren _wiederholen"));
 		}
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_DUPLICATE) {
 		if (count > 1) {
-			*undo_description = g_strdup_printf (ngettext ("Delete %d duplicated item",
-								       "Delete %d duplicated items", count),
+			*undo_description = g_strdup_printf (ngettext ("%d verdoppeltes Objekt löschen",
+								       "%d verdoppelte Objekte löschen", count),
 							     count);
-			*redo_description = g_strdup_printf (ngettext ("Duplicate %d item in '%s'",
-								       "Duplicate %d items in '%s'", count),
+			*redo_description = g_strdup_printf (ngettext ("%d Objekt in »%s« verdoppeln",
+								       "%d Objekte in »%s« verdoppeln", count),
 							     count, destination);
 
-			*undo_label = g_strdup_printf (ngettext ("_Undo Duplicate %d item",
-								 "_Undo Duplicate %d items", count),
+			*undo_label = g_strdup_printf (ngettext ("Verdoppeln von %d Objekt _rückgängig machen",
+								 "Verdoppeln von %d Objekten _rückgängig machen", count),
 						       count);
-			*redo_label = g_strdup_printf (ngettext ("_Redo Duplicate %d item",
-								 "_Redo Duplicate %d items", count),
+			*redo_label = g_strdup_printf (ngettext ("Verdoppeln von %d Objekt _wiederholen",
+								 "Verdoppeln von %d Objekten _wiederholen", count),
 						       count);
 		} else {
-			*undo_description = g_strdup_printf (_("Delete '%s'"), name);
-			*redo_description = g_strdup_printf (_("Duplicate '%s' in '%s'"),
+			*undo_description = g_strdup_printf (_("»%s« löschen"), name);
+			*redo_description = g_strdup_printf (_("»%s« in »%s« verdoppeln"),
 							   name, destination);
 
-			*undo_label = g_strdup (_("_Undo Duplicate"));
-			*redo_label = g_strdup (_("_Redo Duplicate"));
+			*undo_label = g_strdup (_("Verdoppeln _rückgängig machen"));
+			*redo_label = g_strdup (_("Verdoppeln _wiederholen"));
 		}
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_CREATE_LINK) {
 		if (count > 1) {
-			*undo_description = g_strdup_printf (ngettext ("Delete links to %d item",
-								       "Delete links to %d items", count),
+			*undo_description = g_strdup_printf (ngettext ("Verknüpfungen zu %d Objekt löschen",
+								       "Verknüpfungen zu %d Objekten löschen", count),
 							     count);
-			*redo_description = g_strdup_printf (ngettext ("Create links to %d item",
-								       "Create links to %d items", count),
+			*redo_description = g_strdup_printf (ngettext ("Verknüpfungen zu %d Objekt erstellen",
+								       "Verknüpfungen zu %d Objekten erstellen", count),
 							     count);
 		} else {
-			*undo_description = g_strdup_printf (_("Delete link to '%s'"), name);
-			*redo_description = g_strdup_printf (_("Create link to '%s'"), name);
+			*undo_description = g_strdup_printf (_("Verknüpfung zu »%s« löschen"), name);
+			*redo_description = g_strdup_printf (_("Verknüpfung zu »%s« erstellen"), name);
 
-			*undo_label = g_strdup (_("_Undo Create Link"));
-			*redo_label = g_strdup (_("_Redo Create Link"));
+			*undo_label = g_strdup (_("Verknüpfung erstellen _rückgängig machen"));
+			*redo_label = g_strdup (_("Verknüpfung erstellen _wiederholen"));
 		}
 	} else {
 		g_assert_not_reached ();
@@ -681,23 +681,23 @@ create_strings_func (NolphinFileUndoInfo *info,
 	char *name;
 
 	name = g_file_get_parse_name (self->priv->target_file);
-	*undo_description = g_strdup_printf (_("Delete '%s'"), name);
+	*undo_description = g_strdup_printf (_("»%s« löschen"), name);
 
 	if (op_type == NOLPHIN_FILE_UNDO_OP_CREATE_EMPTY_FILE) {
-		*redo_description = g_strdup_printf (_("Create an empty file '%s'"), name);
+		*redo_description = g_strdup_printf (_("Leere Datei »%s« erstellen"), name);
 
-		*undo_label = g_strdup (_("_Undo Create Empty File"));
-		*redo_label = g_strdup (_("_Redo Create Empty File"));
+		*undo_label = g_strdup (_("Erstellen einer leeren Datei _rückgängig machen"));
+		*redo_label = g_strdup (_("Leere Datei erstellen _wiederholen"));
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_CREATE_FOLDER) {
-		*redo_description = g_strdup_printf (_("Create a new folder '%s'"), name);
+		*redo_description = g_strdup_printf (_("Neuen Ordner »%s« erstellen"), name);
 
-		*undo_label = g_strdup (_("_Undo Create Folder"));
-		*redo_label = g_strdup (_("_Redo Create Folder"));
+		*undo_label = g_strdup (_("Ordner erstellen _rückgängig machen"));
+		*redo_label = g_strdup (_("Ordner erstellen _wiederholen"));
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_CREATE_FILE_FROM_TEMPLATE) {
-		*redo_description = g_strdup_printf (_("Create new file '%s' from template "), name);
+		*redo_description = g_strdup_printf (_("Neue Datei »%s« aus Vorlage erstellen "), name);
 
-		*undo_label = g_strdup (_("_Undo Create from Template"));
-		*redo_label = g_strdup (_("_Redo Create from Template"));
+		*undo_label = g_strdup (_("Erstellung aus Vorlage _rückgängig machen"));
+		*redo_label = g_strdup (_("Erstellung aus Vorlage _wiederholen"));
 	} else {
 		g_assert_not_reached ();
 	}
@@ -879,11 +879,11 @@ rename_strings_func (NolphinFileUndoInfo *info,
 	new_name = g_file_get_parse_name (self->priv->new_file);
 	old_name = g_file_get_parse_name (self->priv->old_file);
 
-	*undo_description = g_strdup_printf (_("Rename '%s' as '%s'"), new_name, old_name);
+	*undo_description = g_strdup_printf (_("»%s« in »%s« umbenennen"), new_name, old_name);
 	*redo_description = g_strdup_printf (_("Rename '%s' as '%s'"), old_name, new_name);
 
-	*undo_label = g_strdup (_("_Undo Rename"));
-	*redo_label = g_strdup (_("_Redo Rename"));
+	*undo_label = g_strdup (_("Umbenennen _rückgängig machen"));
+	*redo_label = g_strdup (_("Umbenennen _wiederholen"));
 
 	g_free (old_name);
 	g_free (new_name);
@@ -996,11 +996,11 @@ trash_strings_func (NolphinFileUndoInfo *info,
 	gint count = g_hash_table_size (self->priv->trashed);
 
 	if (count != 1) {
-		*undo_description = g_strdup_printf (ngettext ("Restore %d item from trash",
-							       "Restore %d items from trash", count),
+		*undo_description = g_strdup_printf (ngettext ("%d Objekt aus dem Papierkorb wiederherstellen",
+							       "%d Objekte aus dem Papierkorb wiederherstellen", count),
 						     count);
-		*redo_description = g_strdup_printf (ngettext ("Move %d item to trash",
-							       "Move %d items to trash", count),
+		*redo_description = g_strdup_printf (ngettext ("%d Objekt in den Papierkorb verschieben",
+							       "%d Objekte in den Papierkorb verschieben", count),
 						     count);
 	} else {
 		GList *keys;
@@ -1011,19 +1011,19 @@ trash_strings_func (NolphinFileUndoInfo *info,
 		file = keys->data;
 		name = g_file_get_basename (file);
 		orig_path = g_file_get_path (file);
-		*undo_description = g_strdup_printf (_("Restore '%s' to '%s'"), name, orig_path);
+		*undo_description = g_strdup_printf (_("»%s« nach »%s« wiederherstellen"), name, orig_path);
 
 		g_free (name);
 		g_free (orig_path);
 		g_list_free (keys);
 
 		name = g_file_get_parse_name (file);
-		*redo_description = g_strdup_printf (_("Move '%s' to trash"), name);
+		*redo_description = g_strdup_printf (_("»%s« in den Papierkorb verschieben"), name);
 
 		g_free (name);
 
-		*undo_label = g_strdup (_("_Undo Trash"));
-		*redo_label = g_strdup (_("_Redo Trash"));
+		*undo_label = g_strdup (_("Verschieben in den Papierkorb _rückgängig machen"));
+		*redo_label = g_strdup (_("Verschieben in den Papierkorb _wiederholen"));
 	}
 }
 
@@ -1315,11 +1315,11 @@ rec_permissions_strings_func (NolphinFileUndoInfo *info,
 
 	name = g_file_get_path (self->priv->dest_dir);
 
-	*undo_description = g_strdup_printf (_("Restore original permissions of items enclosed in '%s'"), name);
-	*redo_description = g_strdup_printf (_("Set permissions of items enclosed in '%s'"), name);
+	*undo_description = g_strdup_printf (_("Ursprüngliche Zugriffsrechte aller Objekte in »%s« wiederherstellen"), name);
+	*redo_description = g_strdup_printf (_("Die Zugriffsrechte der in »%s« enthaltenen Objekte bearbeiten"), name);
 
-	*undo_label = g_strdup (_("_Undo Change Permissions"));
-	*redo_label = g_strdup (_("_Redo Change Permissions"));
+	*undo_label = g_strdup (_("Ändern der Zugriffsrechte _rückgängig machen"));
+	*redo_label = g_strdup (_("Ändern der Zugriffsrechte _wiederholen"));
 
 	g_free (name);
 }
@@ -1470,11 +1470,11 @@ permissions_strings_func (NolphinFileUndoInfo *info,
 	gchar *name;
 
 	name = g_file_get_parse_name (self->priv->target_file);
-	*undo_description = g_strdup_printf (_("Restore original permissions of '%s'"), name);
-	*redo_description = g_strdup_printf (_("Set permissions of '%s'"), name);
+	*undo_description = g_strdup_printf (_("Ursprüngliche Zugriffsrechte von »%s« wiederherstellen"), name);
+	*redo_description = g_strdup_printf (_("Zugriffsrechte für »%s« festlegen"), name);
 
-	*undo_label = g_strdup (_("_Undo Change Permissions"));
-	*redo_label = g_strdup (_("_Redo Change Permissions"));
+	*undo_label = g_strdup (_("Ändern der Zugriffsrechte _rückgängig machen"));
+	*redo_label = g_strdup (_("Ändern der Zugriffsrechte _wiederholen"));
 
 	g_free (name);
 }
@@ -1581,21 +1581,21 @@ ownership_strings_func (NolphinFileUndoInfo *info,
 	name = g_file_get_parse_name (self->priv->target_file);
 
 	if (op_type == NOLPHIN_FILE_UNDO_OP_CHANGE_GROUP) {
-		*undo_description = g_strdup_printf (_("Restore group of '%s' to '%s'"),
+		*undo_description = g_strdup_printf (_("Gruppe von »%s« auf »%s« wiederherstellen"),
 						     name, self->priv->original_ownership);
-		*redo_description = g_strdup_printf (_("Set group of '%s' to '%s'"),
+		*redo_description = g_strdup_printf (_("Gruppe von »%s« auf »%s« festlegen"),
 						     name, self->priv->new_ownership);
 
-		*undo_label = g_strdup (_("_Undo Change Group"));
-		*redo_label = g_strdup (_("_Redo Change Group"));
+		*undo_label = g_strdup (_("Gruppenänderung _rückgängig machen"));
+		*redo_label = g_strdup (_("Gruppenänderung _wiederholen"));
 	} else if (op_type == NOLPHIN_FILE_UNDO_OP_CHANGE_OWNER) {
-		*undo_description = g_strdup_printf (_("Restore owner of '%s' to '%s'"),
+		*undo_description = g_strdup_printf (_("Eigentümer von »%s« als »%s« wiederherstellen"),
 						     name, self->priv->original_ownership);
-		*redo_description = g_strdup_printf (_("Set owner of '%s' to '%s'"),
+		*redo_description = g_strdup_printf (_("Eigentümer von »%s« auf »%s« setzen"),
 						     name, self->priv->new_ownership);
 
-		*undo_label = g_strdup (_("_Undo Change Owner"));
-		*redo_label = g_strdup (_("_Redo Change Owner"));
+		*undo_label = g_strdup (_("Eigentumsänderung _rückgängig machen"));
+		*redo_label = g_strdup (_("Eigentumsänderung _wiederholen"));
 	}
 
 	g_free (name);

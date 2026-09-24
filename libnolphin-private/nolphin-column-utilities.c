@@ -42,43 +42,43 @@ get_builtin_columns (void)
 					       "name", "name",
 					       "attribute", "name",
 					       "label", _("Name"),
-					       "description", _("The name and icon of the file."),
+					       "description", _("Name und Symbol der Datei."),
 					       NULL));
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "size",
 					       "attribute", "size",
-					       "label", _("Size"),
-					       "description", _("The size of the file."),
+					       "label", _("Größe"),
+					       "description", _("Die Dateigröße."),
 					       "xalign", 1.0,
 					       NULL));
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "type",
 					       "attribute", "type",
-					       "label", _("Type"),
-					       "description", _("The general type of the file."),
+					       "label", _("Dateityp"),
+					       "description", _("Allgemeiner Dateityp"),
 					       NULL));
     columns = g_list_append (columns,
                  g_object_new (NOLPHIN_TYPE_COLUMN,
                            "name", "detailed_type",
                            "attribute", "detailed_type",
-                           "label", _("Detailed Type"),
-                           "description", _("The specific type of the file."),
+                           "label", _("De­tail­lierter Dateityp"),
+                           "description", _("Der konkrete Dateityp"),
                            NULL));
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "date_modified",
 					       "attribute", "date_modified",
-					       "label", _("Date Modified"),
-					       "description", _("The date the file was modified."),
+					       "label", _("Änderungsdatum"),
+					       "description", _("Datum der letzten Dateiänderung."),
 					       NULL));
     columns = g_list_append (columns,
                  g_object_new (NOLPHIN_TYPE_COLUMN,
                            "name", "date_modified_with_time",
                            "attribute", "date_modified_with_time",
-                           "label", _("Modified - Time"),
-                           "description", _("The date the file was modified."),
+                           "label", _("Geändert – Zeit"),
+                           "description", _("Datum der letzten Dateiänderung."),
                            "xalign", 1.0,
                            NULL));
 
@@ -86,78 +86,78 @@ get_builtin_columns (void)
                  g_object_new (NOLPHIN_TYPE_COLUMN,
                            "name", "date_created",
                            "attribute", "date_created",
-                           "label", _("Date Created"),
-                           "description", _("The date the file was created."),
+                           "label", _("Erstelldatum"),
+                           "description", _("Das Datum, an dem die Datei erstellt wurde."),
                            NULL));
     columns = g_list_append (columns,
                  g_object_new (NOLPHIN_TYPE_COLUMN,
                            "name", "date_created_with_time",
                            "attribute", "date_created_with_time",
-                           "label", _("Created - Time"),
-                           "description", _("The date the file was created."),
+                           "label", _("Erstellt – Zeit"),
+                           "description", _("Das Datum, an dem die Datei erstellt wurde."),
                            NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "date_accessed",
 					       "attribute", "date_accessed",
-					       "label", _("Date Accessed"),
-					       "description", _("The date the file was accessed."),
+					       "label", _("Zugriffsdatum"),
+					       "description", _("Das Datum des letzten Dateizugriffs."),
 					       NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "owner",
 					       "attribute", "owner",
-					       "label", _("Owner"),
-					       "description", _("The owner of the file."),
+					       "label", _("Eigentümer"),
+					       "description", _("Besitzer der Datei"),
 					       NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "group",
 					       "attribute", "group",
-					       "label", _("Group"),
-					       "description", _("The group of the file."),
+					       "label", _("Gruppe"),
+					       "description", _("Die Dateigruppe."),
 					       NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "permissions",
 					       "attribute", "permissions",
-					       "label", _("Permissions"),
-					       "description", _("The permissions of the file."),
+					       "label", _("Zugriffsrechte"),
+					       "description", _("Die Dateizugriffsrechte"),
 					       NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "octal_permissions",
 					       "attribute", "octal_permissions",
-					       "label", _("Octal Permissions"),
-					       "description", _("The permissions of the file, in octal notation."),
+					       "label", _("Oktale Zugriffsrechte"),
+					       "description", _("Die Zugriffsrechte auf die Datei in Oktalnotation."),
 					       NULL));
 
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "mime_type",
 					       "attribute", "mime_type",
-					       "label", _("MIME Type"),
-					       "description", _("The mime type of the file."),
+					       "label", _("MIME-Typ"),
+					       "description", _("Der MIME-Typ der Datei."),
 					       NULL));
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "extension",
 					       "attribute", "extension",
-					       "label", _("Extension"),
-					       "description", _("The extension of the file."),
+					       "label", _("Erweiterung"),
+					       "description", _("Die Erweiterung der Datei."),
 					       NULL));
 #ifdef HAVE_SELINUX
 	columns = g_list_append (columns,
 				 g_object_new (NOLPHIN_TYPE_COLUMN,
 					       "name", "selinux_context",
 					       "attribute", "selinux_context",
-					       "label", _("SELinux Context"),
-					       "description", _("The SELinux security context of the file."),
+					       "label", _("SELinux-Kontext"),
+					       "description", _("Der SELinux-Sicherheitskontext dieser Datei."),
 					       NULL));
 #endif
 	return columns;
@@ -198,15 +198,15 @@ get_trash_columns (void)
 					 g_object_new (NOLPHIN_TYPE_COLUMN,
 						       "name", "trashed_on",
 						       "attribute", "trashed_on",
-						       "label", _("Trashed On"),
-						       "description", _("Date when file was moved to the Trash"),
+						       "label", _("Löschdatum"),
+						       "description", _("Datum, an dem die Datei gelöscht wurde"),
 						       NULL));
 		columns = g_list_append (columns,
 			                 g_object_new (NOLPHIN_TYPE_COLUMN,
 			                               "name", "trash_orig_path",
 			                               "attribute", "trash_orig_path",
-			                               "label", _("Original Location"),
-			                               "description", _("Original location of file before moved to the Trash"),
+			                               "label", _("Ursprungsort"),
+			                               "description", _("Speicherort der Datei vor dem Löschen"),
 			                               NULL));
 	}
 
@@ -225,8 +225,8 @@ get_search_columns (void)
                                            "attribute", "search_result_count",
                                            // TRANSLATORS: This column is only useful for content search results,
                                            // and shows the number of occurrences of the search string within the file.
-                                           "label", _("Hits"),
-                                           "description", _("How many times the search string appeared in the file"),
+                                           "label", _("Aufrufe"),
+                                           "description", _("Wie oft der Suchbegriff in der Datei vorkam"),
                                            NULL));
     }
 
@@ -245,8 +245,8 @@ get_mixed_file_list_columns (void)
                                "attribute", "where",
                                // TRANSLATORS: The Location column displays the parent path of a given file. This
                                // is useful in special file listings like search results, Recents or Favorites.
-                               "label", _("Location"),
-                               "description", _("The location of the file."),
+                               "label", _("Speicherort"),
+                               "description", _("Speicherort der Datei"),
                                "width-chars", 60,
                                "ellipsize", PANGO_ELLIPSIZE_END,
                                NULL));

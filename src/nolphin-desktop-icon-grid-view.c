@@ -919,7 +919,7 @@ real_update_menus (NolphinView *view)
     gtk_action_set_visible (action, include_empty_trash);
 
     if (include_empty_trash) {
-        label = g_strdup (_("E_mpty Trash"));
+        label = g_strdup (_("Papierkorb _leeren"));
         g_object_set (action , "label", label, NULL);
         gtk_action_set_sensitive (action, !nolphin_trash_monitor_is_empty ());
         g_free (label);
@@ -1029,12 +1029,12 @@ real_update_menus (NolphinView *view)
 
 static const GtkToggleActionEntry desktop_grid_toggle_entries[] = {
   /* name, stock id */      { "Desktop Autoarrange", NULL,
-  /* label, accelerator */    N_("Auto-arrange"), NULL,
+  /* label, accelerator */    N_("Automatisch anordnen"), NULL,
   /* tooltip */               NULL,
                               G_CALLBACK (action_auto_arrange_callback),
                               0 },
   /* name, stock id */      { "Desktop Reverse Sort", NULL,
-  /* label, accelerator */    N_("Reverse sort"), NULL,
+  /* label, accelerator */    N_("Sortierung umkehren"), NULL,
   /* tooltip */               NULL,
                               G_CALLBACK (action_reverse_sort_callback),
                               0 }
@@ -1042,11 +1042,11 @@ static const GtkToggleActionEntry desktop_grid_toggle_entries[] = {
 
 static const GtkRadioActionEntry desktop_size_radio_entries[] = {
   { "Desktop Smaller", NULL,
-    N_("Smaller"), NULL,
+    N_("Kleiner"), NULL,
     NULL,
     NOLPHIN_ZOOM_LEVEL_SMALLER },
   { "Desktop Small", NULL,
-    N_("Small"), NULL,
+    N_("Klein"), NULL,
     NULL,
     NOLPHIN_ZOOM_LEVEL_SMALL },
   { "Desktop Normal", NULL,
@@ -1054,18 +1054,18 @@ static const GtkRadioActionEntry desktop_size_radio_entries[] = {
     NULL,
     NOLPHIN_ZOOM_LEVEL_STANDARD },
   { "Desktop Large", NULL,
-    N_("Large"), NULL,
+    N_("Groß"), NULL,
     NULL,
     NOLPHIN_ZOOM_LEVEL_LARGE },
   { "Desktop Larger", NULL,
-    N_("Larger"), NULL,
+    N_("Größer"), NULL,
     NULL,
     NOLPHIN_ZOOM_LEVEL_LARGER },
 };
 
 static const GtkRadioActionEntry desktop_direction_radio_entries[] = {
     { "Vertical Layout", NULL,
-      N_("_Vertical"), NULL,
+      N_("_Senkrecht"), NULL,
       NULL,
       DESKTOP_ARRANGE_VERTICAL },
     { "Horizontal Layout", NULL,
@@ -1080,37 +1080,37 @@ static const GtkRadioActionEntry desktop_sort_radio_entries[] = {
       NULL,
       NOLPHIN_FILE_SORT_BY_DISPLAY_NAME },
     { "Desktop Sort by Size", NULL,
-      N_("Size"), NULL,
+      N_("Größe"), NULL,
       NULL,
       NOLPHIN_FILE_SORT_BY_SIZE },
     { "Desktop Sort by Type", NULL,
-      N_("Type"), NULL,
+      N_("Dateityp"), NULL,
       NULL,
       NOLPHIN_FILE_SORT_BY_DETAILED_TYPE },
     { "Desktop Sort by Date", NULL,
-      N_("Date"), NULL,
+      N_("Datum"), NULL,
       NULL,
       NOLPHIN_FILE_SORT_BY_MTIME },
     { "Desktop Sort by Extension", NULL,
-      N_("Extension"), NULL,
+      N_("Erweiterung"), NULL,
       NULL,
       NOLPHIN_FILE_SORT_BY_EXTENSION }
 };
 
 static const GtkActionEntry desktop_grid_entries[] = {
-    /* name, stock id, label */  { "Desktop Submenu", NULL, N_("_Sort") },
-    /* name, stock id, label */  { "Desktop Zoom", NULL, N_("_Icon Size") },
+    /* name, stock id, label */  { "Desktop Submenu", NULL, N_("_Sortieren") },
+    /* name, stock id, label */  { "Desktop Zoom", NULL, N_("Symbol_größe") },
     /* name, stock id */
     { "Empty Trash Conditional", NULL,
       /* label, accelerator */
-      N_("Empty Trash"), NULL,
+      N_("Papierkorb leeren"), NULL,
       /* tooltip */
-      N_("Delete all items in the Trash"),
+      N_("Alle Objekte im Papierkorb löschen"),
       G_CALLBACK (action_empty_trash_conditional_callback) },
 
     { "Show Desktop Overlay", NULL,
-      N_("_Customize"), NULL,
-      N_("Adjust the desktop layout for this monitor"),
+      N_("_Anpassen"), NULL,
+      N_("Schreibtischanordnung für diesen Bildschirm anpassen"),
       G_CALLBACK (action_show_overlay) },
 };
 
@@ -1201,8 +1201,8 @@ static NolphinViewInfo nolphin_desktop_icon_grid_view = {
 	(char *)NOLPHIN_DESKTOP_ICON_GRID_VIEW_IID,
 	(char *)"Desktop Grid View",
 	(char *)"_Desktop",
-	(char *)N_("The desktop view encountered an error."),
-	(char *)N_("The desktop view encountered an error while starting up."),
+	(char *)N_("Die Schreibtischansicht stieß auf einen Fehler."),
+	(char *)N_("Die Schreibtischansicht stieß beim Starten auf einen Fehler."),
 	(char *)"Display this location with the desktop grid view.",
 	nolphin_desktop_icon_grid_view_create,
 	nolphin_desktop_icon_grid_view_supports_uri

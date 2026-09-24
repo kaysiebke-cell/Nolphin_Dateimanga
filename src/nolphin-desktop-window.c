@@ -127,7 +127,7 @@ nolphin_desktop_window_constructed (GObject *obj)
 	accessible = gtk_widget_get_accessible (GTK_WIDGET (window));
 
 	if (accessible) {
-		atk_object_set_name (accessible, _("Desktop"));
+		atk_object_set_name (accessible, _("Schreibtisch"));
 	}
 
     nolphin_desktop_window_update_geometry (window);
@@ -290,7 +290,7 @@ static void
 real_sync_title (NolphinWindow *window,
 		 NolphinWindowSlot *slot)
 {
-	/* hardcode "Desktop" */
+	/* hardcode "Schreibtisch" */
 	gtk_window_set_title (GTK_WINDOW (window), _("Desktop"));
 }
 

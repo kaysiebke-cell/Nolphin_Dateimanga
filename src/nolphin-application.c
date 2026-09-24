@@ -422,10 +422,9 @@ nolphin_application_check_required_directory (NolphinApplication *application,
         const char *detail_string;
         GtkDialog *dialog;
 
-        error_string = g_strdup_printf (_("Nolphin could not create the required folder \"%s\"."),
+        error_string = g_strdup_printf (_("Nolphin konnte den benötigten Ordner »%s« nicht anlegen."),
                                         path);
-        detail_string = _("Before running Nolphin, please create the following folder, or "
-                          "set permissions such that Nolphin can create it.");
+        detail_string = _("Bevor Sie Nolphin benutzen, erstellen Sie bitte folgenden Ordner oder erteilen Sie Nolphin die Zugriffsrechte, diesen anzulegen.");
 
         dialog = eel_show_error_dialog (error_string, detail_string, NULL);
         /* We need the main event loop so the user has a chance to see the dialog. */

@@ -1130,13 +1130,13 @@ nolphin_view_confirm_multiple (GtkWindow *parent_window,
 		return TRUE;
 	}
 
-	prompt = _("Are you sure you want to open all files?");
+	prompt = _("Sind Sie sicher, dass Sie alle Dateien öffnen wollen?");
 	if (tabs) {
-		detail = g_strdup_printf (ngettext("This will open %'d separate tab.",
-						   "This will open %'d separate tabs.", count), count);
+		detail = g_strdup_printf (ngettext("Dies würde %'d Reiter öffnen.",
+						   "Dies würde %'d Reiter öffnen.", count), count);
 	} else {
-		detail = g_strdup_printf (ngettext("This will open %'d separate window.",
-						   "This will open %'d separate windows.", count), count);
+		detail = g_strdup_printf (ngettext("Dies würde %'d Einzelfenster öffnen.",
+						   "Dies würde %'d Einzelfenster öffnen.", count), count);
 	}
 	dialog = eel_show_yes_no_dialog (prompt, detail,
 					 GTK_STOCK_OK, GTK_STOCK_CANCEL,
@@ -1402,7 +1402,7 @@ choose_program (NolphinView *view,
     mime_type = nolphin_file_get_mime_type (file);
     uri = nolphin_file_get_uri (file);
 
-    dialog = gtk_dialog_new_with_buttons (_("Open with"),
+    dialog = gtk_dialog_new_with_buttons (_("Öffnen mit"),
                           nolphin_view_get_containing_window (view),
                           GTK_DIALOG_DESTROY_WITH_PARENT,
                           GTK_STOCK_CANCEL,
@@ -1739,7 +1739,7 @@ pattern_select_response_cb (GtkWidget *dialog, int response, gpointer user_data)
 			      "help:gnome-help/files-select",
 			      gtk_get_current_event_time (), &error);
 		if (error) {
-			eel_show_error_dialog (_("There was an error displaying help."), error->message,
+			eel_show_error_dialog (_("Beim Anzeigen der Hilfe ist ein Fehler aufgetreten."), error->message,
 					       GTK_WINDOW (dialog));
 			g_error_free (error);
 		}
@@ -1759,7 +1759,7 @@ select_pattern (NolphinView *view)
 	GtkWidget *entry;
 	char *example_pattern;
 
-	dialog = gtk_dialog_new_with_buttons (_("Select Items Matching"),
+	dialog = gtk_dialog_new_with_buttons (_("Passende Objekte auswählen"),
 					      nolphin_view_get_containing_window (view),
 					      GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_STOCK_HELP,
@@ -1774,13 +1774,13 @@ select_pattern (NolphinView *view)
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
 	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 2);
 
-	label = gtk_label_new_with_mnemonic (_("_Pattern:"));
+	label = gtk_label_new_with_mnemonic (_("_Muster:"));
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 
 	example = gtk_label_new (NULL);
 	gtk_widget_set_halign (example, GTK_ALIGN_START);
 	example_pattern = g_strdup_printf ("<b>%s</b><i>%s</i> ",
-					   _("Examples: "),
+					   _("Beispiele: "),
 					   "*.png, file\?\?.txt, pict*.\?\?\?");
 	gtk_label_set_markup (GTK_LABEL (example), example_pattern);
 	g_free (example_pattern);
@@ -1875,7 +1875,7 @@ select_type (NolphinView *view)
 	GtkWidget *grid;
 	guint i;
 
-	dialog = gtk_dialog_new_with_buttons (_("Select Items By Type"),
+	dialog = gtk_dialog_new_with_buttons (_("Nach Dateityp auswählen"),
 					      nolphin_view_get_containing_window (view),
 					      GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_STOCK_CANCEL,
@@ -1887,7 +1887,7 @@ select_type (NolphinView *view)
 					 GTK_RESPONSE_OK);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
 
-	label = gtk_label_new_with_mnemonic (_("_Type:"));
+	label = gtk_label_new_with_mnemonic (_("_Typ:"));
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 
 	combo = gtk_combo_box_text_new ();
@@ -2739,8 +2739,8 @@ update_undo_actions (NolphinView *view)
 		tooltip = undo_description;
 	} else {
 		/* Reset to default info */
-		label = _("Undo");
-		tooltip = _("Undo last action");
+		label = _("Rückgängig machen");
+		tooltip = _("Letzte Aktion zurücknehmen");
 	}
 
 	g_object_set (action,
@@ -2758,8 +2758,8 @@ update_undo_actions (NolphinView *view)
 		tooltip = redo_description;
 	} else {
 		/* Reset to default info */
-		label = _("Redo");
-		tooltip = _("Redo last undone action");
+		label = _("Wiederherstellen");
+		tooltip = _("Die zuletzt rückgängig gemachte Aktion wiederholen");
 	}
 
 	g_object_set (action,
@@ -2956,8 +2956,8 @@ nolphin_view_init (NolphinView *view)
 
 	/* Accessibility */
 	atk_object = gtk_widget_get_accessible (GTK_WIDGET (view));
-	atk_object_set_name (atk_object, _("Content View"));
-	atk_object_set_description (atk_object, _("View of the current folder"));
+	atk_object_set_name (atk_object, _("Inhaltsansicht"));
+	atk_object_set_description (atk_object, _("Ansicht des aktuellen Ordners"));
 
     view->details->action_manager = nolphin_action_manager_new ();
 
@@ -3235,10 +3235,10 @@ nolphin_view_display_selection_info (NolphinView *view)
 
 	if (folder_count != 0) {
 		if (folder_count == 1 && non_folder_count == 0) {
-			folder_count_str = g_strdup_printf (_("\"%s\" selected"), first_item_name);
+			folder_count_str = g_strdup_printf (_("»%s« ausgewählt"), first_item_name);
 		} else {
-			folder_count_str = g_strdup_printf (ngettext("%'d folder selected",
-								     "%'d folders selected",
+			folder_count_str = g_strdup_printf (ngettext("%'d Ordner markiert",
+								     "%'d Ordner markiert",
 								     folder_count),
 							    folder_count);
 		}
@@ -3247,8 +3247,8 @@ nolphin_view_display_selection_info (NolphinView *view)
 			if (!folder_item_count_known) {
 				folder_item_count_str = g_strdup ("");
 			} else {
-				folder_item_count_str = g_strdup_printf (ngettext(" (containing %'d item)",
-										  " (containing %'d items)",
+				folder_item_count_str = g_strdup_printf (ngettext(" (enthält %'d Objekt)",
+										  " (enthält %'d Objekte)",
 										  folder_item_count),
 									 folder_item_count);
 			}
@@ -3258,8 +3258,8 @@ nolphin_view_display_selection_info (NolphinView *view)
 				folder_item_count_str = g_strdup ("");
 			} else {
 				/* translators: this is preceded with a string of form 'N folders' (N more than 1) */
-				folder_item_count_str = g_strdup_printf (ngettext(" (containing a total of %'d item)",
-										  " (containing a total of %'d items)",
+				folder_item_count_str = g_strdup_printf (ngettext(" (enthält insgesamt %'d Objekt)",
+										  " (enthält insgesamt %'d Objekte)",
 										  folder_item_count),
 									 folder_item_count);
 			}
@@ -3276,18 +3276,18 @@ nolphin_view_display_selection_info (NolphinView *view)
 
 		if (folder_count == 0) {
 			if (non_folder_count == 1) {
-				items_string = g_strdup_printf (_("\"%s\" selected"),
+				items_string = g_strdup_printf (_("»%s« ausgewählt"),
 								first_item_name);
 			} else {
-				items_string = g_strdup_printf (ngettext("%'d item selected",
-									 "%'d items selected",
+				items_string = g_strdup_printf (ngettext("%'d Objekt ausgewählt",
+									 "%'d Objekte ausgewählt",
 									 non_folder_count),
 								non_folder_count);
 			}
 		} else {
 			/* Folders selected also, use "other" terminology */
-			items_string = g_strdup_printf (ngettext("%'d other item selected",
-								 "%'d other items selected",
+			items_string = g_strdup_printf (ngettext("%'d weiteres Objekt ausgewählt",
+								 "%'d weitere Objekte ausgewählt",
 								 non_folder_count),
 							non_folder_count);
 		}
@@ -3317,7 +3317,7 @@ nolphin_view_display_selection_info (NolphinView *view)
 
 	free_space_str = nolphin_file_get_volume_free_space (view->details->directory_as_file);
 	if (free_space_str != NULL) {
-		obj_selected_free_space_str = g_strdup_printf (_("Free space: %s"), free_space_str);
+		obj_selected_free_space_str = g_strdup_printf (_("Freier Speicherplatz: %s"), free_space_str);
 	}
 	if (folder_count == 0 && non_folder_count == 0)	{
 		char *item_count_str;
@@ -3325,10 +3325,10 @@ nolphin_view_display_selection_info (NolphinView *view)
 
 		item_count = nolphin_view_get_item_count (view);
 
-		item_count_str = g_strdup_printf (ngettext ("%'u item", "%'u items", item_count), item_count);
+		item_count_str = g_strdup_printf (ngettext ("%'u Objekt", "%'u Objekte", item_count), item_count);
 
 		if (free_space_str != NULL) {
-			status_string = g_strdup_printf (_("%s, Free space: %s"), item_count_str, free_space_str);
+			status_string = g_strdup_printf (_("%s, freier Speicherplatz: %s"), item_count_str, free_space_str);
 			g_free (item_count_str);
 		} else {
 			status_string = item_count_str;
@@ -4937,10 +4937,10 @@ add_application_to_open_with_menu (NolphinView *view,
 	if (submenu)
 		label = g_strdup_printf ("%s", escaped_app);
 	else
-		label = g_strdup_printf (_("Open With %s"), escaped_app);
+		label = g_strdup_printf (_("Mit %s öffnen"), escaped_app);
 
-	tip = g_strdup_printf (ngettext ("Use \"%s\" to open the selected item",
-					 "Use \"%s\" to open the selected items",
+	tip = g_strdup_printf (ngettext ("»%s« verwenden, um gewähltes Objekt zu öffnen",
+					 "»%s« verwenden, um gewählte Objekte zu öffnen",
 					 g_list_length (files)),
 			       escaped_app);
 	g_free (escaped_app);
@@ -6301,7 +6301,7 @@ add_script_to_scripts_menus (NolphinView *directory_view,
 
 	name = nolphin_file_get_display_name (file);
 	uri = nolphin_file_get_uri (file);
-	tip = g_strdup_printf (_("Run \"%s\" on any selected items"), name);
+	tip = g_strdup_printf (_("»%s« mit allen gewählten Objekten starten"), name);
 
 	launch_parameters = script_launch_parameters_new (file, directory_view);
 
@@ -6649,7 +6649,7 @@ add_template_to_templates_menus (NolphinView *directory_view,
 	g_free (tmp);
 
 	uri = nolphin_file_get_uri (file);
-	tip = g_strdup_printf (_("Create a new document from template \"%s\""), name);
+	tip = g_strdup_printf (_("Ein neues Dokument aus Vorlage »%s« anlegen"), name);
 
 	action_name = escape_action_name (uri, "template_");
 	escaped_label = eel_str_double_underscores (name);
@@ -6942,30 +6942,24 @@ copy_or_cut_files (NolphinView *view,
 	if (count == 1) {
 		name = nolphin_file_get_display_name (clipboard_contents->data);
 		if (cut) {
-			status_string = g_strdup_printf (_("\"%s\" will be moved "
-							   "if you select the Paste command"),
+			status_string = g_strdup_printf (_("»%s« wird verschoben, sobald Sie »Einfügen« auswählen"),
 							 name);
 		} else {
-			status_string = g_strdup_printf (_("\"%s\" will be copied "
-							   "if you select the Paste command"),
+			status_string = g_strdup_printf (_("»%s« wird kopiert, sobald Sie »Einfügen« auswählen"),
 							 name);
 		}
 		g_free (name);
 	} else {
 		if (cut) {
 			/* translators: this is preceded with a string of form 'N selected items' (N more than 1) */
-			status_string = g_strdup_printf (ngettext("The %'d selected item will be moved "
-								  "if you select the Paste command",
-								  "The %'d selected items%s will be moved "
-								  "if you select the Paste command",
+			status_string = g_strdup_printf (ngettext("Das %'d ausgewählte Objekt wird verschoben, sobald Sie »Einfügen« auswählen",
+								  "Die %'d ausgewählten Objekte%s werden verschoben, sobald Sie »Einfügen« auswählen",
 								  count),
 							 count, view->details->detail_string);
 		} else {
 			/* translators: this is preceded with a string of form 'N selected items' (N more than 1) */
-			status_string = g_strdup_printf (ngettext("The %'d selected item will be copied "
-								  "if you select the Paste command",
-								  "The %'d selected items%s will be copied "
-								  "if you select the Paste command",
+			status_string = g_strdup_printf (ngettext("Das %'d ausgewählte Objekt wird kopiert, sobald Sie »Einfügen« auswählen",
+								  "Die %'d ausgewählten Objekte%s werden kopiert, sobald Sie »Einfügen« auswählen",
 								  count),
 							 count, view->details->detail_string);
 		}
@@ -7132,7 +7126,7 @@ action_browse_for_move_to_folder_callback (GtkAction *action, gpointer callback_
 
     view = NOLPHIN_VIEW (callback_data);
 
-    dialog = gtk_file_chooser_dialog_new (_("Select Target Folder For Move"),
+    dialog = gtk_file_chooser_dialog_new (_("Zielordner zum Verschieben auswählen"),
                                           nolphin_view_get_containing_window (view),
                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -7155,7 +7149,7 @@ action_browse_for_copy_to_folder_callback (GtkAction *action, gpointer callback_
 
     view = NOLPHIN_VIEW (callback_data);
 
-    dialog = gtk_file_chooser_dialog_new (_("Select Target Folder For Copy"),
+    dialog = gtk_file_chooser_dialog_new (_("Zielordner zum Kopieren auswählen"),
                                           nolphin_view_get_containing_window (view),
                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -7198,7 +7192,7 @@ paste_clipboard_data (NolphinView *view,
 
 	if (item_uris == NULL|| destination_uri == NULL) {
 		nolphin_window_slot_set_status (view->details->slot,
-						 _("There is nothing on the clipboard to paste."),
+						 _("In der Zwischenablage ist nichts zum Einfügen."),
 						 NULL,
                          FALSE);
 	} else {
@@ -7506,9 +7500,9 @@ send_archive_notification (const gchar *title, gboolean success, const gchar *de
     GNotification *notification = g_notification_new (title);
 
     if (success) {
-        g_notification_set_body (notification, _("Completed successfully."));
+        g_notification_set_body (notification, _("Erfolgreich abgeschlossen."));
     } else {
-        gchar *body = g_strdup_printf (_("Failed: %s"), detail_on_error);
+        gchar *body = g_strdup_printf (_("Fehlgeschlagen: %s"), detail_on_error);
         g_notification_set_body (notification, body);
         g_free (body);
     }
@@ -7523,7 +7517,7 @@ compress_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
     GError *error = NULL;
     gboolean success = nolphin_archive_compress_finish (result, &error);
 
-    send_archive_notification (_("Compress"), success, error ? error->message : NULL);
+    send_archive_notification (_("Komprimieren"), success, error ? error->message : NULL);
     g_clear_error (&error);
 }
 
@@ -7589,7 +7583,7 @@ extract_here_finished_cb (GObject *source, GAsyncResult *result, gpointer user_d
     GError *error = NULL;
     gboolean success = nolphin_archive_extract_finish (result, &error);
 
-    send_archive_notification (_("Extract"), success, error ? error->message : NULL);
+    send_archive_notification (_("Entpacken"), success, error ? error->message : NULL);
     g_clear_error (&error);
 }
 
@@ -7635,8 +7629,8 @@ action_extract_here_callback (GtkAction *action,
     g_object_unref (parent);
 
     if (destination == NULL || !g_file_make_directory (destination, NULL, &error)) {
-        send_archive_notification (_("Extract"), FALSE,
-                                   error ? error->message : _("Could not create a destination folder."));
+        send_archive_notification (_("Entpacken"), FALSE,
+                                   error ? error->message : _("Zielordner konnte nicht angelegt werden."));
         g_clear_error (&error);
         g_clear_object (&destination);
         g_object_unref (archive_location);
@@ -7657,7 +7651,7 @@ test_archive_finished_cb (GObject *source, GAsyncResult *result, gpointer user_d
     GError *error = NULL;
     gboolean success = nolphin_archive_test_finish (result, &error);
 
-    send_archive_notification (_("Test Archive"), success, error ? error->message : NULL);
+    send_archive_notification (_("Archiv prüfen"), success, error ? error->message : NULL);
     g_clear_error (&error);
 }
 
@@ -7886,7 +7880,7 @@ file_mount_callback (NolphinFile  *file,
 	     (error->code != G_IO_ERROR_CANCELLED &&
 	      error->code != G_IO_ERROR_FAILED_HANDLED &&
 	      error->code != G_IO_ERROR_ALREADY_MOUNTED))) {
-		eel_show_error_dialog (_("Unable to mount location"),
+		eel_show_error_dialog (_("Einhängen des Ortes nicht möglich"),
 				       error->message, NULL);
 	}
 }
@@ -7906,7 +7900,7 @@ file_unmount_callback (NolphinFile  *file,
 	    (error->domain != G_IO_ERROR ||
 	     (error->code != G_IO_ERROR_CANCELLED &&
 	      error->code != G_IO_ERROR_FAILED_HANDLED))) {
-		eel_show_error_dialog (_("Unable to unmount location"),
+		eel_show_error_dialog (_("Aushängen des Ortes nicht möglich"),
 				       error->message, NULL);
 	}
 }
@@ -7926,7 +7920,7 @@ file_eject_callback (NolphinFile  *file,
 	    (error->domain != G_IO_ERROR ||
 	     (error->code != G_IO_ERROR_CANCELLED &&
 	      error->code != G_IO_ERROR_FAILED_HANDLED))) {
-		eel_show_error_dialog (_("Unable to eject location"),
+		eel_show_error_dialog (_("Auswerfen des Ortes nicht möglich"),
 				       error->message, NULL);
 	}
 }
@@ -7941,7 +7935,7 @@ file_stop_callback (NolphinFile  *file,
 	    (error->domain != G_IO_ERROR ||
 	     (error->code != G_IO_ERROR_CANCELLED &&
 	      error->code != G_IO_ERROR_FAILED_HANDLED))) {
-		eel_show_error_dialog (_("Unable to stop drive"),
+		eel_show_error_dialog (_("Laufwerk konnte nicht angehalten werden"),
 				       error->message, NULL);
 	}
 }
@@ -8033,7 +8027,7 @@ file_start_callback (NolphinFile  *file,
 	     (error->code != G_IO_ERROR_CANCELLED &&
 	      error->code != G_IO_ERROR_FAILED_HANDLED &&
 	      error->code != G_IO_ERROR_ALREADY_MOUNTED))) {
-		eel_show_error_dialog (_("Unable to start location"),
+		eel_show_error_dialog (_("Starten des Ortes nicht möglich"),
 				       error->message, NULL);
 	}
 }
@@ -8427,12 +8421,12 @@ action_connect_to_server_link_callback (GtkAction *action,
 	name = nolphin_file_get_display_name (file);
 
 	if (uri != NULL) {
-		title = g_strdup_printf (_("Connect to Server %s"), name);
+		title = g_strdup_printf (_("Mit Server %s verbinden"), name);
 		dialog = gtk_dialog_new_with_buttons (title,
 						      nolphin_view_get_containing_window (view),
 						      0,
 						      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-						      _("_Connect"), GTK_RESPONSE_OK,
+						      _("_Verbinden"), GTK_RESPONSE_OK,
 						      NULL);
 
 		g_object_set_data_full (G_OBJECT (dialog), "link-uri", g_strdup (uri), g_free);
@@ -8446,7 +8440,7 @@ action_connect_to_server_link_callback (GtkAction *action,
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))),
 				    box, TRUE, TRUE, 0);
 
-		label = gtk_label_new_with_mnemonic (_("Link _name:"));
+		label = gtk_label_new_with_mnemonic (_("Verknüpfungs_name:"));
 		gtk_widget_show (label);
 
 		gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 12);
@@ -8653,155 +8647,155 @@ nolphin_view_init_show_hidden_files (NolphinView *view)
 }
 
 static const GtkActionEntry directory_view_entries[] = {
-  /* name, stock id, label */  { "New Documents", "xsi-document-new-symbolic", N_("Create New _Document") },
-  /* name, stock id, label */  { "Open With", NULL, N_("Open Wit_h"),
-				 NULL, N_("Choose a program with which to open the selected item") },
+  /* name, stock id, label */  { "New Documents", "xsi-document-new-symbolic", N_("Neues _Dokument anlegen") },
+  /* name, stock id, label */  { "Open With", NULL, N_("Öffnen _mit"),
+				 NULL, N_("Ein Programm auswählen, mit dem das gewählte Objekt geöffnet werden soll.") },
   /* name, stock id */         { "Properties", "xsi-document-properties-symbolic",
-  /* label, accelerator */       N_("_Properties"), "<alt>Return",
-  /* tooltip */                  N_("View or modify the properties of each selected item"),
+  /* label, accelerator */       N_("_Eigenschaften"), "<alt>Return",
+  /* tooltip */                  N_("Die Eigenschaften aller gewählten Objekte anzeigen/ändern"),
 				 G_CALLBACK (action_properties_callback) },
   /* name, stock id */         { "ActivateFilter", NULL,
   /* label, accelerator */       "ActivateFilter", "<control>I",
   /* tooltip */                  NULL,
 				 G_CALLBACK (action_activate_filter_callback) },
   /* name, stock id */         { "New Folder", "xsi-folder-new-symbolic",
-  /* label, accelerator */       N_("Create New _Folder"), "<control><shift>N",
-  /* tooltip */                  N_("Create a new empty folder inside this folder"),
+  /* label, accelerator */       N_("Neuen _Ordner anlegen"), "<control><shift>N",
+  /* tooltip */                  N_("Einen neuen leeren Ordner in diesem Ordner anlegen"),
 				 G_CALLBACK (action_new_folder_callback) },
-  /* name, stock id, label */  { "No Templates", NULL, N_("No templates installed") },
+  /* name, stock id, label */  { "No Templates", NULL, N_("Keine Vorlagen installiert") },
   /* name, stock id */         { "New Empty Document", NULL,
     /* translators: this is used to indicate that a document doesn't contain anything */
-  /* label, accelerator */       N_("_Empty Document"), NULL,
-  /* tooltip */                  N_("Create a new empty document inside this folder"),
+  /* label, accelerator */       N_("_Leeres Dokument"), NULL,
+  /* tooltip */                  N_("Ein neues leeres Dokument in diesem Ordner anlegen"),
 				 G_CALLBACK (action_new_empty_file_callback) },
   /* name, stock id */         { "Open", NULL,
-  /* label, accelerator */       N_("_Open"), "<control>o",
-  /* tooltip */                  N_("Open the selected item in this window"),
+  /* label, accelerator */       N_("_Öffnen"), "<control>o",
+  /* tooltip */                  N_("Das gewählte Objekt in diesem Fenster öffnen"),
                  G_CALLBACK (action_open_callback) },
   /* name, stock id */         { "OpenAccel", NULL,
   /* label, accelerator */       "OpenAccel", "<alt>Down",
   /* tooltip */                  NULL,
 				 G_CALLBACK (action_open_callback) },
   /* name, stock id */         { "OpenAlternate", NULL,
-  /* label, accelerator */       N_("Open in Navigation Window"), "<control><shift>o",
-  /* tooltip */                  N_("Open each selected item in a navigation window"),
+  /* label, accelerator */       N_("In Navigationsfenster öffnen"), "<control><shift>o",
+  /* tooltip */                  N_("Jedes gewählte Objekt in einem einzelnen Navigationsfenster öffnen"),
 				 G_CALLBACK (action_open_alternate_callback) },
   /* name, stock id */         { "OpenInNewTab", NULL,
-  /* label, accelerator */       N_("Open in New _Tab"), "<control><shift>t",
-  /* tooltip */                  N_("Open each selected item in a new tab"),
+  /* label, accelerator */       N_("In neuem _Reiter öffnen"), "<control><shift>t",
+  /* tooltip */                  N_("Jedes gewählte Objekt in einem neuen Reiter öffnen"),
 				 G_CALLBACK (action_open_new_tab_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_OPEN_IN_TERMINAL, "xsi-utilities-terminal-symbolic",
-  /* label, accelerator */       N_("Open in Terminal"), "<shift>F4",
-  /* tooltip */                  N_("Open terminal in the selected folder"),
+  /* label, accelerator */       N_("Im Terminal öffnen"), "<shift>F4",
+  /* tooltip */                  N_("Terminal im gewähltem Ordner öffnen"),
 				 G_CALLBACK (action_open_in_terminal_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_OPEN_AS_ROOT, "xsi-dialog-password-symbolic",
-  /* label, accelerator */       N_("Open as Root"), "",
-  /* tooltip */                  N_("Open the folder with administration privileges"),
+  /* label, accelerator */       N_("Als Systemverwalter öffnen"), "",
+  /* tooltip */                  N_("Ordner mit Administratorrechten öffnen"),
 				 G_CALLBACK (action_open_as_root_callback) },
 
   /* name, stock id */         { NOLPHIN_ACTION_FOLLOW_SYMLINK, "xsi-go-jump-symbolic",
-  /* label, accelerator */       N_("Follow link to original file"), "",
-  /* tooltip */                  N_("Navigate to the original file that this symbolic link points to"),
+  /* label, accelerator */       N_("Der Verknüpfung zur Originaldatei folgen"), "",
+  /* tooltip */                  N_("Zur Originaldatei navigieren, zu welcher diese symbolische Verknüpfung zeigt."),
                  G_CALLBACK (action_follow_symlink_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER, "xsi-go-jump-symbolic",
-  /* label, accelerator */       N_("Open containing folder"), "<control><alt>O",
-  /* tooltip */                  N_("Navigate to the folder that the selected item is stored in"),
+  /* label, accelerator */       N_("Übergeordneten Ordner öffnen"), "<control><alt>O",
+  /* tooltip */                  N_("Den Ordner öffnen, der das ausgewählte Element enthält"),
                  G_CALLBACK (action_open_containing_folder_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_COMPRESS, NULL,
-  /* label, accelerator */       N_("Com_press..."), NULL,
-  /* tooltip */                  N_("Create a ZIP archive of the selected items"),
+  /* label, accelerator */       N_("Kom_primieren …"), NULL,
+  /* tooltip */                  N_("Ein ZIP-Archiv der ausgewählten Objekte erstellen"),
                  G_CALLBACK (action_compress_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_EXTRACT_HERE, NULL,
-  /* label, accelerator */       N_("_Extract Here"), NULL,
-  /* tooltip */                  N_("Extract the archive into a new folder next to it"),
+  /* label, accelerator */       N_("Hier _entpacken"), NULL,
+  /* tooltip */                  N_("Das Archiv in einen neuen, danebenliegenden Ordner entpacken"),
                  G_CALLBACK (action_extract_here_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_TEST_ARCHIVE, NULL,
-  /* label, accelerator */       N_("_Test Archive"), NULL,
-  /* tooltip */                  N_("Check the archive for errors without extracting it"),
+  /* label, accelerator */       N_("Archiv _prüfen"), NULL,
+  /* tooltip */                  N_("Das Archiv auf Fehler prüfen, ohne es zu entpacken"),
                  G_CALLBACK (action_test_archive_callback) },
   /* name, stock id */         { "OtherApplication1", NULL,
-  /* label, accelerator */       N_("Other _Application..."), NULL,
-  /* tooltip */                  N_("Choose another application with which to open the selected item"),
+  /* label, accelerator */       N_("Andere _Anwendung …"), NULL,
+  /* tooltip */                  N_("Eine andere Anwendung auswählen, mit der das gewählte Objekt geöffnet werden soll"),
 				 G_CALLBACK (action_other_application_callback) },
   /* name, stock id */         { "OtherApplication2", NULL,
-  /* label, accelerator */       N_("Open With Other _Application..."), NULL,
-  /* tooltip */                  N_("Choose another application with which to open the selected item"),
+  /* label, accelerator */       N_("Mit anderer _Anwendung öffnen …"), NULL,
+  /* tooltip */                  N_("Eine andere Anwendung auswählen, mit der das gewählte Objekt geöffnet werden soll"),
 				 G_CALLBACK (action_other_application_callback) },
   /* name, stock id */         { "Empty Trash", NULL,
-  /* label, accelerator */       N_("E_mpty Trash"), NULL,
-  /* tooltip */                  N_("Delete all items in the Trash"),
+  /* label, accelerator */       N_("Papierkorb _leeren"), NULL,
+  /* tooltip */                  N_("Alle Objekte im Papierkorb löschen"),
 				 G_CALLBACK (action_empty_trash_callback) },
   /* name, stock id */         { "Cut", "xsi-edit-cut-symbolic",
-  /* label, accelerator */       N_("Cu_t"), "<control>X",
-  /* tooltip */                  N_("Prepare the selected files to be moved with a Paste command"),
+  /* label, accelerator */       N_("_Ausschneiden"), "<control>X",
+  /* tooltip */                  N_("Die gewählten Dateien, auf das Verschieben, mit dem Einfügenbefehl, vorbereiten"),
 				 G_CALLBACK (action_cut_files_callback) },
   /* name, stock id */         { "Copy", "xsi-edit-copy-symbolic",
-  /* label, accelerator */       N_("_Copy"), "<control>C",
-  /* tooltip */                  N_("Prepare the selected files to be copied with a Paste command"),
+  /* label, accelerator */       N_("_Kopieren"), "<control>C",
+  /* tooltip */                  N_("Die gewählten Dateien, auf das Kopieren, mit dem Einfügenbefehl, vorbereiten"),
 				 G_CALLBACK (action_copy_files_callback) },
   /* name, stock id */         { "Paste", "xsi-edit-paste-symbolic",
-  /* label, accelerator */       N_("_Paste"), "<control>V",
-  /* tooltip */                  N_("Move or copy files previously selected by a Cut or Copy command"),
+  /* label, accelerator */       N_("_Einfügen"), "<control>V",
+  /* tooltip */                  N_("Zuvor durch »Ausschneiden« oder »Kopieren« ausgewählte Dateien verschieben oder kopieren"),
 				 G_CALLBACK (action_paste_files_callback) },
   /* We make accelerator "" instead of null here to not inherit the stock
      accelerator for paste */
   /* name, stock id */         { "Paste Files Into", "xsi-edit-paste-symbolic",
-  /* label, accelerator */       N_("_Paste Into Folder"), "",
-  /* tooltip */                  N_("Move or copy files previously selected by a Cut or Copy command into the selected folder"),
+  /* label, accelerator */       N_("In Ordner e_infügen"), "",
+  /* tooltip */                  N_("Zuvor durch »Ausschneiden« oder »Kopieren« ausgewählte Dateien in den gewählten Ordner verschieben oder kopieren"),
 				 G_CALLBACK (action_paste_files_into_callback) },
-  /* name, stock id, label */  { "CopyToMenu", NULL, N_("Cop_y to") },
-  /* name, stock id, label */  { "MoveToMenu", NULL, N_("M_ove to") },
+  /* name, stock id, label */  { "CopyToMenu", NULL, N_("Kop_ieren nach") },
+  /* name, stock id, label */  { "MoveToMenu", NULL, N_("Verschieben _nach") },
   /* name, stock id */         { "Select All", NULL,
-  /* label, accelerator */       N_("Select _All"), "<control>A",
-  /* tooltip */                  N_("Select all items in this window"),
+  /* label, accelerator */       N_("_Alles auswählen"), "<control>A",
+  /* tooltip */                  N_("Alle Objekte in diesem Fenster auswählen"),
 				 G_CALLBACK (action_select_all_callback) },
   /* name, stock id */         { "Select Pattern", NULL,
-  /* label, accelerator */       N_("Select I_tems Matching..."), "<control>S",
-  /* tooltip */                  N_("Select items in this window matching a given pattern"),
+  /* label, accelerator */       N_("_Nach Muster auswählen …"), "<control>S",
+  /* tooltip */                  N_("Alle Objekte in diesem Fenster auswählen, die auf ein bestimmtes Muster passen"),
 				 G_CALLBACK (action_select_pattern_callback) },
   /* name, stock id */         { "Select Type", NULL,
-  /* label, accelerator */       N_("Select By _Type..."), NULL,
-  /* tooltip */                  N_("Select items in this window belonging to a given file type category"),
+  /* label, accelerator */       N_("Nach _Typ auswählen …"), NULL,
+  /* tooltip */                  N_("Objekte in diesem Fenster auswählen, die zu einer bestimmten Dateityp-Kategorie gehören"),
 				 G_CALLBACK (action_select_type_callback) },
   /* name, stock id */         { "Invert Selection", NULL,
-  /* label, accelerator */       N_("_Invert Selection"), "<control><shift>I",
-  /* tooltip */                  N_("Select all and only the items that are not currently selected"),
+  /* label, accelerator */       N_("Aus_wahl umkehren"), "<control><shift>I",
+  /* tooltip */                  N_("Alle und nur die Objekte auswählen, die momentan nicht ausgewählt sind"),
 				 G_CALLBACK (action_invert_selection_callback) },
   /* name, stock id */         { "Duplicate", NULL,
-  /* label, accelerator */       N_("D_uplicate"), NULL,
-  /* tooltip */                  N_("Duplicate each selected item"),
+  /* label, accelerator */       N_("Ver_doppeln"), NULL,
+  /* tooltip */                  N_("Alle gewählten Objekte verdoppeln"),
 				 G_CALLBACK (action_duplicate_callback) },
   /* name, stock id */         { "Create Link", NULL,
-  /* label, accelerator */       N_("Ma_ke Link"), "<control>M",
-  /* tooltip */                  N_("Create a symbolic link for each selected item"),
+  /* label, accelerator */       N_("_Verknüpfung anlegen"), "<control>M",
+  /* tooltip */                  N_("Eine symbolische Verknüpfung für jedes gewählte Objekt anlegen"),
 				 G_CALLBACK (action_create_link_callback) },
   /* name, stock id */         { "Rename", NULL,
-  /* label, accelerator */       N_("_Rename..."), "F2",
-  /* tooltip */                  N_("Rename selected item"),
+  /* label, accelerator */       N_("_Umbenennen …"), "F2",
+  /* tooltip */                  N_("Ausgewähltes Objekt umbenennen"),
 				 G_CALLBACK (action_rename_callback) },
   /* name, stock id */         { "RenameSelectAll", NULL,
   /* label, accelerator */       "RenameSelectAll", "<shift>F2",
   /* tooltip */                  NULL,
 				 G_CALLBACK (action_rename_select_all_callback) },
   /* name, stock id */         { "Trash", NULL,
-  /* label, accelerator */       N_("Mo_ve to Trash"), NULL,
-  /* tooltip */                  N_("Move each selected item to the Trash"),
+  /* label, accelerator */       N_("In den _Papierkorb verschieben"), NULL,
+  /* tooltip */                  N_("Jedes gewählte Objekt in den Papierkorb verschieben"),
 				 G_CALLBACK (action_trash_callback) },
   /* name, stock id */         { "Delete", NULL,
-  /* label, accelerator */       N_("_Delete"), NULL,
-  /* tooltip */                  N_("Delete each selected item, without moving to the Trash"),
+  /* label, accelerator */       N_("_Löschen"), NULL,
+  /* tooltip */                  N_("Jedes gewählte Objekt löschen, ohne es in den Papierkorb zu verschieben"),
 				 G_CALLBACK (action_delete_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_RESTORE_FROM_TRASH, NULL,
-  /* label, accelerator */       N_("_Restore to original location"), NULL,
+  /* label, accelerator */       N_("Am _ursprünglichen Ort wiederherstellen"), NULL,
 				 NULL,
                  G_CALLBACK (action_restore_from_trash_callback) },
  /* name, stock id */          { "Undo", "xsi-edit-undo-symbolic",
- /* label, accelerator */        N_("_Undo"), "<control>Z",
- /* tooltip */                   N_("Undo the last action"),
+ /* label, accelerator */        N_("_Rückgängig"), "<control>Z",
+ /* tooltip */                   N_("Letzte Änderung rückgängig machen"),
                                  G_CALLBACK (action_undo_callback) },
  /* name, stock id */	       { "Redo", "xsi-edit-redo-symbolic",
- /* label, accelerator */        N_("_Redo"), "<control>Y",
- /* tooltip */                   N_("Redo the last undone action"),
+ /* label, accelerator */        N_("_Wiederholen"), "<control>Y",
+ /* tooltip */                   N_("Die zuletzt rückgängig gemachte Aktion wiederherstellen"),
                                  G_CALLBACK (action_redo_callback) },
   /*
    * multiview-TODO: decide whether "Reset to Defaults" should
@@ -8810,171 +8804,171 @@ static const GtkActionEntry directory_view_entries[] = {
    * it is a mixture of both ATM.
    */
   /* name, stock id */         { "Reset to Defaults", NULL,
-  /* label, accelerator */       N_("Reset View to _Defaults"), NULL,
-  /* tooltip */                  N_("Reset sorting order and zoom level to match preferences for this view"),
+  /* label, accelerator */       N_("Ansicht auf _Vorgaben zurücksetzen"), NULL,
+  /* tooltip */                  N_("Sortierreihenfolge und Vergrößerungsstufe auf Vorgaben für diese Ansicht zurücksetzen"),
 				 G_CALLBACK (action_reset_to_defaults_callback) },
   /* name, stock id */         { "Connect To Server Link", NULL,
-  /* label, accelerator */       N_("Connect To This Server"), NULL,
-  /* tooltip */                  N_("Make a permanent connection to this server"),
+  /* label, accelerator */       N_("Mit diesem Server verbinden"), NULL,
+  /* tooltip */                  N_("Eine dauerhafte Verbindung mit diesem Server herstellen"),
 				 G_CALLBACK (action_connect_to_server_link_callback) },
   /* name, stock id */         { "Mount Volume", "xsi-media-mount-symbolic",
-  /* label, accelerator */       N_("_Mount"), NULL,
-  /* tooltip */                  N_("Mount the selected volume"),
+  /* label, accelerator */       N_("_Einhängen"), NULL,
+  /* tooltip */                  N_("Den gewählten Datenträger einbinden"),
 				 G_CALLBACK (action_mount_volume_callback) },
   /* name, stock id */         { "Unmount Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Unmount"), NULL,
-  /* tooltip */                  N_("Unmount the selected volume"),
+  /* label, accelerator */       N_("_Aushängen"), NULL,
+  /* tooltip */                  N_("Den gewählten Datenträger aushängen"),
 				 G_CALLBACK (action_unmount_volume_callback) },
   /* name, stock id */         { "Eject Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Eject"), NULL,
-  /* tooltip */                  N_("Eject the selected volume"),
+  /* label, accelerator */       N_("_Auswerfen"), NULL,
+  /* tooltip */                  N_("Den ausgewählten Datenträger auswerfen"),
 				 G_CALLBACK (action_eject_volume_callback) },
   /* name, stock id */         { "Start Volume", NULL,
   /* label, accelerator */       N_("_Start"), NULL,
-  /* tooltip */                  N_("Start the selected volume"),
+  /* tooltip */                  N_("Den ausgewählten Datenträger starten"),
 				 G_CALLBACK (action_start_volume_callback) },
   /* name, stock id */         { "Stop Volume", NULL,
-  /* label, accelerator */       N_("_Stop"), NULL,
-  /* tooltip */                  N_("Stop the selected volume"),
+  /* label, accelerator */       N_("_Anhalten"), NULL,
+  /* tooltip */                  N_("Den gewählten Datenträger anhalten"),
 				 G_CALLBACK (action_stop_volume_callback) },
   /* name, stock id */         { "Poll", NULL,
-  /* label, accelerator */       N_("_Detect Media"), NULL,
-  /* tooltip */                  N_("Detect media in the selected drive"),
+  /* label, accelerator */       N_("Me_dien erkennen"), NULL,
+  /* tooltip */                  N_("Medium im gewählten Datenträger erkennen"),
 				 G_CALLBACK (action_detect_media_callback) },
   /* name, stock id */         { "Self Mount Volume", "xsi-media-mount-symbolic",
-  /* label, accelerator */       N_("_Mount"), NULL,
-  /* tooltip */                  N_("Mount the volume associated with the open folder"),
+  /* label, accelerator */       N_("_Einhängen"), NULL,
+  /* tooltip */                  N_("Den zum geöffneten Ordner gehörenden Datenträger einhängen"),
 				 G_CALLBACK (action_self_mount_volume_callback) },
   /* name, stock id */         { "Self Unmount Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Unmount"), NULL,
-  /* tooltip */                  N_("Unmount the volume associated with the open folder"),
+  /* label, accelerator */       N_("_Aushängen"), NULL,
+  /* tooltip */                  N_("Den zum geöffneten Ordner gehörenden Datenträger aushängen"),
 				 G_CALLBACK (action_self_unmount_volume_callback) },
   /* name, stock id */         { "Self Eject Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Eject"), NULL,
-  /* tooltip */                  N_("Eject the volume associated with the open folder"),
+  /* label, accelerator */       N_("_Auswerfen"), NULL,
+  /* tooltip */                  N_("Den zum geöffneten Ordner gehörenden Datenträger auswerfen"),
 				 G_CALLBACK (action_self_eject_volume_callback) },
   /* name, stock id */         { "Self Start Volume", NULL,
   /* label, accelerator */       N_("_Start"), NULL,
-  /* tooltip */                  N_("Start the volume associated with the open folder"),
+  /* tooltip */                  N_("Den zum geöffneten Ordner gehörenden Datenträger starten"),
 				 G_CALLBACK (action_self_start_volume_callback) },
   /* name, stock id */         { "Self Stop Volume", NULL,
-  /* label, accelerator */       N_("_Stop"), NULL,
-  /* tooltip */                  N_("Stop the volume associated with the open folder"),
+  /* label, accelerator */       N_("_Anhalten"), NULL,
+  /* tooltip */                  N_("Den zum geöffneten Ordner gehörenden Datenträger anhalten"),
 				 G_CALLBACK (action_self_stop_volume_callback) },
   /* name, stock id */         { "Self Poll", NULL,
-  /* label, accelerator */       N_("_Detect Media"), NULL,
-  /* tooltip */                  N_("Detect media in the selected drive"),
+  /* label, accelerator */       N_("Me_dien erkennen"), NULL,
+  /* tooltip */                  N_("Medium im gewählten Datenträger erkennen"),
 				 G_CALLBACK (action_self_detect_media_callback) },
   /* Location-specific actions */
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_OPEN_ALTERNATE, NULL,
-  /* label, accelerator */       N_("Open in Navigation Window"), "",
-  /* tooltip */                  N_("Open this folder in a navigation window"),
+  /* label, accelerator */       N_("In Navigationsfenster öffnen"), "",
+  /* tooltip */                  N_("Diesen Ordner in einem einzelnen Navigationsfenster öffnen"),
 				 G_CALLBACK (action_location_open_alternate_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_OPEN_IN_NEW_TAB, NULL,
-  /* label, accelerator */       N_("Open in New _Tab"), "",
-  /* tooltip */                  N_("Open this folder in a new tab"),
+  /* label, accelerator */       N_("In neuem _Reiter öffnen"), "",
+  /* tooltip */                  N_("Diesen Ordner in einem neuen Reiter öffnen"),
 				 G_CALLBACK (action_location_open_in_new_tab_callback) },
 
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_CUT, "xsi-edit-cut-symbolic",
-  /* label, accelerator */       N_("Cu_t"), "",
-  /* tooltip */                  N_("Prepare this folder to be moved with a Paste command"),
+  /* label, accelerator */       N_("_Ausschneiden"), "",
+  /* tooltip */                  N_("Diesen Ordner auf Verschieben mit »Einfügen« vorbereiten"),
 				 G_CALLBACK (action_location_cut_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_COPY, "xsi-edit-copy-symbolic",
-  /* label, accelerator */       N_("_Copy"), "",
-  /* tooltip */                  N_("Prepare this folder to be copied with a Paste command"),
+  /* label, accelerator */       N_("_Kopieren"), "",
+  /* tooltip */                  N_("Diesen Ordner auf Kopieren mit »Einfügen« vorbereiten"),
 				 G_CALLBACK (action_location_copy_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_PASTE_FILES_INTO, "xsi-edit-paste-symbolic",
-  /* label, accelerator */       N_("_Paste Into Folder"), "",
-  /* tooltip */                  N_("Move or copy files previously selected by a Cut or Copy command into this folder"),
+  /* label, accelerator */       N_("In Ordner e_infügen"), "",
+  /* tooltip */                  N_("Zuvor durch »Ausschneiden« oder »Kopieren« gewählte Dateien in diesen Ordner verschieben oder kopieren"),
 				 G_CALLBACK (action_location_paste_files_into_callback) },
 
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_TRASH, NULL,
-  /* label, accelerator */       N_("Mo_ve to Trash"), "",
-  /* tooltip */                  N_("Move this folder to the Trash"),
+  /* label, accelerator */       N_("In den _Papierkorb verschieben"), "",
+  /* tooltip */                  N_("Diesen Ordner in den Papierkorb verschieben"),
 				 G_CALLBACK (action_location_trash_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_DELETE, NOLPHIN_ICON_DELETE,
-  /* label, accelerator */       N_("_Delete"), "",
-  /* tooltip */                  N_("Delete this folder, without moving to the Trash"),
+  /* label, accelerator */       N_("_Löschen"), "",
+  /* tooltip */                  N_("Diesen Ordner löschen, ohne ihn in den Papierkorb zu verschieben"),
 				 G_CALLBACK (action_location_delete_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_LOCATION_RESTORE_FROM_TRASH, NULL,
-  /* label, accelerator */       N_("_Restore to original location"), NULL, NULL,
+  /* label, accelerator */       N_("Am _ursprünglichen Ort wiederherstellen"), NULL, NULL,
 				 G_CALLBACK (action_location_restore_from_trash_callback) },
 
   /* name, stock id */         { "Location Mount Volume", "xsi-media-mount-symbolic",
-  /* label, accelerator */       N_("_Mount"), NULL,
-  /* tooltip */                  N_("Mount the volume associated with this folder"),
+  /* label, accelerator */       N_("_Einhängen"), NULL,
+  /* tooltip */                  N_("Den zu diesem Ordner gehörenden Datenträger einhängen"),
 				 G_CALLBACK (action_location_mount_volume_callback) },
   /* name, stock id */         { "Location Unmount Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Unmount"), NULL,
-  /* tooltip */                  N_("Unmount the volume associated with this folder"),
+  /* label, accelerator */       N_("_Aushängen"), NULL,
+  /* tooltip */                  N_("Den zu diesem Ordner gehörenden Datenträger aushängen"),
 				 G_CALLBACK (action_location_unmount_volume_callback) },
   /* name, stock id */         { "Location Eject Volume", "xsi-media-eject-symbolic",
-  /* label, accelerator */       N_("_Eject"), NULL,
-  /* tooltip */                  N_("Eject the volume associated with this folder"),
+  /* label, accelerator */       N_("_Auswerfen"), NULL,
+  /* tooltip */                  N_("Den zu diesem Ordner gehörenden Datenträger auswerfen"),
 				 G_CALLBACK (action_location_eject_volume_callback) },
   /* name, stock id */         { "Location Start Volume", NULL,
   /* label, accelerator */       N_("_Start"), NULL,
-  /* tooltip */                  N_("Start the volume associated with this folder"),
+  /* tooltip */                  N_("Den zu diesem Ordner gehörenden Datenträger starten"),
 				 G_CALLBACK (action_location_start_volume_callback) },
   /* name, stock id */         { "Location Stop Volume", NULL,
-  /* label, accelerator */       N_("_Stop"), NULL,
-  /* tooltip */                  N_("Stop the volume associated with this folder"),
+  /* label, accelerator */       N_("_Anhalten"), NULL,
+  /* tooltip */                  N_("Den zu diesem Ordner gehörenden Datenträger anhalten"),
 				 G_CALLBACK (action_location_stop_volume_callback) },
   /* name, stock id */         { "Location Poll", NULL,
-  /* label, accelerator */       N_("_Detect Media"), NULL,
-  /* tooltip */                  N_("Detect media in the selected drive"),
+  /* label, accelerator */       N_("Me_dien erkennen"), NULL,
+  /* tooltip */                  N_("Medium im gewählten Datenträger erkennen"),
 				 G_CALLBACK (action_location_detect_media_callback) },
 
   /* name, stock id */         { "LocationProperties", "xsi-document-properties-symbolic",
-  /* label, accelerator */       N_("_Properties"), NULL,
-  /* tooltip */                  N_("View or modify the properties of this folder"),
+  /* label, accelerator */       N_("_Eigenschaften"), NULL,
+  /* tooltip */                  N_("Die Eigenschaften dieses Ordners anzeigen/ändern"),
 				 G_CALLBACK (action_location_properties_callback) },
 
-  /* name, stock id, label */  {NOLPHIN_ACTION_COPY_TO_NEXT_PANE, NULL, N_("_Other pane"),
-				NULL, N_("Copy the current selection to the other pane in the window"),
+  /* name, stock id, label */  {NOLPHIN_ACTION_COPY_TO_NEXT_PANE, NULL, N_("_Andere Leiste"),
+				NULL, N_("Die aktuelle Auswahl in die andere Leiste dieses Fensters kopieren"),
 				G_CALLBACK (action_copy_to_next_pane_callback) },
-  /* name, stock id, label */  {NOLPHIN_ACTION_MOVE_TO_NEXT_PANE, NULL, N_("_Other pane"),
-				NULL, N_("Move the current selection to the other pane in the window"),
+  /* name, stock id, label */  {NOLPHIN_ACTION_MOVE_TO_NEXT_PANE, NULL, N_("_Andere Leiste"),
+				NULL, N_("Die aktuelle Auswahl in die andere Leiste dieses Fensters verschieben"),
 				G_CALLBACK (action_move_to_next_pane_callback) },
   /* name, stock id, label */  {NOLPHIN_ACTION_COPY_TO_HOME, NULL,
-				N_("_Home"), NULL,
-				N_("Copy the current selection to the home folder"),
+				N_("_Persönlicher Ordner"), NULL,
+				N_("Die aktuelle Auswahl in den persönlichen Ordner kopieren"),
 				G_CALLBACK (action_copy_to_home_callback) },
   /* name, stock id, label */  {NOLPHIN_ACTION_MOVE_TO_HOME, NULL,
-				N_("_Home"), NULL,
-				N_("Move the current selection to the home folder"),
+				N_("_Persönlicher Ordner"), NULL,
+				N_("Die aktuelle Auswahl in den persönlichen Ordner verschieben"),
 				G_CALLBACK (action_move_to_home_callback) },
   /* name, stock id, label */  {NOLPHIN_ACTION_COPY_TO_DESKTOP, NULL,
-				N_("_Desktop"), NULL,
-				N_("Copy the current selection to the desktop"),
+				N_("_Schreibtisch"), NULL,
+				N_("Die aktuelle Auswahl auf den Schreibtisch kopieren"),
 				G_CALLBACK (action_copy_to_desktop_callback) },
   /* name, stock id, label */  {NOLPHIN_ACTION_MOVE_TO_DESKTOP, NULL,
-				N_("_Desktop"), NULL,
-				N_("Move the current selection to the desktop"),
+				N_("_Schreibtisch"), NULL,
+				N_("Die aktuelle Auswahl auf den Schreibtisch verschieben"),
 				G_CALLBACK (action_move_to_desktop_callback) },
                                {NOLPHIN_ACTION_BROWSE_MOVE_TO, "xsi-document-open-symbolic",
-                N_("Browse..."), NULL,
-                N_("Browse for a folder to move the selection to"),
+                N_("Durchsuchen …"), NULL,
+                N_("Nach einem Zielordner zum Verschieben der Auswahl suchen"),
                 G_CALLBACK (action_browse_for_move_to_folder_callback) },
                                {NOLPHIN_ACTION_BROWSE_COPY_TO, "xsi-document-open-symbolic",
-                N_("Browse..."), NULL,
-                N_("Browse for a folder to copy the selection to"),
+                N_("Durchsuchen …"), NULL,
+                N_("Nach einem Zielordner zum Kopieren der Auswahl suchen"),
                 G_CALLBACK (action_browse_for_copy_to_folder_callback) },
                                {NOLPHIN_ACTION_PIN_FILE, "xsi-pin-symbolic",
-                N_("P_in"), "<control><shift>D",
-                N_("Pin the selected file so it always appears at the top of this location's file list"),
+                N_("_Anheften"), "<control><shift>D",
+                N_("Die ausgewählte Datei anheften, so dass sie immer ganz oben in der Dateiliste dieses Ortes erscheint."),
                 G_CALLBACK (action_pin_unpin_file_callback) },
                                {NOLPHIN_ACTION_UNPIN_FILE, "xsi-unpin-symbolic",
-                N_("Unp_in"), "<control><shift>D",
-                N_("Unpin the selected file from the top of this location's file list"),
+                N_("_Lösen"), "<control><shift>D",
+                N_("Die ausgewählte Datei vom Anfang der Dateiliste dieses Ortes lösen."),
                 G_CALLBACK (action_pin_unpin_file_callback) },
                                {NOLPHIN_ACTION_FAVORITE_FILE, "xsi-favorite-symbolic",
-                N_("Add to favorites"), NULL,
-                N_("Add the selected file to your favorites"),
+                N_("Zu Favoriten hinzufügen"), NULL,
+                N_("Die ausgewählte Datei zu Ihren Favoriten hinzufügen"),
                 G_CALLBACK (action_favorite_unfavorite_file_callback) },
                                {NOLPHIN_ACTION_UNFAVORITE_FILE, "xsi-unfavorite-symbolic",
-                N_("Remove from favorites"), NULL,
-                N_("Remove the selected file from your favorites"),
+                N_("Aus Favoriten entfernen"), NULL,
+                N_("Die ausgewählte Datei aus Ihren Favoriten entfernen"),
                 G_CALLBACK (action_favorite_unfavorite_file_callback) }
 };
 
@@ -9049,9 +9043,9 @@ real_merge_menus (NolphinView *view)
 				      directory_view_entries, G_N_ELEMENTS (directory_view_entries),
 				      view);
 
-	tooltip = g_strdup_printf (_("Run scripts"));
+	tooltip = g_strdup_printf (_("Skripte ausführen"));
 	/* Create a script action here specially because its tooltip is dynamic */
-	action = gtk_action_new ("Scripts", _("_Scripts"), tooltip, NULL);
+	action = gtk_action_new ("Scripts", _("_Skripte"), tooltip, NULL);
 	gtk_action_group_add_action (action_group, action);
 	g_object_unref (action);
 	g_free (tooltip);
@@ -9424,35 +9418,35 @@ update_restore_from_trash_action (GtkAction *action,
 		if (is_self) {
 			g_assert (g_list_length (files) == 1);
 			g_assert (original_location != NULL);
-			tooltip = g_strdup_printf (_("Move the open folder out of the trash to \"%s\""), original_name);
+			tooltip = g_strdup_printf (_("Den geöffneten Ordner aus dem Papierkorb nach »%s« verschieben"), original_name);
 		} else if (files_are_all_directories (files)) {
 			if (original_name != NULL) {
-				tooltip = g_strdup_printf (ngettext ("Move the selected folder out of the trash to \"%s\"",
-								     "Move the selected folders out of the trash to \"%s\"",
+				tooltip = g_strdup_printf (ngettext ("Den gewählten Ordner aus dem Papierkorb nach »%s« verschieben",
+								     "Die gewählten Ordner aus dem Papierkorb nach »%s« verschieben",
 								     g_list_length (files)), original_name);
 			} else {
-				tooltip = g_strdup_printf (ngettext ("Move the selected folder out of the trash",
-								     "Move the selected folders out of the trash",
+				tooltip = g_strdup_printf (ngettext ("Den gewählten Ordner aus dem Papierkorb verschieben",
+								     "Die gewählten Ordner aus dem Papierkorb verschieben",
 								     g_list_length (files)));
 			}
 		} else if (files_is_none_directory (files)) {
 			if (original_name != NULL) {
-				tooltip = g_strdup_printf (ngettext ("Move the selected file out of the trash to \"%s\"",
-								     "Move the selected files out of the trash to \"%s\"",
+				tooltip = g_strdup_printf (ngettext ("Die gewählte Datei aus dem Papierkorb nach »%s« verschieben",
+								     "Die gewählten Dateien aus dem Papierkorb nach »%s« verschieben",
 								     g_list_length (files)), original_name);
 			} else {
-				tooltip = g_strdup_printf (ngettext ("Move the selected file out of the trash",
-								     "Move the selected files out of the trash",
+				tooltip = g_strdup_printf (ngettext ("Die gewählte Datei aus dem Papierkorb entfernen",
+								     "Die gewählten Dateien aus dem Papierkorb entfernen",
 								     g_list_length (files)));
 			}
 		} else {
 			if (original_name != NULL) {
-				tooltip = g_strdup_printf (ngettext ("Move the selected item out of the trash to \"%s\"",
-								     "Move the selected items out of the trash to \"%s\"",
+				tooltip = g_strdup_printf (ngettext ("Das gewählte Objekt aus dem Papierkorb nach »%s« verschieben",
+								     "Die gewählten Objekte aus dem Papierkorb nach »%s« verschieben",
 								     g_list_length (files)), original_name);
 			} else {
-				tooltip = g_strdup_printf (ngettext ("Move the selected item out of the trash",
-								     "Move the selected items out of the trash",
+				tooltip = g_strdup_printf (ngettext ("Das gewählte Objekt aus dem Papierkorb entfernen",
+								     "Die gewählten Objekte aus dem Papierkorb entfernen",
 								     g_list_length (files)));
 			}
 		}
@@ -9568,23 +9562,23 @@ real_update_menus_volumes (NolphinView *view,
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the selected drive"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the selected drive"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Connect"));
-			gtk_action_set_tooltip (action, _("Connect to the selected drive"));
+			gtk_action_set_label (action, _("_Verbinden"));
+			gtk_action_set_tooltip (action, _("Mit gewähltem Laufwerk verbinden"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Start Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Start the selected multi-disk drive"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _starten"));
+			gtk_action_set_tooltip (action, _("Das ausgewählte Multimedienlaufwerk _starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("U_nlock Drive"));
-			gtk_action_set_tooltip (action, _("Unlock the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk en_tsperren"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk entsperren"));
 			break;
 		}
 	}
@@ -9596,24 +9590,24 @@ real_update_menus_volumes (NolphinView *view,
 		switch (start_stop_type) {
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
-			gtk_action_set_label (action, _("_Stop"));
-			gtk_action_set_tooltip (action, _("Stop the selected drive"));
+			gtk_action_set_label (action, _("_Anhalten"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
-			gtk_action_set_label (action, _("_Safely Remove Drive"));
-			gtk_action_set_tooltip (action, _("Safely remove the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk _sicher entfernen"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk sicher entfernen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Disconnect"));
-			gtk_action_set_tooltip (action, _("Disconnect the selected drive"));
+			gtk_action_set_label (action, _("_Trennen"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk trennen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Stop Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Stop the selected multi-disk drive"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _anhalten"));
+			gtk_action_set_tooltip (action, _("Das ausgewählte Multimedienlaufwerk anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("_Lock Drive"));
-			gtk_action_set_tooltip (action, _("Lock the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk _sperren"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk sperren"));
 			break;
 		}
 	}
@@ -9655,23 +9649,23 @@ real_update_menus_volumes (NolphinView *view,
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the drive associated with the open folder"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the drive associated with the open folder"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Connect"));
-			gtk_action_set_tooltip (action, _("Connect to the drive associated with the open folder"));
+			gtk_action_set_label (action, _("_Verbinden"));
+			gtk_action_set_tooltip (action, _("Verbinden mit dem zum geöffneten Ordner gehörenden Laufwerk"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Start Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Start the multi-disk drive associated with the open folder"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _starten"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Multimedienlaufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("_Unlock Drive"));
-			gtk_action_set_tooltip (action, _("Unlock the drive associated with the open folder"));
+			gtk_action_set_label (action, _("Laufwerk _entsperren"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk entsperren"));
 			break;
 		}
 	}
@@ -9683,24 +9677,24 @@ real_update_menus_volumes (NolphinView *view,
 		switch (self_start_stop_type) {
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
-			gtk_action_set_label (action, _("_Stop"));
-			gtk_action_set_tooltip (action, _("_Stop the drive associated with the open folder"));
+			gtk_action_set_label (action, _("_Anhalten"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk _anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
-			gtk_action_set_label (action, _("_Safely Remove Drive"));
-			gtk_action_set_tooltip (action, _("Safely remove the drive associated with the open folder"));
+			gtk_action_set_label (action, _("Laufwerk _sicher entfernen"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk sicher entfernen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Disconnect"));
-			gtk_action_set_tooltip (action, _("Disconnect the drive associated with the open folder"));
+			gtk_action_set_label (action, _("_Trennen"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk trennen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Stop Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Stop the multi-disk drive associated with the open folder"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _anhalten"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Multimedienlaufwerk anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("_Lock Drive"));
-			gtk_action_set_tooltip (action, _("Lock the drive associated with the open folder"));
+			gtk_action_set_label (action, _("Laufwerk _sperren"));
+			gtk_action_set_tooltip (action, _("Das zum geöffneten Ordner gehörende Laufwerk sperren"));
 			break;
 		}
 	}
@@ -9759,23 +9753,23 @@ real_update_location_menu_volumes (NolphinView *view)
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the selected drive"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
 			gtk_action_set_label (action, _("_Start"));
-			gtk_action_set_tooltip (action, _("Start the selected drive"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Connect"));
-			gtk_action_set_tooltip (action, _("Connect to the selected drive"));
+			gtk_action_set_label (action, _("_Verbinden"));
+			gtk_action_set_tooltip (action, _("Mit gewähltem Laufwerk verbinden"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Start Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Start the selected multi-disk drive"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _starten"));
+			gtk_action_set_tooltip (action, _("Das ausgewählte Multimedienlaufwerk _starten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("_Unlock Drive"));
-			gtk_action_set_tooltip (action, _("Unlock the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk _entsperren"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk entsperren"));
 			break;
 		}
 	}
@@ -9787,24 +9781,24 @@ real_update_location_menu_volumes (NolphinView *view)
 		switch (start_stop_type) {
 		default:
 		case G_DRIVE_START_STOP_TYPE_UNKNOWN:
-			gtk_action_set_label (action, _("_Stop"));
-			gtk_action_set_tooltip (action, _("Stop the selected volume"));
+			gtk_action_set_label (action, _("_Anhalten"));
+			gtk_action_set_tooltip (action, _("Den gewählten Datenträger anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
-			gtk_action_set_label (action, _("_Safely Remove Drive"));
-			gtk_action_set_tooltip (action, _("Safely remove the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk _sicher entfernen"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk sicher entfernen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (action, _("_Disconnect"));
-			gtk_action_set_tooltip (action, _("Disconnect the selected drive"));
+			gtk_action_set_label (action, _("_Trennen"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk trennen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (action, _("_Stop Multi-disk Drive"));
-			gtk_action_set_tooltip (action, _("Stop the selected multi-disk drive"));
+			gtk_action_set_label (action, _("Multimedienlaufwerk _anhalten"));
+			gtk_action_set_tooltip (action, _("Das ausgewählte Multimedienlaufwerk anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
-			gtk_action_set_label (action, _("_Lock Drive"));
-			gtk_action_set_tooltip (action, _("Lock the selected drive"));
+			gtk_action_set_label (action, _("Laufwerk _sperren"));
+			gtk_action_set_tooltip (action, _("Gewähltes Laufwerk sperren"));
 			break;
 		}
 	}
@@ -9884,7 +9878,7 @@ real_update_location_menu (NolphinView *view)
 					      NOLPHIN_ACTION_LOCATION_OPEN_ALTERNATE);
 	gtk_action_set_visible (action, show_open_alternate);
 
-	label = _("Open in New _Window");
+	label = _("In neuem _Fenster öffnen");
 	g_object_set (action,
 		      "label", label,
 		      NULL);
@@ -9893,7 +9887,7 @@ real_update_location_menu (NolphinView *view)
 					      NOLPHIN_ACTION_LOCATION_OPEN_IN_NEW_TAB);
 	gtk_action_set_visible (action, show_open_in_new_tab);
 
-	label = _("Open in New _Tab");
+	label = _("In neuem _Reiter öffnen");
 	g_object_set (action,
 		      "label", label,
 		      NULL);
@@ -9942,12 +9936,12 @@ real_update_location_menu (NolphinView *view)
 			show_delete = FALSE;
 		}
 
-		label = _("_Delete Permanently");
-		tip = _("Delete the open folder permanently");
+		label = _("_Dauerhaft löschen");
+		tip = _("Den geöffneten Ordner dauerhaft löschen");
 		show_separate_delete_command = FALSE;
 	} else {
-		label = _("Mo_ve to Trash");
-		tip = _("Move the open folder to the Trash");
+		label = _("In den _Papierkorb verschieben");
+		tip = _("Den geöffneten Ordner in den Papierkorb verschieben");
 		show_separate_delete_command = g_settings_get_boolean (nolphin_preferences, NOLPHIN_PREFERENCES_ENABLE_DELETE);
 	}
 
@@ -10194,7 +10188,7 @@ real_update_menus (NolphinView *view)
 		char *escaped_app;
 
 		escaped_app = eel_str_double_underscores (g_app_info_get_name (app));
-		label_with_underscore = g_strdup_printf (_("_Open With %s"),
+		label_with_underscore = g_strdup_printf (_("_Öffnen mit %s"),
 							 escaped_app);
 
 		app_icon = g_app_info_get_icon (app);
@@ -10215,7 +10209,7 @@ real_update_menus (NolphinView *view)
     gtk_action_set_sensitive (action, selection_count != 0);
 
     g_object_set (action, "label",
-              label_with_underscore ? label_with_underscore : _("_Open"),
+              label_with_underscore ? label_with_underscore : _("_Öffnen"),
               NULL);
 
     gtk_action_set_gicon (action, app_icon);
@@ -10241,10 +10235,10 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_visible (action, show_open_alternate);
 
 	if (selection_count == 0 || selection_count == 1) {
-		label_with_underscore = g_strdup (_("Open in New _Window"));
+		label_with_underscore = g_strdup (_("In neuem _Fenster öffnen"));
 	} else {
-		label_with_underscore = g_strdup_printf (ngettext("Open in %'d New _Window",
-								  "Open in %'d New _Windows",
+		label_with_underscore = g_strdup_printf (ngettext("In %'d neuem _Fenster öffnen",
+								  "In %'d neuen _Fenstern öffnen",
 								  selection_count),
 							 selection_count);
 	}
@@ -10261,10 +10255,10 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_visible (action, show_open_in_new_tab);
 
 	if (selection_count == 0 || selection_count == 1) {
-		label_with_underscore = g_strdup (_("Open in New _Tab"));
+		label_with_underscore = g_strdup (_("In neuem _Reiter öffnen"));
 	} else {
-		label_with_underscore = g_strdup_printf (ngettext("Open in %'d New _Tab",
-								  "Open in %'d New _Tabs",
+		label_with_underscore = g_strdup_printf (ngettext("In %'d neuem _Reiter öffnen",
+								  "In %'d neuen _Reitern öffnen",
 								  selection_count),
 							 selection_count);
 	}
@@ -10279,12 +10273,12 @@ real_update_menus (NolphinView *view)
     reset_move_copy_to_menu (view);
 
 	if (selection_contains_trash) {
-		label = _("_Delete Permanently");
-		tip = _("Delete all selected items permanently");
+		label = _("_Dauerhaft löschen");
+		tip = _("Alle gewählten Objekte dauerhaft löschen");
 		show_separate_delete_command = FALSE;
 	} else {
-		label = _("Mo_ve to Trash");
-		tip = _("Move each selected item to the Trash");
+		label = _("In den _Papierkorb verschieben");
+		tip = _("Jedes gewählte Objekt in den Papierkorb verschieben");
 		show_separate_delete_command = g_settings_get_boolean (nolphin_preferences, NOLPHIN_PREFERENCES_ENABLE_DELETE);
 	}
 
@@ -10304,11 +10298,11 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_visible (action, show_separate_delete_command && !selection_contains_favorites);
 
     if (selection_contains_recent) {
-        label = _("Remo_ve from Recent");
-        tip = _("Remove each selected item from the recently used list");
+        label = _("Aus »Kürzlich« _entfernen");
+        tip = _("Jedes gewählte Objekt von der Liste zuletzt verwendeter entfernen");
     } else {
-        label = _("_Delete");
-        tip = _("Delete each selected item, without moving to the Trash");
+        label = _("_Löschen");
+        tip = _("Jedes gewählte Objekt löschen, ohne es in den Papierkorb zu verschieben");
     }
 
 	if (show_separate_delete_command) {
@@ -10333,8 +10327,8 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_sensitive (action, can_link_files);
     gtk_action_set_visible (action, !selection_contains_recent && !selection_contains_favorites);
 	g_object_set (action, "label",
-		      ngettext ("Ma_ke Link",
-			      	"Ma_ke Links",
+		      ngettext ("_Verknüpfung anlegen",
+			      	"_Verknüpfungen anlegen",
 				selection_count),
 		      NULL);
 
@@ -10346,9 +10340,9 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_sensitive (action, show_properties);
 
 	if (selection_count == 0) {
-		gtk_action_set_tooltip (action, _("View or modify the properties of the open folder"));
+		gtk_action_set_tooltip (action, _("Die Eigenschaften des aktuellen Ordners anzeigen/ändern"));
 	} else {
-		gtk_action_set_tooltip (action, _("View or modify the properties of each selected item"));
+		gtk_action_set_tooltip (action, _("Die Eigenschaften aller gewählten Objekte anzeigen/ändern"));
 	}
 
 	gtk_action_set_visible (action, show_properties);
@@ -10356,7 +10350,7 @@ real_update_menus (NolphinView *view)
 	action = gtk_action_group_get_action (view->details->dir_action_group,
 					      NOLPHIN_ACTION_EMPTY_TRASH);
 	g_object_set (action,
-		      "label", _("E_mpty Trash"),
+		      "label", _("Papierkorb _leeren"),
 		      NULL);
 	gtk_action_set_sensitive (action, !nolphin_trash_monitor_is_empty ());
 	gtk_action_set_visible (action, should_show_empty_trash (view));

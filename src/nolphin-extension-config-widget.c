@@ -210,7 +210,7 @@ refresh_widget (NolphinExtensionConfigWidget *widget)
         GtkWidget *empty_label = gtk_label_new (NULL);
         gchar *markup = NULL;
 
-        markup = g_strdup_printf ("<i>%s</i>", _("No extensions found"));
+        markup = g_strdup_printf ("<i>%s</i>", _("Keine Erweiterungen gefunden"));
 
         gtk_label_set_markup (GTK_LABEL (empty_label), markup);
         g_free (markup);
@@ -275,7 +275,7 @@ refresh_widget (NolphinExtensionConfigWidget *widget)
             gtk_label_set_xalign (GTK_LABEL (w), 0.0);
 
             if (proxy->display_name == NULL)
-                markup = g_strdup (_("no information available"));
+                markup = g_strdup (_("Keine Information verfügbar"));
             else
                 markup = g_strdup_printf ("%s", proxy->desc);
 
@@ -285,7 +285,7 @@ refresh_widget (NolphinExtensionConfigWidget *widget)
             gtk_box_pack_start (GTK_BOX (box), w, FALSE, FALSE, 6);
 
             if (proxy->config_exec != NULL) {
-                button = gtk_link_button_new_with_label ("", _("Configure"));
+                button = gtk_link_button_new_with_label ("", _("Konfigurieren"));
                 g_signal_connect (button, "activate-link", G_CALLBACK (on_config_clicked), proxy);
 
                 gtk_box_pack_end (GTK_BOX (box), button, FALSE, FALSE, 2);
@@ -398,7 +398,7 @@ nolphin_extension_config_widget_init (NolphinExtensionConfigWidget *self)
 
     GtkWidget *label = nolphin_config_base_widget_get_label (NOLPHIN_CONFIG_BASE_WIDGET (self));
 
-    gchar *title = g_strdup (_("Extensions"));
+    gchar *title = g_strdup (_("Erweiterungen"));
     gchar *markup = g_strdup_printf ("<b>%s</b>", title);
 
     gtk_label_set_markup (GTK_LABEL (label), markup);
@@ -406,7 +406,7 @@ nolphin_extension_config_widget_init (NolphinExtensionConfigWidget *self)
     g_free (title);
     g_free (markup);
 
-    self->restart_button = gtk_button_new_with_label (_("Extensions changed.  Restart required."));
+    self->restart_button = gtk_button_new_with_label (_("Erweiterungen geändert. Neustart wird benötigt!"));
 
     GtkWidget *bb = NOLPHIN_CONFIG_BASE_WIDGET (self)->rbuttonbox;
     gtk_box_pack_end (GTK_BOX (bb),

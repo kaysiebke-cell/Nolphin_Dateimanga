@@ -679,7 +679,7 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_visible (action,
 				include_empty_trash);
 	if (include_empty_trash) {
-		label = g_strdup (_("E_mpty Trash"));
+		label = g_strdup (_("Papierkorb _leeren"));
 		g_object_set (action , "label", label, NULL);
 		gtk_action_set_sensitive (action,
 					  !nolphin_trash_monitor_is_empty ());
@@ -701,8 +701,8 @@ real_update_menus (NolphinView *view)
                                           NOLPHIN_ACTION_UNSTRETCH);
     g_object_set (action, "label",
                   (selection_count > 1) ?
-                      _("Restore Icons' Original Si_zes")
-                    : _("Restore Icon's Original Si_ze"),
+                      _("_Originalgröße der Symbole wiederherstellen")
+                    : _("Symbolgröße _wiederherstellen"),
                   NULL);
     gtk_action_set_sensitive (action,
                               icon_container != NULL &&
@@ -712,16 +712,16 @@ real_update_menus (NolphinView *view)
 
 static const GtkActionEntry desktop_view_entries[] = {
     /* name, stock id */         { "Stretch", NULL,
-    /* label, accelerator */       N_("Resize Icon..."), NULL,
-    /* tooltip */                  N_("Make the selected icon resizable"),
+    /* label, accelerator */       N_("Symbolgröße ändern …"), NULL,
+    /* tooltip */                  N_("Das gewählte Symbol Größenveränderbar machen"),
                                  G_CALLBACK (action_stretch_callback) },
     /* name, stock id */         { "Unstretch", NULL,
-    /* label, accelerator */       N_("Restore Icons' Original Si_zes"), NULL,
-    /* tooltip */                  N_("Restore each selected icon to its original size"),
+    /* label, accelerator */       N_("_Originalgröße der Symbole wiederherstellen"), NULL,
+    /* tooltip */                  N_("Alle gewählten Symbole auf Originalgröße zurücksetzen"),
                                  G_CALLBACK (action_unstretch_callback) },
     /* name, stock id */         { "Empty Trash Conditional", NULL,
-    /* label, accelerator */       N_("Empty Trash"), NULL,
-    /* tooltip */                  N_("Delete all items in the Trash"),
+    /* label, accelerator */       N_("Papierkorb leeren"), NULL,
+    /* tooltip */                  N_("Alle Objekte im Papierkorb löschen"),
                                  G_CALLBACK (action_empty_trash_conditional_callback) }
 };
 
@@ -784,8 +784,8 @@ static NolphinViewInfo nolphin_desktop_icon_view = {
 	(char *)NOLPHIN_DESKTOP_ICON_VIEW_ID,
 	(char *)"Desktop View",
 	(char *)"_Desktop",
-	(char *)N_("The desktop view encountered an error."),
-	(char *)N_("The desktop view encountered an error while starting up."),
+	(char *)N_("Die Schreibtischansicht stieß auf einen Fehler."),
+	(char *)N_("Die Schreibtischansicht stieß beim Starten auf einen Fehler."),
 	(char *)"Display this location with the desktop view.",
 	nolphin_desktop_icon_view_create,
 	nolphin_desktop_icon_view_supports_uri

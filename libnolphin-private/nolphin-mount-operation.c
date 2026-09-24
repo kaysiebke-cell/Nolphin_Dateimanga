@@ -119,7 +119,7 @@ get_process_name (GPid pid)
     }
 
     if (name == NULL) {
-        name = g_strdup_printf ("%s (PID %d)", _("Unknown"), (gint) pid);
+        name = g_strdup_printf ("%s (PID %d)", _("Unbekannt"), (gint) pid);
     }
 
     return name;

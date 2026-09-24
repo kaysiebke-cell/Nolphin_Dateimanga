@@ -195,7 +195,7 @@ nolphin_query_to_readable_string (NolphinQuery *query)
     gchar *location_title, *readable;
 
 	if (!query || !query->details->file_pattern || query->details->file_pattern[0] == '\0') {
-		return g_strdup (_("Search"));
+		return g_strdup (_("Suche"));
 	}
 
     file = g_file_new_for_uri (query->details->location_uri);
@@ -203,7 +203,7 @@ nolphin_query_to_readable_string (NolphinQuery *query)
 
     g_object_unref (file);
 
-    readable = g_strdup_printf (_("Search in \"%s\""), location_title);
+    readable = g_strdup_printf (_("in »%s« suchen"), location_title);
 
     g_free (location_title);
 

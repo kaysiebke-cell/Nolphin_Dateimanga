@@ -2154,7 +2154,7 @@ nolphin_icon_view_container_construct (NolphinIconViewContainer *icon_container,
     nolphin_icon_container_set_is_desktop (NOLPHIN_ICON_CONTAINER (icon_container), is_desktop);
 
 	atk_obj = gtk_widget_get_accessible (GTK_WIDGET (icon_container));
-	atk_object_set_name (atk_obj, _("Icon View"));
+	atk_object_set_name (atk_obj, _("Symbolansicht"));
 
     constants = NOLPHIN_ICON_CONTAINER (icon_container)->details->view_constants;
 

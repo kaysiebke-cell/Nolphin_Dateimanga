@@ -122,7 +122,7 @@ handle_netscape_url_drop_link_cb (GObject *source_object,
 		icon_name = g_strdup ("text-html");
 	}
 
-	link_display_name = g_strdup_printf (_("Link to %s"), link_name);
+	link_display_name = g_strdup_printf (_("Verknüpfung mit %s"), link_name);
 
 	/* The filename can't contain slashes, strip em.
 	   (the basename of http://foo/ is http://foo/) */
@@ -168,8 +168,8 @@ nolphin_view_handle_netscape_url_drop (NolphinView  *view,
 	f = g_file_new_for_uri (target_uri);
 
 	if (!g_file_is_native (f)) {
-		eel_show_warning_dialog (_("Drag and drop is not supported."),
-					 _("Drag and drop is only supported on local file systems."),
+		eel_show_warning_dialog (_("Ziehen und Ablegen wird nicht unterstützt."),
+					 _("Ziehen und Ablegen wird ausschließlich auf lokalen Dateisystemen unterstützt."),
                                          GET_ANCESTOR (view));
 		g_object_unref (f);
 		return;
@@ -202,8 +202,8 @@ nolphin_view_handle_netscape_url_drop (NolphinView  *view,
 	    (action != GDK_ACTION_COPY) &&
 	    (action != GDK_ACTION_MOVE) &&
 	    (action != GDK_ACTION_LINK)) {
-		eel_show_warning_dialog (_("Drag and drop is not supported."),
-					 _("An invalid drag type was used."),
+		eel_show_warning_dialog (_("Ziehen und Ablegen wird nicht unterstützt."),
+					 _("Es wurde eine ungültige Art des Ziehens verwendet."),
                                          GET_ANCESTOR (view));
 		g_object_unref (f);
 		g_strfreev (bits);
@@ -295,8 +295,8 @@ nolphin_view_handle_uri_list_drop (NolphinView  *view,
 	    (action != GDK_ACTION_COPY) &&
 	    (action != GDK_ACTION_MOVE) &&
 	    (action != GDK_ACTION_LINK)) {
-		eel_show_warning_dialog (_("Drag and drop is not supported."),
-					 _("An invalid drag type was used."),
+		eel_show_warning_dialog (_("Ziehen und Ablegen wird nicht unterstützt."),
+					 _("Es wurde eine ungültige Art des Ziehens verwendet."),
                                          GET_ANCESTOR (view));
 		g_free (container_uri);
 		return;
@@ -373,7 +373,7 @@ nolphin_view_handle_text_drop (NolphinView  *view,
 	nolphin_view_new_file_with_initial_contents (
 		view, target_uri != NULL ? target_uri : container_uri,
 		/* Translator: This is the filename used for when you dnd text to a directory */
-		_("dropped text.txt"),
+		_("Abgelegter-Text.txt"),
 		text, length, &pos);
 
 	g_free (container_uri);
@@ -418,7 +418,7 @@ nolphin_view_handle_raw_drop (NolphinView *view,
 		/* Translator: This is the filename used for when you dnd raw
 		 * data to a directory, if the source didn't supply a name.
 		 */
-		filename = g_strdup (_("dropped data"));
+		filename = g_strdup (_("abgelegte Daten"));
 	}
 
 	nolphin_view_new_file_with_initial_contents (

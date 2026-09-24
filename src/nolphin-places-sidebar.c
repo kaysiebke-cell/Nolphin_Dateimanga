@@ -345,7 +345,7 @@ check_heading_for_devices (NolphinPlacesSidebar *sidebar,
     if (section_type == SECTION_DEVICES) {
         if (!sidebar->devices_header_added) {
             cat_iter = add_heading (sidebar, SECTION_DEVICES,
-                        _("Devices"));
+                        _("Geräte"));
             sidebar->devices_header_added = TRUE;
         }
     }
@@ -653,7 +653,7 @@ get_disk_full (GFile *file, gchar **tooltip_info)
             prefix = nolphin_global_preferences_get_size_prefix_preference ();
             size_string = g_format_size_full (k_free, prefix);
 
-            out_string = g_strdup_printf (_("Free space: %s"), size_string);
+            out_string = g_strdup_printf (_("Freier Speicherplatz: %s"), size_string);
 
             g_free (size_string);
         }
@@ -776,7 +776,7 @@ update_places (NolphinPlacesSidebar *sidebar)
 	volume_monitor = sidebar->volume_monitor;
 
     cat_iter = add_heading (sidebar, SECTION_COMPUTER,
-                                    _("My Computer"));
+                                    _("Mein Rechner"));
     /* add built in bookmarks */
 
     /* home folder */
@@ -787,11 +787,11 @@ update_places (NolphinPlacesSidebar *sidebar)
     full = get_disk_full (df_file, &tooltip_info);
     g_clear_object (&df_file);
 
-    tooltip = g_strdup_printf (_("Open your personal folder\n%s"), tooltip_info);
+    tooltip = g_strdup_printf (_("Persönlichen Ordner öffnen\n%s"), tooltip_info);
     g_free (tooltip_info);
     cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                            SECTION_COMPUTER,
-                           _("Home"), icon,
+                           _("Persönlicher Ordner"), icon,
                            mount_uri, NULL, NULL, NULL, 0,
                            tooltip,
                            full, home_on_different_fs (mount_uri) && full > -1,
@@ -808,9 +808,9 @@ update_places (NolphinPlacesSidebar *sidebar)
         icon = get_icon_name (mount_uri);
         cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                                SECTION_COMPUTER,
-                               _("Desktop"), icon,
+                               _("Schreibtisch"), icon,
                                mount_uri, NULL, NULL, NULL, 0,
-                               _("Open the contents of your desktop in a folder"), 0, FALSE,
+                               _("Den Inhalt des Schreibtisches in einem Ordner öffnen"), 0, FALSE,
                                cat_iter);
         g_free (icon);
         g_free (sidebar->top_bookend_uri);
@@ -863,9 +863,9 @@ update_places (NolphinPlacesSidebar *sidebar)
             icon = "xsi-user-favorites-symbolic";
             cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                                   SECTION_COMPUTER,
-                                  _("Favorites"), icon, mount_uri,
+                                  _("Favoriten"), icon, mount_uri,
                                   NULL, NULL, NULL, 0,
-                                  _("Favorite files"), 0, FALSE, cat_iter);
+                                  _("Favorisierte Dateien"), 0, FALSE, cat_iter);
 
             sidebar->bottom_bookend_uri = g_strdup (mount_uri);
         }
@@ -880,9 +880,9 @@ update_places (NolphinPlacesSidebar *sidebar)
         icon = NOLPHIN_ICON_SYMBOLIC_FOLDER_RECENT;
         cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                               SECTION_COMPUTER,
-                              _("Recent"), icon, mount_uri,
+                              _("Kürzlich"), icon, mount_uri,
                               NULL, NULL, NULL, 0,
-                              _("Recent files"), 0, FALSE, cat_iter);
+                              _("Kürzlich verwendete Dateien"), 0, FALSE, cat_iter);
 
         if (sidebar->bottom_bookend_uri == NULL) {
             sidebar->bottom_bookend_uri = g_strdup (mount_uri);
@@ -897,11 +897,11 @@ update_places (NolphinPlacesSidebar *sidebar)
     full = get_disk_full (df_file, &tooltip_info);
     g_clear_object (&df_file);
 
-    tooltip = g_strdup_printf (_("Open the contents of the File System\n%s"), tooltip_info);
+    tooltip = g_strdup_printf (_("Die Inhalte des Dateisystems öffnen\n%s"), tooltip_info);
     g_free (tooltip_info);
     cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                            SECTION_COMPUTER,
-                           _("File System"), icon,
+                           _("Dateisystem"), icon,
                            mount_uri, NULL, NULL, NULL, 0,
                            tooltip,
                            full, full > -1,
@@ -917,15 +917,15 @@ update_places (NolphinPlacesSidebar *sidebar)
         icon = nolphin_trash_monitor_get_symbolic_icon_name ();
         cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                                SECTION_COMPUTER,
-                               _("Trash"), icon, mount_uri,
+                               _("Papierkorb"), icon, mount_uri,
                                NULL, NULL, NULL, 0,
-                               _("Open the trash"), 0, FALSE,
+                               _("Papierkorb öffnen"), 0, FALSE,
                                cat_iter);
         g_free (icon);
     }
 
     cat_iter = add_heading (sidebar, SECTION_BOOKMARKS,
-                                    _("Bookmarks"));
+                                    _("Lesezeichen"));
 
     while (bookmark_index < bookmark_count) {
         bookmark = nolphin_bookmark_list_item_at (sidebar->bookmarks, bookmark_index);
@@ -1092,7 +1092,7 @@ update_places (NolphinPlacesSidebar *sidebar)
 
                     volume_id = g_volume_get_identifier (volume,
                                                          G_VOLUME_IDENTIFIER_KIND_UNIX_DEVICE);
-                    tooltip = g_strdup_printf (_("Mount and open %s (%s)"), name, volume_id);
+                    tooltip = g_strdup_printf (_("%s (%s) einhängen und öffnen"), name, volume_id);
 
                     place_info = new_place_info (PLACES_MOUNTED_VOLUME,
                                                  SECTION_DEVICES,
@@ -1120,7 +1120,7 @@ update_places (NolphinPlacesSidebar *sidebar)
                  */
                 icon = nolphin_get_drive_icon_name (drive);
                 name = g_drive_get_name (drive);
-                tooltip = g_strdup_printf (_("Mount and open %s"), name);
+                tooltip = g_strdup_printf (_("%s einhängen und öffnen"), name);
 
                 place_info = new_place_info (PLACES_BUILT_IN,
                                              SECTION_DEVICES,
@@ -1237,7 +1237,7 @@ update_places (NolphinPlacesSidebar *sidebar)
 
 	/* network */
 	cat_iter = add_heading (sidebar, SECTION_NETWORK,
-		     _("Network"));
+		     _("Netzwerk"));
 
 	network_volumes = g_list_reverse (network_volumes);
 	for (l = network_volumes; l != NULL; l = l->next) {
@@ -1250,7 +1250,7 @@ update_places (NolphinPlacesSidebar *sidebar)
 		} else {
 			icon = nolphin_get_volume_icon_name (volume);
 			name = g_volume_get_name (volume);
-			tooltip = g_strdup_printf (_("Mount and open %s"), name);
+			tooltip = g_strdup_printf (_("%s einhängen und öffnen"), name);
 
 			cat_iter = add_place (sidebar, PLACES_MOUNTED_VOLUME,
                 				   SECTION_NETWORK,
@@ -1292,9 +1292,9 @@ update_places (NolphinPlacesSidebar *sidebar)
 	icon = NOLPHIN_ICON_SYMBOLIC_NETWORK;
 	cat_iter = add_place (sidebar, PLACES_BUILT_IN,
                 		   SECTION_NETWORK,
-                		   _("Network"), icon,
+                		   _("Netzwerk"), icon,
                 		   mount_uri, NULL, NULL, NULL, 0,
-                		   _("Browse the contents of the network"), 0, FALSE,
+                		   _("Inhalt des Netzwerks durchsuchen"), 0, FALSE,
                            cat_iter);
 
 	/* restore selection */
@@ -2376,26 +2376,26 @@ update_menu_states (NolphinPlacesSidebar *sidebar)
     stop_action = gtk_action_group_get_action (sidebar->bookmark_action_group, NOLPHIN_ACTION_STOP_VOLUME);
 
 	gtk_action_set_label (start_action, _("_Start"));
-	gtk_action_set_label (stop_action, _("_Stop"));
+	gtk_action_set_label (stop_action, _("_Anhalten"));
 	if ((show_start || show_stop) && drive != NULL) {
 		switch (g_drive_get_start_stop_type (drive)) {
 		case G_DRIVE_START_STOP_TYPE_SHUTDOWN:
 			/* start() for type G_DRIVE_START_STOP_TYPE_SHUTDOWN is normally not used */
-			gtk_action_set_label (start_action, _("_Power On"));
-			gtk_action_set_label (stop_action, _("_Safely Remove Drive"));
+			gtk_action_set_label (start_action, _("_Einschalten"));
+			gtk_action_set_label (stop_action, _("Laufwerk _sicher entfernen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_NETWORK:
-			gtk_action_set_label (start_action, _("_Connect Drive"));
-			gtk_action_set_label (stop_action, _("_Disconnect Drive"));
+			gtk_action_set_label (start_action, _("Laufwerk _verbinden"));
+			gtk_action_set_label (stop_action, _("Laufwerk _trennen"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_MULTIDISK:
-			gtk_action_set_label (start_action, _("_Start Multi-disk Device"));
-			gtk_action_set_label (stop_action, _("_Stop Multi-disk Device"));
+			gtk_action_set_label (start_action, _("Multimedienlaufwerk _starten"));
+			gtk_action_set_label (stop_action, _("Multimedienlaufwerk _anhalten"));
 			break;
 		case G_DRIVE_START_STOP_TYPE_PASSWORD:
 			/* stop() for type G_DRIVE_START_STOP_TYPE_PASSWORD is normally not used */
-			gtk_action_set_label (start_action, _("_Unlock Drive"));
-			gtk_action_set_label (stop_action, _("_Lock Drive"));
+			gtk_action_set_label (start_action, _("Laufwerk _entsperren"));
+			gtk_action_set_label (stop_action, _("Laufwerk _sperren"));
 			break;
 
 		default:
@@ -2473,7 +2473,7 @@ drive_start_from_bookmark_cb (GObject      *source_object,
 	if (!g_drive_poll_for_media_finish (G_DRIVE (source_object), res, &error)) {
 		if (error->code != G_IO_ERROR_FAILED_HANDLED) {
 			name = g_drive_get_name (G_DRIVE (source_object));
-			primary = g_strdup_printf (_("Unable to start %s"), name);
+			primary = g_strdup_printf (_("Starten von %s nicht möglich"), name);
 			g_free (name);
 			eel_show_error_dialog (primary,
 					       error->message,
@@ -2854,7 +2854,7 @@ drive_eject_cb (GObject *source_object,
         char *name, *primary;
 
         name = g_drive_get_name (G_DRIVE (source_object));
-        primary = g_strdup_printf (_("Unable to eject %s"), name);
+        primary = g_strdup_printf (_("Auswerfen von %s nicht möglich"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -2880,7 +2880,7 @@ volume_eject_cb (GObject *source_object,
         char *name, *primary;
 
         name = g_volume_get_name (G_VOLUME (source_object));
-        primary = g_strdup_printf (_("Unable to eject %s"), name);
+        primary = g_strdup_printf (_("Auswerfen von %s nicht möglich"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -2906,7 +2906,7 @@ mount_eject_cb (GObject *source_object,
         char *name, *primary;
 
         name = g_mount_get_name (G_MOUNT (source_object));
-        primary = g_strdup_printf (_("Unable to eject %s"), name);
+        primary = g_strdup_printf (_("Auswerfen von %s nicht möglich"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -3044,7 +3044,7 @@ drive_poll_for_media_cb (GObject *source_object,
         char *name, *primary;
 
         name = g_drive_get_name (G_DRIVE (source_object));
-        primary = g_strdup_printf (_("Unable to poll %s for media changes"), name);
+        primary = g_strdup_printf (_("%s konnte nicht nach Datenträgeränderungen befragt werden"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -3088,7 +3088,7 @@ drive_start_cb (GObject      *source_object,
         char *name, *primary;
 
         name = g_drive_get_name (G_DRIVE (source_object));
-        primary = g_strdup_printf (_("Unable to start %s"), name);
+        primary = g_strdup_printf (_("Starten von %s nicht möglich"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -3142,7 +3142,7 @@ drive_stop_cb (GObject *source_object,
         char *name, *primary;
 
         name = g_drive_get_name (G_DRIVE (source_object));
-        primary = g_strdup_printf (_("Unable to stop %s"), name);
+        primary = g_strdup_printf (_("Anhalten von %s nicht möglich"), name);
 
         handle_mount_unmount_failure (primary, error);
 
@@ -3512,20 +3512,20 @@ clear_ui (NolphinPlacesSidebar *sidebar)
 }
 
 static const GtkActionEntry bookmark_action_entries[] = {
-    { NOLPHIN_ACTION_OPEN,                    "xsi-folder-open-symbolic", N_("_Open"),                NULL, NULL, G_CALLBACK (open_shortcut_cb)               },
-    { NOLPHIN_ACTION_OPEN_IN_NEW_TAB,         NULL,                   N_("Open in New _Tab"),     NULL, NULL, G_CALLBACK (open_shortcut_in_new_tab_cb)    },
-    { NOLPHIN_ACTION_OPEN_ALTERNATE,          NULL,                   N_("Open in New _Window"),  NULL, NULL, G_CALLBACK (open_shortcut_in_new_window_cb) },
-    { NOLPHIN_ACTION_ADD_BOOKMARK,            NULL,                   N_("_Add Bookmark"),        NULL, NULL, G_CALLBACK (add_shortcut_cb)                },
-    { NOLPHIN_ACTION_SIDEBAR_REMOVE,          "xsi-list-remove-symbolic", N_("Remove"),               NULL, NULL, G_CALLBACK (remove_shortcut_cb)             },
-    { NOLPHIN_ACTION_RENAME,                  NULL,                   N_("_Rename..."),           NULL, NULL, G_CALLBACK (rename_shortcut_cb)             },
-    { NOLPHIN_ACTION_MOUNT_VOLUME,            NULL,                   N_("_Mount"),               NULL, NULL, G_CALLBACK (mount_shortcut_cb)              },
-    { NOLPHIN_ACTION_UNMOUNT_VOLUME,          NULL,                   N_("_Unmount"),             NULL, NULL, G_CALLBACK (unmount_shortcut_cb)            },
-    { NOLPHIN_ACTION_EJECT_VOLUME,            NULL,                   N_("_Eject"),               NULL, NULL, G_CALLBACK (eject_shortcut_cb)              },
-    { NOLPHIN_ACTION_SIDEBAR_DETECT_MEDIA,    NULL,                   N_("_Detect Media"),        NULL, NULL, G_CALLBACK (rescan_shortcut_cb)             },
+    { NOLPHIN_ACTION_OPEN,                    "xsi-folder-open-symbolic", N_("_Öffnen"),                NULL, NULL, G_CALLBACK (open_shortcut_cb)               },
+    { NOLPHIN_ACTION_OPEN_IN_NEW_TAB,         NULL,                   N_("In neuem _Reiter öffnen"),     NULL, NULL, G_CALLBACK (open_shortcut_in_new_tab_cb)    },
+    { NOLPHIN_ACTION_OPEN_ALTERNATE,          NULL,                   N_("In neuem _Fenster öffnen"),  NULL, NULL, G_CALLBACK (open_shortcut_in_new_window_cb) },
+    { NOLPHIN_ACTION_ADD_BOOKMARK,            NULL,                   N_("Lesezeichen _hinzufügen"),        NULL, NULL, G_CALLBACK (add_shortcut_cb)                },
+    { NOLPHIN_ACTION_SIDEBAR_REMOVE,          "xsi-list-remove-symbolic", N_("Entfernen"),               NULL, NULL, G_CALLBACK (remove_shortcut_cb)             },
+    { NOLPHIN_ACTION_RENAME,                  NULL,                   N_("_Umbenennen …"),           NULL, NULL, G_CALLBACK (rename_shortcut_cb)             },
+    { NOLPHIN_ACTION_MOUNT_VOLUME,            NULL,                   N_("_Einhängen"),               NULL, NULL, G_CALLBACK (mount_shortcut_cb)              },
+    { NOLPHIN_ACTION_UNMOUNT_VOLUME,          NULL,                   N_("_Aushängen"),             NULL, NULL, G_CALLBACK (unmount_shortcut_cb)            },
+    { NOLPHIN_ACTION_EJECT_VOLUME,            NULL,                   N_("_Auswerfen"),               NULL, NULL, G_CALLBACK (eject_shortcut_cb)              },
+    { NOLPHIN_ACTION_SIDEBAR_DETECT_MEDIA,    NULL,                   N_("Me_dien erkennen"),        NULL, NULL, G_CALLBACK (rescan_shortcut_cb)             },
     { NOLPHIN_ACTION_START_VOLUME,            NULL,                   N_("_Start"),               NULL, NULL, G_CALLBACK (start_shortcut_cb)              },
-    { NOLPHIN_ACTION_STOP_VOLUME,             NULL,                   N_("_Stop"),                NULL, NULL, G_CALLBACK (stop_shortcut_cb)               },
-    { NOLPHIN_ACTION_EMPTY_TRASH_CONDITIONAL, NULL,                   N_("_Empty _Trash"),        NULL, NULL, G_CALLBACK (empty_trash_cb)                 },
-    { NOLPHIN_ACTION_PROPERTIES,              NULL,                   N_("_Properties"),          NULL, NULL, G_CALLBACK (properties_cb)                  },
+    { NOLPHIN_ACTION_STOP_VOLUME,             NULL,                   N_("_Anhalten"),                NULL, NULL, G_CALLBACK (stop_shortcut_cb)               },
+    { NOLPHIN_ACTION_EMPTY_TRASH_CONDITIONAL, NULL,                   N_("_Papierkorb leeren"),        NULL, NULL, G_CALLBACK (empty_trash_cb)                 },
+    { NOLPHIN_ACTION_PROPERTIES,              NULL,                   N_("_Eigenschaften"),          NULL, NULL, G_CALLBACK (properties_cb)                  },
 };
 
 static void
@@ -3827,15 +3827,15 @@ query_tooltip_callback (GtkWidget *widget,
                                 PLACES_SIDEBAR_COLUMN_VOLUME, &volume,
                                 -1);
             if (mount != NULL) {
-                tooltip_markup = g_strdup (_("Unmount"));
+                tooltip_markup = g_strdup (_("Aushängen"));
             }
             else
             if (drive != NULL) {
-                tooltip_markup = g_strdup (_("Eject"));
+                tooltip_markup = g_strdup (_("Auswerfen"));
             }
             else
             if (volume != NULL) {
-                tooltip_markup = g_strdup (_("Stop"));
+                tooltip_markup = g_strdup (_("Anhalten"));
             }
         } else {
             gtk_tree_model_get (model,

@@ -175,7 +175,7 @@ cad_info_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
         if (info != NULL) {
             req->preview->cad_info = info;
         } else {
-            req->preview->cad_info_error = g_strdup (error != NULL ? error->message : _("Unknown error"));
+            req->preview->cad_info_error = g_strdup (error != NULL ? error->message : _("Unbekannter Fehler"));
         }
 
         /* Re-render: display_single_file() will now find the cache
@@ -196,29 +196,29 @@ add_cad_info_rows (GtkGrid *grid, gint *row, NolphinCadInfo *info)
 
     switch (info->format) {
         case NOLPHIN_CAD_FORMAT_STL:
-            add_info_row (grid, (*row)++, _("STL type:"),
-                          info->stl_is_binary ? _("Binary") : _("ASCII"));
+            add_info_row (grid, (*row)++, _("STL-Typ:"),
+                          info->stl_is_binary ? _("Binär") : _("ASCII"));
             if (info->stl_triangle_count_known) {
                 text = g_strdup_printf ("%" G_GUINT64_FORMAT, info->stl_triangle_count);
-                add_info_row (grid, (*row)++, _("Triangles:"), text);
+                add_info_row (grid, (*row)++, _("Dreiecke:"), text);
                 g_free (text);
             } else {
-                add_info_row (grid, (*row)++, _("Triangles:"), _("not counted (file too large)"));
+                add_info_row (grid, (*row)++, _("Dreiecke:"), _("nicht gezählt (Datei zu groß)"));
             }
             break;
         case NOLPHIN_CAD_FORMAT_STEP:
-            add_info_row (grid, (*row)++, _("STEP description:"), info->step_description);
-            add_info_row (grid, (*row)++, _("STEP file name:"), info->step_file_name);
-            add_info_row (grid, (*row)++, _("STEP timestamp:"), info->step_timestamp);
-            add_info_row (grid, (*row)++, _("STEP author:"), info->step_author);
-            add_info_row (grid, (*row)++, _("STEP schema:"), info->step_schema);
+            add_info_row (grid, (*row)++, _("STEP-Beschreibung:"), info->step_description);
+            add_info_row (grid, (*row)++, _("STEP-Dateiname:"), info->step_file_name);
+            add_info_row (grid, (*row)++, _("STEP-Zeitstempel:"), info->step_timestamp);
+            add_info_row (grid, (*row)++, _("STEP-Autor:"), info->step_author);
+            add_info_row (grid, (*row)++, _("STEP-Schema:"), info->step_schema);
             break;
         case NOLPHIN_CAD_FORMAT_FCSTD:
-            add_info_row (grid, (*row)++, _("FreeCAD comment:"), info->fcstd_comment);
-            add_info_row (grid, (*row)++, _("FreeCAD author:"), info->fcstd_author);
-            add_info_row (grid, (*row)++, _("FreeCAD company:"), info->fcstd_company);
-            add_info_row (grid, (*row)++, _("FreeCAD created:"), info->fcstd_created_date);
-            add_info_row (grid, (*row)++, _("FreeCAD modified:"), info->fcstd_last_modified_date);
+            add_info_row (grid, (*row)++, _("FreeCAD-Kommentar:"), info->fcstd_comment);
+            add_info_row (grid, (*row)++, _("FreeCAD-Autor:"), info->fcstd_author);
+            add_info_row (grid, (*row)++, _("FreeCAD-Firma:"), info->fcstd_company);
+            add_info_row (grid, (*row)++, _("FreeCAD erstellt:"), info->fcstd_created_date);
+            add_info_row (grid, (*row)++, _("FreeCAD geändert:"), info->fcstd_last_modified_date);
             break;
         default:
             break;
@@ -243,7 +243,7 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
     clear_grid (grid);
 
     text = nolphin_file_get_string_attribute (file, "type");
-    add_info_row (grid, row++, _("Type:"), text);
+    add_info_row (grid, row++, _("Typ:"), text);
     g_free (text);
 
     is_dir = nolphin_file_is_directory (file);
@@ -255,36 +255,36 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
     } else {
         text = NULL;
     }
-    add_info_row (grid, row++, _("Size:"), text);
+    add_info_row (grid, row++, _("Größe:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "date_modified_full");
-    add_info_row (grid, row++, _("Modified:"), text);
+    add_info_row (grid, row++, _("Geändert:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "date_accessed_full");
-    add_info_row (grid, row++, _("Accessed:"), text);
+    add_info_row (grid, row++, _("Zugegriffen:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "permissions");
-    add_info_row (grid, row++, _("Permissions:"), text);
+    add_info_row (grid, row++, _("Zugriffsrechte:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "owner");
-    add_info_row (grid, row++, _("Owner:"), text);
+    add_info_row (grid, row++, _("Eigentümer:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "group");
-    add_info_row (grid, row++, _("Group:"), text);
+    add_info_row (grid, row++, _("Gruppe:"), text);
     g_free (text);
 
     text = nolphin_file_get_string_attribute (file, "where");
-    add_info_row (grid, row++, _("Location:"), text);
+    add_info_row (grid, row++, _("Ort:"), text);
     g_free (text);
 
     text = nolphin_file_get_symbolic_link_target_path (file);
     if (text != NULL) {
-        add_info_row (grid, row++, _("Link target:"), text);
+        add_info_row (grid, row++, _("Verknüpfungsziel:"), text);
         g_free (text);
     }
 
@@ -299,25 +299,25 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
         if (cad_format == NOLPHIN_CAD_FORMAT_UNKNOWN) {
             g_object_unref (location);
         } else if (!nolphin_cad_format_has_backend (cad_format)) {
-            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
-            add_info_row (grid, row++, _("3D/CAD preview:"),
-                          _("No backend available for this format on this system"));
+            add_info_row (grid, row++, _("3D/CAD-Format:"), nolphin_cad_format_get_label (cad_format));
+            add_info_row (grid, row++, _("3D/CAD-Vorschau:"),
+                          _("Für dieses Format ist auf diesem System kein Backend verfügbar"));
             g_object_unref (location);
         } else if (preview->cad_info_file == file) {
             /* Already attempted for this exact file - show the cached
              * outcome instead of asking again. */
-            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
+            add_info_row (grid, row++, _("3D/CAD-Format:"), nolphin_cad_format_get_label (cad_format));
             if (preview->cad_info != NULL) {
                 add_cad_info_rows (grid, &row, preview->cad_info);
             } else {
-                add_info_row (grid, row++, _("3D/CAD preview:"), preview->cad_info_error);
+                add_info_row (grid, row++, _("3D/CAD-Vorschau:"), preview->cad_info_error);
             }
             g_object_unref (location);
         } else {
             CadRequest *req;
 
-            add_info_row (grid, row++, _("3D/CAD format:"), nolphin_cad_format_get_label (cad_format));
-            add_info_row (grid, row++, _("3D/CAD preview:"), _("Analyzing…"));
+            add_info_row (grid, row++, _("3D/CAD-Format:"), nolphin_cad_format_get_label (cad_format));
+            add_info_row (grid, row++, _("3D/CAD-Vorschau:"), _("Wird analysiert …"));
 
             if (preview->cad_cancellable != NULL) {
                 g_cancellable_cancel (preview->cad_cancellable);
@@ -393,16 +393,16 @@ display_multi_selection (NolphinPreview *preview, GList *selection)
         }
     }
 
-    text = g_strdup_printf (ngettext ("%u item selected", "%u items selected", count), count);
+    text = g_strdup_printf (ngettext ("%u Objekt ausgewählt", "%u Objekte ausgewählt", count), count);
     gtk_label_set_text (GTK_LABEL (preview->name_label), text);
     g_free (text);
 
     clear_grid (grid);
 
     text = g_format_size (total_size);
-    add_info_row (grid, 0, _("Combined size:"), text);
+    add_info_row (grid, 0, _("Gesamtgröße:"), text);
     g_free (text);
-    add_info_row (grid, 1, _("Note:"), _("folder sizes not included"));
+    add_info_row (grid, 1, _("Hinweis:"), _("Ordnergrößen nicht eingerechnet"));
 
     gtk_image_clear (GTK_IMAGE (preview->image));
 }
@@ -511,7 +511,7 @@ nolphin_preview_init (NolphinPreview *preview)
     gtk_container_add (GTK_CONTAINER (scrolled), content_box);
     gtk_stack_add_named (GTK_STACK (stack), scrolled, "content");
 
-    preview->fallback_label = gtk_label_new (_("No file selected"));
+    preview->fallback_label = gtk_label_new (_("Keine Datei ausgewählt"));
     gtk_style_context_add_class (gtk_widget_get_style_context (preview->fallback_label), "dim-label");
     gtk_stack_add_named (GTK_STACK (stack), preview->fallback_label, "empty");
 

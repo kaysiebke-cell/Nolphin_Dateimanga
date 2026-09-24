@@ -2091,7 +2091,7 @@ column_header_clicked (GtkWidget *column_button,
 	menu_item = gtk_separator_menu_item_new ();
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 
-	menu_item = gtk_menu_item_new_with_label (_("Use Default"));
+	menu_item = gtk_menu_item_new_with_label (_("Vorgabe verwenden"));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 
 	g_signal_connect (menu_item,
@@ -2102,7 +2102,7 @@ column_header_clicked (GtkWidget *column_button,
     menu_item = gtk_separator_menu_item_new ();
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 
-    menu_item = gtk_check_menu_item_new_with_label (_("Temporarily disable auto-sort"));
+    menu_item = gtk_check_menu_item_new_with_label (_("Automatische Sortierung vorübergehend deaktivieren"));
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
 
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item),
@@ -2834,7 +2834,7 @@ create_and_set_up_tree_view (NolphinListView *view)
 	gtk_container_add (GTK_CONTAINER (view), GTK_WIDGET (view->details->tree_view));
 
         atk_obj = gtk_widget_get_accessible (GTK_WIDGET (view->details->tree_view));
-        atk_object_set_name (atk_obj, _("List View"));
+        atk_object_set_name (atk_obj, _("Listenansicht"));
 
     gtk_widget_set_has_tooltip (GTK_WIDGET (view->details->tree_view), TRUE);
 
@@ -4560,12 +4560,12 @@ static NolphinViewInfo nolphin_list_view = {
 	(char *)NOLPHIN_LIST_VIEW_ID,
 	/* translators: this is used in the view selection dropdown
 	 * of navigation windows and in the preferences dialog */
-	(char *)N_("List View"),
+	(char *)N_("Listenansicht"),
 	/* translators: this is used in the view menu */
-	(char *)N_("_List"),
-	(char *)N_("The list view encountered an error."),
-	(char *)N_("The list view encountered an error while starting up."),
-	(char *)N_("Display this location with the list view."),
+	(char *)N_("_Liste"),
+	(char *)N_("Fehler in der Listenansicht."),
+	(char *)N_("Die Listenansicht stieß beim Starten auf einen Fehler."),
+	(char *)N_("Diesen Ort mit der Listenansicht anzeigen"),
 	nolphin_list_view_create,
 	nolphin_list_view_supports_uri
 };

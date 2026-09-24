@@ -245,7 +245,7 @@ refresh_widget (NolphinActionConfigWidget *widget)
         GtkWidget *empty_label = gtk_label_new (NULL);
         gchar *markup = NULL;
 
-        markup = g_strdup_printf ("<i>%s</i>", _("No actions found"));
+        markup = g_strdup_printf ("<i>%s</i>", _("Keine Aktionen gefunden"));
 
         gtk_label_set_markup (GTK_LABEL (empty_label), markup);
         g_free (markup);
@@ -467,7 +467,7 @@ nolphin_action_config_widget_init (NolphinActionConfigWidget *self)
 
     GtkWidget *label = nolphin_config_base_widget_get_label (NOLPHIN_CONFIG_BASE_WIDGET (self));
 
-    gchar *title = g_strdup (_("Actions"));
+    gchar *title = g_strdup (_("Aktionen"));
     gchar *markup = g_strdup_printf ("<b>%s</b>", title);
 
     gtk_label_set_markup (GTK_LABEL (label), markup);
@@ -484,7 +484,7 @@ nolphin_action_config_widget_init (NolphinActionConfigWidget *self)
     gtk_widget_show (widget);
     g_signal_connect (widget, "clicked", G_CALLBACK (on_open_folder_clicked), self);
 
-    widget = gtk_button_new_with_label (_("Edit layout"));
+    widget = gtk_button_new_with_label (_("Anordnung bearbeiten"));
 
     bb = NOLPHIN_CONFIG_BASE_WIDGET (self)->lbuttonbox;
     gtk_box_pack_start (GTK_BOX (bb),

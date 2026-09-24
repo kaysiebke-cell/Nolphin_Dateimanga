@@ -1260,7 +1260,7 @@ real_setup_loading_floating_bar (NolphinWindowSlot *slot)
 
 	nolphin_floating_bar_set_label (NOLPHIN_FLOATING_BAR (slot->floating_bar),
 					 NOLPHIN_IS_SEARCH_DIRECTORY (nolphin_view_get_model (slot->content_view)) ?
-					 _("Searching...") : _("Loading..."));
+					 _("Suche läuft …") : _("Ladevorgang …"));
 	nolphin_floating_bar_set_show_spinner (NOLPHIN_FLOATING_BAR (slot->floating_bar),
 						TRUE);
 	nolphin_floating_bar_add_action (NOLPHIN_FLOATING_BAR (slot->floating_bar),
@@ -1752,49 +1752,49 @@ display_view_selection_failure (NolphinWindow *window, NolphinFile *file,
 	if (error == NULL) {
 		if (nolphin_file_is_directory (file)) {
 			error_message = g_strdup_printf
-				(_("Could not display \"%s\"."),
+				(_("»%s« konnte nicht angezeigt werden."),
 				 uri_for_display);
 			detail_message = g_strdup
-				(_("Nolphin has no installed viewer capable of displaying the folder."));
+				(_("Nolphin hat keinen installierten Betrachter der diesen Ordner darstellen kann."));
 		} else {
 			error_message = g_strdup_printf
-				(_("Could not display \"%s\"."),
+				(_("»%s« konnte nicht angezeigt werden."),
 				 uri_for_display);
 			detail_message = g_strdup
-				(_("The location is not a folder."));
+				(_("Der angegebene Ort ist kein Ordner."));
 		}
 	} else if (error->domain == G_IO_ERROR) {
 		switch (error->code) {
 		case G_IO_ERROR_NOT_FOUND:
 			error_message = g_strdup_printf
-				(_("Could not find \"%s\"."),
+				(_("»%s« konnte nicht gefunden werden."),
 				 uri_for_display);
 			detail_message = g_strdup
-				(_("Please check the spelling and try again."));
+				(_("Bitte überprüfen Sie die Schreibweise und versuchen Sie es erneut."));
 			break;
 		case G_IO_ERROR_NOT_SUPPORTED:
 			scheme_string = g_file_get_uri_scheme (location);
 
-			error_message = g_strdup_printf (_("Could not display \"%s\"."),
+			error_message = g_strdup_printf (_("»%s« konnte nicht angezeigt werden."),
 							 uri_for_display);
 			if (scheme_string != NULL) {
-				detail_message = g_strdup_printf (_("Nolphin cannot handle \"%s\" locations."),
+				detail_message = g_strdup_printf (_("Nolphin kann Orte wie »%s« nicht verarbeiten."),
 								  scheme_string);
 			} else {
-				detail_message = g_strdup (_("Nolphin cannot handle this kind of location."));
+				detail_message = g_strdup (_("Nolphin kann diese Art von Ort nicht verarbeiten."));
 			}
 			g_free (scheme_string);
 			break;
 		case G_IO_ERROR_NOT_MOUNTED:
-			error_message = g_strdup_printf (_("Could not display \"%s\"."),
+			error_message = g_strdup_printf (_("»%s« konnte nicht angezeigt werden."),
 							 uri_for_display);
-			detail_message = g_strdup (_("Unable to mount the location."));
+			detail_message = g_strdup (_("Einhängen des Ortes nicht möglich."));
 			break;
 
 		case G_IO_ERROR_PERMISSION_DENIED:
-			error_message = g_strdup_printf (_("Could not display \"%s\"."),
+			error_message = g_strdup_printf (_("»%s« konnte nicht angezeigt werden."),
 							 uri_for_display);
-			detail_message = g_strdup (_("Access was denied."));
+			detail_message = g_strdup (_("Zugriff wurde verweigert."));
 			break;
 
 		case G_IO_ERROR_HOST_NOT_FOUND:
@@ -1803,9 +1803,9 @@ display_view_selection_failure (NolphinWindow *window, NolphinFile *file,
 			 * But this case is also hit for legitimate web addresses when
 			 * the proxy is set up wrong.
 			 */
-			error_message = g_strdup_printf (_("Could not display \"%s\", because the host could not be found."),
+			error_message = g_strdup_printf (_("»%s« konnte nicht angezeigt werden, da der Rechner nicht gefunden werden konnte."),
 							 uri_for_display);
-			detail_message = g_strdup (_("Check that the spelling is correct and that your proxy settings are correct."));
+			detail_message = g_strdup (_("Rechtschreibung und Proxy-Einstellungen prüfen."));
 			break;
 		case G_IO_ERROR_CANCELLED:
 		case G_IO_ERROR_FAILED_HANDLED:
@@ -1818,9 +1818,9 @@ display_view_selection_failure (NolphinWindow *window, NolphinFile *file,
 	}
 
 	if (error_message == NULL) {
-		error_message = g_strdup_printf (_("Could not display \"%s\"."),
+		error_message = g_strdup_printf (_("»%s« konnte nicht angezeigt werden."),
 						 uri_for_display);
-		detail_message = g_strdup_printf (_("Error: %s\nPlease select another viewer and try again."), error->message);
+		detail_message = g_strdup_printf (_("Fehler: %s\nBitte wählen Sie einen anderen Betrachter und versuchen Sie es erneut."), error->message);
 	}
 
 	eel_show_error_dialog (error_message, detail_message, NULL);

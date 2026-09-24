@@ -80,12 +80,11 @@ show_bogus_bookmark_window (NolphinWindow *window,
 	location = nolphin_bookmark_get_location (bookmark);
 	uri_for_display = g_file_get_parse_name (location);
 	
-	prompt = _("Do you want to remove any bookmarks with the "
-		   "non-existing location from your list?");
-	detail = g_strdup_printf (_("The location \"%s\" does not exist."), uri_for_display);
+	prompt = _("Sollen die Lesezeichen mit dem nicht vorhandenen Ort aus Ihrer Liste entfernt werden?");
+	detail = g_strdup_printf (_("Der Ort »%s« existiert nicht."), uri_for_display);
 	
 	dialog = eel_show_yes_no_dialog (prompt, detail,
-					 _("Bookmark for Nonexistent Location"),
+					 _("Lesezeichen für nicht existierenden Ort"),
 					 GTK_STOCK_CANCEL,
 					 GTK_WINDOW (window));
 
@@ -305,7 +304,7 @@ nolphin_menus_append_bookmark_to_menu (NolphinWindow *window,
 
 	action = gtk_action_new (action_name,
 				 name,
-				 _("Go to the location specified by this bookmark"),
+				 _("Zum durch dieses Lesezeichen angegebenen Ort gehen"),
 				 NULL);
 	
 	g_object_set_data_full (G_OBJECT (action), "menu-icon-name",

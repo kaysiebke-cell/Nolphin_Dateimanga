@@ -158,7 +158,7 @@ new_entry (const gchar *filename)
         g_warning ("Failed to query content type for %s: %s", filename, error->message);
         g_clear_error (&error);
 
-        info->content_desc = g_strdup (_("Unknown template"));
+        info->content_desc = g_strdup (_("Unbekannte Vorlage"));
     } else {
         const gchar *ctype = g_file_info_get_content_type (file_info);
 
@@ -231,7 +231,7 @@ refresh_widget (NolphinTemplateConfigWidget *widget)
         GtkWidget *empty_label = gtk_label_new (NULL);
         gchar *markup = NULL;
 
-        markup = g_strdup_printf ("<i>%s</i>", _("No templates found. Click New or drag a file here to create one."));
+        markup = g_strdup_printf ("<i>%s</i>", _("Keine Vorlagen gefunden. Klicken Sie auf »Neu« oder ziehen Sie eine Datei hierher, um eine Vorlage zu erstellen."));
 
         gtk_label_set_markup (GTK_LABEL (empty_label), markup);
         g_free (markup);
@@ -326,9 +326,9 @@ start_renaming_selected_row (NolphinTemplateConfigWidget *widget, GtkWidget *row
     rename_dialog = gtk_dialog_new_with_buttons ("Rename template",
                                           GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (widget))),
                                           GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          _("_Cancel"),
+                                          _("_Abbrechen"),
                                           GTK_RESPONSE_REJECT,
-                                          _("_Rename"),
+                                          _("_Umbenennen"),
                                           GTK_RESPONSE_ACCEPT,
                                           NULL);
     gtk_dialog_set_default_response (GTK_DIALOG (rename_dialog), GTK_RESPONSE_ACCEPT);
@@ -422,12 +422,12 @@ on_new_template_clicked (GtkWidget *button, gpointer user_data)
     GtkWidget *dialog;
     gint response = 0;
 
-    dialog = gtk_file_chooser_dialog_new (_("Select a document to use as a template"),
+    dialog = gtk_file_chooser_dialog_new (_("Wählen Sie ein Dokument, um es als Vorlage zu verwenden"),
                                           GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (widget))),
                                           GTK_FILE_CHOOSER_ACTION_OPEN,
-                                          _("Cancel"),
+                                          _("Abbrechen"),
                                           GTK_RESPONSE_CANCEL,
-                                          _("Select"),
+                                          _("Auswählen"),
                                           GTK_RESPONSE_ACCEPT,
                                           NULL);
 
@@ -593,7 +593,7 @@ nolphin_template_config_widget_init (NolphinTemplateConfigWidget *self)
     gtk_list_box_set_selection_mode (GTK_LIST_BOX (NOLPHIN_CONFIG_BASE_WIDGET (self)->listbox), GTK_SELECTION_SINGLE);
     gtk_list_box_set_activate_on_single_click (GTK_LIST_BOX (NOLPHIN_CONFIG_BASE_WIDGET (self)->listbox), FALSE);
 
-    gchar *title = g_strdup (_("Templates"));
+    gchar *title = g_strdup (_("Vorlagen"));
     gchar *markup = g_strdup_printf ("<b>%s</b>", title);
 
     gtk_label_set_markup (GTK_LABEL (label), markup);
@@ -613,8 +613,8 @@ nolphin_template_config_widget_init (NolphinTemplateConfigWidget *self)
 
     bb = NOLPHIN_CONFIG_BASE_WIDGET (self)->lbuttonbox;
 
-    widget = gtk_button_new_with_label (_("New"));
-    gtk_widget_set_tooltip_text (widget, _("Create a new template"));
+    widget = gtk_button_new_with_label (_("Neu"));
+    gtk_widget_set_tooltip_text (widget, _("Eine neue Vorlage erstellen"));
 
     gtk_box_pack_start (GTK_BOX (bb),
                       widget,
@@ -622,8 +622,8 @@ nolphin_template_config_widget_init (NolphinTemplateConfigWidget *self)
     gtk_widget_show (widget);
     g_signal_connect (widget, "clicked", G_CALLBACK (on_new_template_clicked), self);
 
-    widget = gtk_button_new_with_label (_("Remove"));
-    gtk_widget_set_tooltip_text (widget, _("Delete the selected template"));
+    widget = gtk_button_new_with_label (_("Entfernen"));
+    gtk_widget_set_tooltip_text (widget, _("Die ausgewählten Vorlage löschen"));
 
     gtk_box_pack_start (GTK_BOX (bb),
                       widget,
@@ -632,8 +632,8 @@ nolphin_template_config_widget_init (NolphinTemplateConfigWidget *self)
     g_signal_connect (widget, "clicked", G_CALLBACK (on_remove_row_clicked), self);
     self->remove_button = widget;
 
-    widget = gtk_button_new_with_label (_("Rename"));
-    gtk_widget_set_tooltip_text (widget, _("Rename the selected template"));
+    widget = gtk_button_new_with_label (_("Umbenennen"));
+    gtk_widget_set_tooltip_text (widget, _("Die ausgewählte Vorlage umbenennen"));
 
     gtk_box_pack_start (GTK_BOX (bb),
                       widget,
@@ -642,8 +642,8 @@ nolphin_template_config_widget_init (NolphinTemplateConfigWidget *self)
     g_signal_connect (widget, "clicked", G_CALLBACK (on_rename_row_clicked), self);
     self->rename_button = widget;
 
-    widget = gtk_button_new_with_label (_("Edit content"));
-    gtk_widget_set_tooltip_text (widget, _("Modify the selected template's contents"));
+    widget = gtk_button_new_with_label (_("Inhalt bearbeiten"));
+    gtk_widget_set_tooltip_text (widget, _("Den Inhalt der ausgewählten Vorlage ändern"));
 
     gtk_box_pack_start (GTK_BOX (bb),
                       widget,

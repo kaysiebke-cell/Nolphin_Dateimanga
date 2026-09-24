@@ -622,7 +622,7 @@ nolphin_query_editor_set_active (NolphinQueryEditor *editor,
         } else {
             gtk_widget_set_sensitive (editor->priv->content_main_box, FALSE);
             gtk_entry_set_placeholder_text (GTK_ENTRY (editor->priv->content_entry),
-                                            _("Not supported in this location"));
+                                            _("An diesem Ort nicht unterstützt"));
         }
 
         g_object_unref (location);

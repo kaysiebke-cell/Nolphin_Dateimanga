@@ -304,7 +304,7 @@ create_icon_caption_combo_box_items (GtkComboBoxText *combo_box,
 	column_names = g_ptr_array_new ();
 
 	/* Translators: this is referred to captions under icons. */
-	gtk_combo_box_text_append_text (combo_box, _("None"));
+	gtk_combo_box_text_append_text (combo_box, _("Keine"));
 	g_ptr_array_add (column_names, g_strdup ("none"));
 
 	for (l = columns; l != NULL; l = l->next) {
@@ -509,7 +509,7 @@ create_date_format_menu (GtkBuilder *builder)
 	gtk_combo_box_text_append_text (combo_box, date_string);
 	g_free (date_string);
 
-	gtk_combo_box_text_append_text (combo_box, _("Yesterday"));
+	gtk_combo_box_text_append_text (combo_box, _("Gestern"));
 
 	g_date_time_unref (now);
 }

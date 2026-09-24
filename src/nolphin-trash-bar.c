@@ -208,23 +208,23 @@ nolphin_trash_bar_init (NolphinTrashBar *bar)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
 					GTK_ORIENTATION_HORIZONTAL);
 
-	label = gtk_label_new (_("Trash"));
+	label = gtk_label_new (_("Papierkorb"));
 	gtk_style_context_add_class (gtk_widget_get_style_context (label),
 				     "nolphin-cluebar-label");
 	gtk_widget_show (label);
 	gtk_container_add (GTK_CONTAINER (content_area), label);
 
 	w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-				     _("Restore Selected Items"),
+				     _("Ausgewählte Objekte wiederherstellen"),
 				     TRASH_BAR_RESPONSE_RESTORE);
 	gtk_widget_set_tooltip_text (w,
-				     _("Restore selected items to their original position"));
+				     _("Ausgewählte Objekte an ihrem ursprünglichen Ort wiederherstellen"));
 
 	w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-				     _("Empty _Trash"),
+				     _("_Papierkorb leeren"),
 				     TRASH_BAR_RESPONSE_EMPTY);
 	gtk_widget_set_tooltip_text (w,
-				     _("Delete all items in the Trash"));
+				     _("Alle Objekte im Papierkorb löschen"));
 
 	g_signal_connect_object (nolphin_trash_monitor_get (),
 				 "trash_state_changed",

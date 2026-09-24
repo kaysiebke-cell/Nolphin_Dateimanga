@@ -88,7 +88,7 @@ action_show_overlay (GtkAction *action, gpointer user_data)
 }
 
 static const GtkActionEntry entries[] = {
-    { "Desktop Overlay", NULL, N_("_Customize"), NULL, N_("Adjust the desktop layout for this monitor"), G_CALLBACK (action_show_overlay) }
+    { "Desktop Overlay", NULL, N_("_Anpassen"), NULL, N_("Schreibtischanordnung für diesen Bildschirm anpassen"), G_CALLBACK (action_show_overlay) }
     //
     //
 };
@@ -324,7 +324,7 @@ nolphin_blank_desktop_window_constructed (GObject *obj)
 	accessible = gtk_widget_get_accessible (GTK_WIDGET (window));
 
 	if (accessible) {
-		atk_object_set_name (accessible, _("Desktop"));
+		atk_object_set_name (accessible, _("Schreibtisch"));
 	}
 
     window->details->ui_manager = gtk_ui_manager_new ();

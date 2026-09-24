@@ -64,7 +64,7 @@ nolphin_compute_title_for_location (GFile *location)
 	   info about the file isn't known atm... */
 
 	if (nolphin_is_home_directory (location)) {
-		return g_strdup (_("Home"));
+		return g_strdup (_("Persönlicher Ordner"));
 	}
 
 	builder = NULL;
@@ -112,7 +112,7 @@ nolphin_compute_search_title_for_location (GFile *location)
     gchar *location_string;
 
     if (nolphin_is_home_directory (location)) {
-        return g_strdup (_("Home"));
+        return g_strdup (_("Persönlicher Ordner"));
     }
 
     home_file = g_file_new_for_path (g_get_home_dir ());
@@ -1402,11 +1402,11 @@ nolphin_restore_files_from_trash (GList *files,
 	for (l = unhandled_files; l != NULL; l = l->next) {
 		file = NOLPHIN_FILE (l->data);
 		file_name = nolphin_file_get_display_name (file);
-		message = g_strdup_printf (_("Could not determine original location of \"%s\" "), file_name);
+		message = g_strdup_printf (_("Ursprünglicher Ort von »%s« konnte nicht ermittelt werden "), file_name);
 		g_free (file_name);
 
 		eel_show_warning_dialog (message,
-					 _("The item cannot be restored from trash"),
+					 _("Das Objekt kann aus dem Papierkorb nicht wiederhergestellt werden"),
 					 parent_window);
 		g_free (message);
 	}

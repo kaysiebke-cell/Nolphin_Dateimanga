@@ -107,7 +107,7 @@ nolphin_cad_format_get_label (NolphinCadFormat format)
             return cad_formats[i].label;
         }
     }
-    return _("Unknown");
+    return _("Unbekannt");
 }
 
 gboolean
@@ -311,7 +311,7 @@ parse_step (const gchar *path, NolphinCadInfo *info, GError **error)
     if (g_ascii_strncasecmp (buf, "ISO-10303-21", 12) != 0) {
         g_free (buf);
         g_set_error (error, NOLPHIN_CAD_ERROR, NOLPHIN_CAD_ERROR_NOT_A_CAD_FILE,
-                    _("File does not start with the expected ISO-10303-21 STEP signature."));
+                    _("Die Datei beginnt nicht mit der erwarteten ISO-10303-21-STEP-Signatur."));
         return;
     }
 
@@ -436,7 +436,7 @@ parse_fcstd (const gchar *path, NolphinCadInfo *info, GError **error)
     g_object_unref (input);
     if (zip == NULL) {
         g_set_error (error, NOLPHIN_CAD_ERROR, NOLPHIN_CAD_ERROR_NOT_A_CAD_FILE,
-                    _("Not a valid ZIP container (FCStd files are ZIP archives): %s"),
+                    _("Kein gültiger ZIP-Container (FCStd-Dateien sind ZIP-Archive): %s"),
                     gsf_error ? gsf_error->message : "?");
         g_clear_error (&gsf_error);
         return;
@@ -446,7 +446,7 @@ parse_fcstd (const gchar *path, NolphinCadInfo *info, GError **error)
     if (doc_xml == NULL) {
         g_object_unref (zip);
         g_set_error (error, NOLPHIN_CAD_ERROR, NOLPHIN_CAD_ERROR_NOT_A_CAD_FILE,
-                    _("No Document.xml found inside - this doesn't look like a FreeCAD file."));
+                    _("Keine Document.xml enthalten - das sieht nicht nach einer FreeCAD-Datei aus."));
         return;
     }
 
@@ -517,7 +517,7 @@ cad_info_thread (GTask *task, gpointer source_object, gpointer task_data, GCance
 
     if (!nolphin_cad_format_has_backend (format)) {
         g_task_return_new_error (task, NOLPHIN_CAD_ERROR, NOLPHIN_CAD_ERROR_NO_BACKEND,
-                                 _("No backend is available for %s files on this system yet."),
+                                 _("Für %s-Dateien ist auf diesem System noch kein Backend verfügbar."),
                                  nolphin_cad_format_get_label (format));
         return;
     }
@@ -525,7 +525,7 @@ cad_info_thread (GTask *task, gpointer source_object, gpointer task_data, GCance
     path = g_file_get_path (file);
     if (path == NULL) {
         g_task_return_new_error (task, NOLPHIN_CAD_ERROR, NOLPHIN_CAD_ERROR_READ_FAILED,
-                                 _("Remote locations are not supported for CAD file analysis yet."));
+                                 _("Entfernte Orte werden für die CAD-Dateianalyse noch nicht unterstützt."));
         return;
     }
 

@@ -94,28 +94,28 @@ nolphin_x_content_bar_set_x_content_type (NolphinXContentBar *bar, const char *x
 
 	/* Customize greeting for well-known x-content types */
 	if (strcmp (x_content_type, "x-content/audio-cdda") == 0) {
-		message = g_strdup (_("These files are on an Audio CD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Audio-CD."));
 	} else if (strcmp (x_content_type, "x-content/audio-dvd") == 0) {
-		message = g_strdup (_("These files are on an Audio DVD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Audio-DVD."));
 	} else if (strcmp (x_content_type, "x-content/video-dvd") == 0) {
-		message = g_strdup (_("These files are on a Video DVD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Video-DVD."));
 	} else if (strcmp (x_content_type, "x-content/video-vcd") == 0) {
-		message = g_strdup (_("These files are on a Video CD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Video-CD."));
 	} else if (strcmp (x_content_type, "x-content/video-svcd") == 0) {
-		message = g_strdup (_("These files are on a Super Video CD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Super-Video-CD."));
 	} else if (strcmp (x_content_type, "x-content/image-photocd") == 0) {
-		message = g_strdup (_("These files are on a Photo CD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Foto-CD."));
 	} else if (strcmp (x_content_type, "x-content/image-picturecd") == 0) {
-		message = g_strdup (_("These files are on a Picture CD."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einer Bild-CD."));
 	} else if (strcmp (x_content_type, "x-content/image-dcf") == 0) {
-		message = g_strdup (_("The media contains digital photos."));
+		message = g_strdup (_("Dieser Datenträger enthält Digitalfotos."));
 	} else if (strcmp (x_content_type, "x-content/audio-player") == 0) {
-		message = g_strdup (_("These files are on a digital audio player."));
+		message = g_strdup (_("Diese Dateien befinden sich auf einem digitalen Audio-Player."));
 	} else if (strcmp (x_content_type, "x-content/software") == 0) {
-		message = g_strdup (_("The media contains software."));
+		message = g_strdup (_("Dieser Datenträger enthält Programme."));
 	} else {
 		/* fallback to generic greeting */
-		message = g_strdup_printf (_("The media has been detected as \"%s\"."), description);
+		message = g_strdup_printf (_("Dieser Datenträger wurde als »%s« erkannt."), description);
 	}
 
 
@@ -140,7 +140,7 @@ nolphin_x_content_bar_set_x_content_type (NolphinXContentBar *bar, const char *x
 		}
 
 		name = g_app_info_get_display_name (default_app);
-		button_text = g_strdup_printf (_("Open %s"), name);
+		button_text = g_strdup_printf (_("%s öffnen"), name);
 
 		gtk_button_set_image (GTK_BUTTON (bar->priv->button), image);
 		gtk_button_set_label (GTK_BUTTON (bar->priv->button), button_text);

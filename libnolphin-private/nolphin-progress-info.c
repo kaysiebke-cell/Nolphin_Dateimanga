@@ -208,7 +208,7 @@ nolphin_progress_info_get_status (NolphinProgressInfo *info)
 	if (info->status) {
 		res = g_strdup (info->status);
 	} else {
-		res = g_strdup (_("Preparing"));
+		res = g_strdup (_("Vorbereitung"));
 	}
 	
 	g_mutex_unlock (&info->info_lock);
@@ -226,7 +226,7 @@ nolphin_progress_info_get_details (NolphinProgressInfo *info)
 	if (info->details) {
 		res = g_strdup (info->details);
 	} else {
-		res = g_strdup (_("Preparing"));
+		res = g_strdup (_("Vorbereitung"));
 	}
 	
 	g_mutex_unlock (&info->info_lock);
@@ -244,7 +244,7 @@ nolphin_progress_info_get_initial_details (NolphinProgressInfo *info)
     if (info->initial_details) {
         res = g_strdup (info->initial_details);
     } else {
-        res = g_strdup (_("Preparing"));
+        res = g_strdup (_("Vorbereitung"));
     }
     
     g_mutex_unlock (&info->info_lock);

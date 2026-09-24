@@ -173,7 +173,7 @@ nolphin_status_bar_constructed (GObject *object)
     button = gtk_toggle_button_new ();
     icon = gtk_image_new_from_icon_name ("nolphin-sidebar-places-symbolic", size);
     gtk_button_set_image (GTK_BUTTON (button), icon);
-    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Show Places"));
+    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Orte anzeigen"));
     bar->places_button = button;
     gtk_box_pack_start (GTK_BOX (bar), button, FALSE, FALSE, 2);
     g_signal_connect (GTK_BUTTON (button), "clicked",
@@ -182,7 +182,7 @@ nolphin_status_bar_constructed (GObject *object)
     button = gtk_toggle_button_new ();
     icon = gtk_image_new_from_icon_name ("nolphin-sidebar-tree-symbolic", size);
     gtk_button_set_image (GTK_BUTTON (button), icon);
-    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Show Treeview"));
+    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Baumansicht anzeigen"));
     bar->tree_button = button;
     gtk_box_pack_start (GTK_BOX (bar), button, FALSE, FALSE, 2);
     g_signal_connect (GTK_BUTTON (button), "clicked",
@@ -196,7 +196,7 @@ nolphin_status_bar_constructed (GObject *object)
     button = gtk_button_new ();
     icon = gtk_image_new_from_icon_name ("nolphin-sidebar-hide-symbolic", size);
     gtk_button_set_image (GTK_BUTTON (button), icon);
-    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Hide the Sidebar (F9)"));
+    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Seitenleiste verstecken (F9)"));
     bar->hide_button = button;
     gtk_box_pack_start (GTK_BOX (bar), button, FALSE, FALSE, 2);
     g_signal_connect (GTK_BUTTON (button), "clicked",
@@ -205,7 +205,7 @@ nolphin_status_bar_constructed (GObject *object)
     button = gtk_button_new ();
     icon = gtk_image_new_from_icon_name ("nolphin-sidebar-show-symbolic", size);
     gtk_button_set_image (GTK_BUTTON (button), icon);
-    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Show the Sidebar (F9)"));
+    gtk_widget_set_tooltip_text (GTK_WIDGET (button), _("Seitenleiste anzeigen (F9)"));
     bar->show_button = button;
     gtk_box_pack_start (GTK_BOX (bar), button, FALSE, FALSE, 2);
     g_signal_connect (GTK_BUTTON (button), "clicked",
@@ -219,7 +219,7 @@ nolphin_status_bar_constructed (GObject *object)
                                                        (gdouble) NOLPHIN_ZOOM_LEVEL_SMALLEST,
                                                        (gdouble) NOLPHIN_ZOOM_LEVEL_LARGEST,
                                                        1.0);
-    gtk_widget_set_tooltip_text (GTK_WIDGET (zoom_slider), _("Adjust zoom level"));
+    gtk_widget_set_tooltip_text (GTK_WIDGET (zoom_slider), _("Vergrößerungsstufe einstellen"));
     bar->zoom_slider = zoom_slider;
 
     gtk_box_pack_start (GTK_BOX (bar), zoom_slider, FALSE, FALSE, 2);

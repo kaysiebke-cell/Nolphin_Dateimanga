@@ -642,18 +642,17 @@ report_broken_symbolic_link (GtkWindow *parent_window, NolphinFile *file)
 
 	display_name = nolphin_file_get_display_name (file);
 	if (nolphin_file_is_in_trash (file)) {
-		prompt = g_strdup_printf (_("The Link \"%s\" is Broken."), display_name);
+		prompt = g_strdup_printf (_("Die Verknüpfung »%s« ist fehlerhaft."), display_name);
 	} else {
-		prompt = g_strdup_printf (_("The Link \"%s\" is Broken. Move it to Trash?"), display_name);
+		prompt = g_strdup_printf (_("Die Verknüpfung »%s« ist fehlerhaft. Soll sie in den Papierkorb verschoben werden?"), display_name);
 	}
 	g_free (display_name);
 
 	target_path = nolphin_file_get_symbolic_link_target_path (file);
 	if (target_path == NULL) {
-		detail = g_strdup (_("This link cannot be used, because it has no target."));
+		detail = g_strdup (_("Diese Verknüpfung kann nicht verwendet werden, da sie auf kein Ziel verweist."));
 	} else {
-		detail = g_strdup_printf (_("This link cannot be used, because its target "
-					    "\"%s\" doesn't exist."), target_path);
+		detail = g_strdup_printf (_("Diese Verknüpfung kann nicht verwendet werden, da ihr Ziel »%s« nicht existiert."), target_path);
 	}
 
 	if (nolphin_file_is_in_trash (file)) {
@@ -662,7 +661,7 @@ report_broken_symbolic_link (GtkWindow *parent_window, NolphinFile *file)
 		goto out;
 	}
 
-	dialog = eel_show_yes_no_dialog (prompt, detail, _("Mo_ve to Trash"), GTK_STOCK_CANCEL,
+	dialog = eel_show_yes_no_dialog (prompt, detail, _("In den _Papierkorb verschieben"), GTK_STOCK_CANCEL,
 					 parent_window);
 
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_CANCEL);
@@ -722,19 +721,19 @@ get_executable_text_file_action (GtkWindow *parent_window, NolphinFile *file)
 
 
 	file_name = nolphin_file_get_display_name (file);
-	prompt = g_strdup_printf (_("Do you want to run \"%s\", or display its contents?"),
+	prompt = g_strdup_printf (_("Wollen Sie »%s« starten oder den Inhalt anzeigen lassen?"),
 	                            file_name);
-	detail = g_strdup_printf (_("\"%s\" is an executable text file."),
+	detail = g_strdup_printf (_("»%s« ist eine ausführbare Textdatei."),
 				    file_name);
 	g_free (file_name);
 
 	dialog = eel_create_question_dialog (prompt,
 					     detail,
-					     _("Run in _Terminal"), RESPONSE_RUN_IN_TERMINAL,
-     					     _("_Display"), RESPONSE_DISPLAY,
+					     _("Im _Terminal ausführen"), RESPONSE_RUN_IN_TERMINAL,
+     					     _("An_zeigen"), RESPONSE_DISPLAY,
 					     parent_window);
 	gtk_dialog_add_button (dialog, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
-	gtk_dialog_add_button (dialog, _("_Run"), RESPONSE_RUN);
+	gtk_dialog_add_button (dialog, _("Ausfüh_ren"), RESPONSE_RUN);
 	gtk_dialog_set_default_response (dialog, GTK_RESPONSE_CANCEL);
 	gtk_widget_show (GTK_WIDGET (dialog));
 
@@ -1061,13 +1060,13 @@ confirm_multiple_windows (GtkWindow *parent_window,
 		return TRUE;
 	}
 
-	prompt = _("Are you sure you want to open all files?");
+	prompt = _("Sind Sie sicher, dass Sie alle Dateien öffnen wollen?");
 	if (use_tabs) {
-		detail = g_strdup_printf (ngettext("This will open %d separate tab.",
-						   "This will open %d separate tabs.", count), count);
+		detail = g_strdup_printf (ngettext("Dies würde %d Reiter öffnen.",
+						   "Dies würde %d Reiter öffnen.", count), count);
 	} else {
-		detail = g_strdup_printf (ngettext("This will open %d separate window.",
-						   "This will open %d separate windows.", count), count);
+		detail = g_strdup_printf (ngettext("Dies würde %d Einzelfenster öffnen.",
+						   "Dies würde %d Einzelfenster öffnen.", count), count);
 	}
 	dialog = eel_show_yes_no_dialog (prompt, detail,
 					 GTK_STOCK_OK, GTK_STOCK_CANCEL,
@@ -1166,7 +1165,7 @@ run_open_with_dialog (ActivateParametersSpecial *params)
     mime_type = nolphin_file_get_mime_type (params->file);
     uri = nolphin_file_get_uri (params->file);
 
-    dialog = gtk_dialog_new_with_buttons (_("Open with"),
+    dialog = gtk_dialog_new_with_buttons (_("Öffnen mit"),
                                           params->parent_window,
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_STOCK_CANCEL,
@@ -1246,7 +1245,7 @@ application_unhandled_uri (ActivateParameters *parameters, char *uri)
                      GTK_BUTTONS_NONE,
                      NULL);
 
-    primary = _("Unknown file type");
+    primary = _("Unbekannter Dateityp");
     display_name = nolphin_file_get_display_name (file);
     if (display_name == NULL || g_strcmp0(display_name, "") == 0) {
         g_free(display_name);
@@ -1254,17 +1253,14 @@ application_unhandled_uri (ActivateParameters *parameters, char *uri)
     }
     if (enable_exec_button) {
         secondary =
-            g_strdup_printf (_("The file \"%s\" has no known programs associated with it.  "
-                             "If you trust the source of this file, and have sufficient permissions, you can mark it executable and launch it.  "
-                             "Or, you can use the Open With dialog to pick a program to associate it with."
+            g_strdup_printf (_("Der Datei »%s« sind keine Programme zum Öffnen zugeordnet. Wenn Sie der Quelle dieser Datei vertrauen und ausreichende Zugriffsrechte haben, können Sie es als ausführbar markieren und starten. Alternativ können Sie über »Ein Programm wählen« ein Programm zum Öffnen auswählen."
                              ),
                              display_name);
 
         gtk_dialog_add_button (GTK_DIALOG (dialog),
-                               _("Make executable and run"), RESPONSE_RUN);
+                               _("Ausführbar machen und starten"), RESPONSE_RUN);
     } else {
-        secondary = g_strdup_printf (_("The file \"%s\" has no known programs associated with it.  "
-                                     "Use the Open With dialog to pick a program to open it with."),
+        secondary = g_strdup_printf (_("Die Datei »%s« wurde keinen bekannten Programmen zugeordnet. Bitte den Dialog »Öffnen mit« benutzen, um ein Programm zum Öffnen auszuwählen."),
                                      display_name);
     }
 
@@ -1276,7 +1272,7 @@ application_unhandled_uri (ActivateParameters *parameters, char *uri)
     param_uri = nolphin_file_get_uri (parameters_special->file);
     if (param_uri != NULL) {
         gtk_dialog_add_button (GTK_DIALOG (dialog),
-                   _("Choose a program"), RESPONSE_OPEN_WITH);
+                   _("Ein Programm wählen"), RESPONSE_OPEN_WITH);
     }
 
     if (!nolphin_file_can_set_permissions (file) && enable_exec_button) {
@@ -1360,11 +1356,10 @@ activate_desktop_file (ActivateParameters *parameters,
 		}
 		parameters_special->file = nolphin_file_ref (file);
 
-		primary = _("Untrusted application launcher");
+		primary = _("Starter für nicht vertrauenswürdige Anwendungen");
 		display_name = nolphin_file_get_display_name (file);
 		secondary =
-			g_strdup_printf (_("The application launcher \"%s\" has not been marked as trusted (executable). "
-					   "If you do not know the source of this file, launching it may be unsafe."
+			g_strdup_printf (_("Die Anwendung des Starters »%s« wurde nicht als vertrauenswürdig (ausführbar) markiert. Wenn die Herkunft der Datei unbekannt ist kann das Starten gefährlich sein."
 					   ),
 					 display_name);
 
@@ -1379,10 +1374,10 @@ activate_desktop_file (ActivateParameters *parameters,
 			      NULL);
 
 		gtk_dialog_add_button (GTK_DIALOG (dialog),
-				       _("_Display"), RESPONSE_DISPLAY);
+				       _("An_zeigen"), RESPONSE_DISPLAY);
 		if (nolphin_file_can_set_permissions (file)) {
 			gtk_dialog_add_button (GTK_DIALOG (dialog),
-					       _("Mark as _Trusted"), RESPONSE_MARK_TRUSTED);
+					       _("Als _vertrauenswürdig markieren"), RESPONSE_MARK_TRUSTED);
 		}
 
 		gtk_dialog_add_button (GTK_DIALOG (dialog),
@@ -1760,9 +1755,9 @@ activate_files (ActivateParameters *parameters)
 
 		pause_activation_timed_cancel (parameters);
 
-		prompt = _("Are you sure you want to open all files?");
-		detail = g_strdup_printf (ngettext ("This will open %d separate application.",
-						    "This will open %d separate applications.", num_apps), num_apps);
+		prompt = _("Sind Sie sicher, dass Sie alle Dateien öffnen wollen?");
+		detail = g_strdup_printf (ngettext ("Dies würde %d zusätzliche Anwendung öffnen.",
+						    "Dies würde %d zusätzliche Anwendungen öffnen.", num_apps), num_apps);
 		dialog = eel_show_yes_no_dialog (prompt, detail,
 						 GTK_STOCK_OK, GTK_STOCK_CANCEL,
 						 parameters->parent_window);
@@ -1839,7 +1834,7 @@ activation_mount_not_mounted_callback (GObject *source_object,
 		    (error->code != G_IO_ERROR_CANCELLED &&
 		     error->code != G_IO_ERROR_FAILED_HANDLED &&
 		     error->code != G_IO_ERROR_ALREADY_MOUNTED)) {
-			eel_show_error_dialog (_("Unable to mount location"),
+			eel_show_error_dialog (_("Einhängen des Ortes nicht möglich"),
 					       error->message, parameters->parent_window);
 		}
 
@@ -2113,7 +2108,7 @@ activation_mountable_mounted (NolphinFile  *file,
 		    (error->code != G_IO_ERROR_CANCELLED &&
 		     error->code != G_IO_ERROR_FAILED_HANDLED &&
 		     error->code != G_IO_ERROR_ALREADY_MOUNTED)) {
-			eel_show_error_dialog (_("Unable to mount location"),
+			eel_show_error_dialog (_("Einhängen des Ortes nicht möglich"),
 					       error->message, parameters->parent_window);
 		}
 
@@ -2192,7 +2187,7 @@ activation_mountable_started (NolphinFile  *file,
 		if (error->domain != G_IO_ERROR ||
 		    (error->code != G_IO_ERROR_CANCELLED &&
 		     error->code != G_IO_ERROR_FAILED_HANDLED)) {
-			eel_show_error_dialog (_("Unable to start location"),
+			eel_show_error_dialog (_("Starten des Ortes nicht möglich"),
 					       error->message, NULL);
 		}
 
@@ -2280,11 +2275,11 @@ nolphin_mime_activate_files (GtkWindow *parent_window,
 	file_count = g_list_length (files);
 	if (file_count == 1) {
 		file_name = nolphin_file_get_display_name (files->data);
-		parameters->timed_wait_prompt = g_strdup_printf (_("Opening \"%s\"."), file_name);
+		parameters->timed_wait_prompt = g_strdup_printf (_("»%s« wird geöffnet."), file_name);
 		g_free (file_name);
 	} else {
-		parameters->timed_wait_prompt = g_strdup_printf (ngettext ("Opening %d item.",
-									   "Opening %d items.",
+		parameters->timed_wait_prompt = g_strdup_printf (ngettext ("%d Objekt wird geöffnet.",
+									   "%d Objekte werden geöffnet.",
 									   file_count),
 								 file_count);
 	}

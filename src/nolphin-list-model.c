@@ -471,9 +471,9 @@ nolphin_list_model_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, int c
 				g_value_take_string (value, str);
 			} else if (attribute == attribute_name_q) {
 				if (file_entry->parent->loaded) {
-					g_value_set_string (value, _("(Empty)"));
+					g_value_set_string (value, _("(Leer)"));
 				} else {
-					g_value_set_string (value, _("Loading..."));
+					g_value_set_string (value, _("Ladevorgang …"));
 				}
 			}
 		} else {

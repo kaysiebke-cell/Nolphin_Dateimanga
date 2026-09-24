@@ -317,14 +317,14 @@ eel_editable_label_class_init (EelEditableLabelClass *class)
                                    PROP_TEXT,
                                    g_param_spec_string ("text",
                                                         _("Text"),
-                                                        _("The text of the label."),
+                                                        _("Beschriftungstext"),
                                                         NULL,
                                                         G_PARAM_READWRITE));
   g_object_class_install_property (gobject_class,
 				   PROP_JUSTIFY,
                                    g_param_spec_enum ("justify",
-                                                      _("Justification"),
-                                                      _("The alignment of the lines in the text of the label relative to each other. This does NOT affect the alignment of the label within its allocation. See GtkMisc::xalign for that."),
+                                                      _("Ausrichtung"),
+                                                      _("Die Ausrichtung der Zeilen des Beschriftungstextes relativ zueinander. Dies beeinflusst NICHT die Ausrichtung der Beschriftung innerhalb des ihr zugewiesenen Bereichs. Siehe hierzu auch GtkMisc::xalign."),
 						      GTK_TYPE_JUSTIFICATION,
 						      GTK_JUSTIFY_LEFT,
                                                       G_PARAM_READWRITE));
@@ -332,16 +332,16 @@ eel_editable_label_class_init (EelEditableLabelClass *class)
   g_object_class_install_property (gobject_class,
                                    PROP_WRAP,
                                    g_param_spec_boolean ("wrap",
-                                                        _("Line wrap"),
-                                                        _("If set, wrap lines if the text becomes too wide."),
+                                                        _("Zeilenumbruch"),
+                                                        _("Wenn eingestellt, werden Zeilen bei zu langem Text umgebrochen."),
                                                         FALSE,
                                                         G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class,
                                    PROP_CURSOR_POSITION,
                                    g_param_spec_int ("cursor_position",
-                                                     _("Cursor Position"),
-                                                     _("The current position of the insertion cursor in chars."),
+                                                     _("Zeigerposition"),
+                                                     _("Die aktuelle Position der Einfügemarke in Zeichen."),
                                                      0,
                                                      G_MAXINT,
                                                      0,
@@ -350,8 +350,8 @@ eel_editable_label_class_init (EelEditableLabelClass *class)
   g_object_class_install_property (gobject_class,
                                    PROP_SELECTION_BOUND,
                                    g_param_spec_int ("selection_bound",
-                                                     _("Selection Bound"),
-                                                     _("The position of the opposite end of the selection from the cursor in chars."),
+                                                     _("Auswahlgebunden"),
+                                                     _("Die Position des gegenüberliegenden Endes der Markierung relativ zur Eingabemarke in Zeichen."),
                                                      0,
                                                      G_MAXINT,
                                                      0,
@@ -3101,7 +3101,7 @@ popup_targets_received (GtkClipboard     *clipboard,
       append_action_signal (label, label->popup_menu, GTK_STOCK_PASTE, "paste_clipboard",
 			    clipboard_contains_text);
   
-      menuitem = gtk_menu_item_new_with_label (_("Select All"));
+      menuitem = gtk_menu_item_new_with_label (_("Alles auswählen"));
       g_signal_connect_object (menuitem, "activate",
 			       G_CALLBACK (eel_editable_label_select_all), label,
 			       G_CONNECT_SWAPPED);
@@ -3112,7 +3112,7 @@ popup_targets_received (GtkClipboard     *clipboard,
       gtk_widget_show (menuitem);
       gtk_menu_shell_append (GTK_MENU_SHELL (label->popup_menu), menuitem);
       
-      menuitem = gtk_menu_item_new_with_label (_("Input Methods"));
+      menuitem = gtk_menu_item_new_with_label (_("Eingabemethoden"));
       gtk_widget_show (menuitem);
       submenu = gtk_menu_new ();
       gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem), submenu);

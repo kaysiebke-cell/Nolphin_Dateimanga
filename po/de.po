@@ -4354,7 +4354,7 @@ msgid_plural ""
 msgstr[0] ""
 "Das %'d ausgewählte Objekt wird verschoben, sobald Sie »Einfügen« auswählen"
 msgstr[1] ""
-"Die %'d ausgewählten Objekte werden verschoben, sobald Sie »Einfügen« "
+"Die %'d ausgewählten Objekte%s werden verschoben, sobald Sie »Einfügen« "
 "auswählen"
 
 #: src/nolphin-view.c:6965
@@ -4365,7 +4365,8 @@ msgid_plural ""
 msgstr[0] ""
 "Das %'d ausgewählte Objekt wird kopiert, sobald Sie »Einfügen« auswählen"
 msgstr[1] ""
-"Die %'d ausgewählten Objekte werden kopiert, sobald Sie »Einfügen« auswählen"
+"Die %'d ausgewählten Objekte%s werden kopiert, sobald Sie »Einfügen« "
+"auswählen"
 
 #: src/nolphin-view.c:7135
 msgid "Select Target Folder For Move"

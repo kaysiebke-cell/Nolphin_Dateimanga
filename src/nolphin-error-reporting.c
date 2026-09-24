@@ -65,22 +65,22 @@ nolphin_report_error_loading_directory (NolphinFile *file,
 	if (error->domain == G_IO_ERROR) {
 		switch (error->code) {
 		case G_IO_ERROR_PERMISSION_DENIED:
-			message = g_strdup_printf (_("You do not have the permissions necessary to view the contents of \"%s\"."),
+			message = g_strdup_printf (_("Sie haben nicht die nötigen Zugriffsrechte, um den Inhalt von »%s« anzuzeigen."),
 						   file_name);
 			break;
 		case G_IO_ERROR_NOT_FOUND:
-			message = g_strdup_printf (_("\"%s\" could not be found. Perhaps it has recently been deleted."),
+			message = g_strdup_printf (_("»%s« konnte nicht gefunden werden. Vielleicht wurde es kürzlich gelöscht."),
 						   file_name);
 			break;
 		default:
-			message = g_strdup_printf (_("Sorry, could not display all the contents of \"%s\": %s"), file_name,
+			message = g_strdup_printf (_("Leider konnte der gesamte Inhalt von »%s« nicht angezeigt werden: %s"), file_name,
 						   error->message);
 		}
 	} else {
 		message = g_strdup (error->message);
 	}
 
-	eel_show_error_dialog (_("The folder contents could not be displayed."), message, parent_window);
+	eel_show_error_dialog (_("Der Ordnerinhalt konnte nicht angezeigt werden."), message, parent_window);
 
 	g_free (file_name);
 	g_free (message);
@@ -104,7 +104,7 @@ nolphin_report_error_setting_group (NolphinFile *file,
 	if (error->domain == G_IO_ERROR) {
 		switch (error->code) {
 		case G_IO_ERROR_PERMISSION_DENIED:
-			message = g_strdup_printf (_("You do not have the permissions necessary to change the group of \"%s\"."),
+			message = g_strdup_printf (_("Sie haben nicht die nötigen Zugriffsrechte, um die Gruppe von »%s« zu ändern."),
 						   file_name);
 			break;
 		default:
@@ -117,12 +117,12 @@ nolphin_report_error_setting_group (NolphinFile *file,
 		g_warning ("Hit unhandled case %s:%d in nolphin_report_error_setting_group", 
 			   g_quark_to_string (error->domain), error->code);
 		/* fall through */
-		message = g_strdup_printf (_("Sorry, could not change the group of \"%s\": %s"), file_name,
+		message = g_strdup_printf (_("Leider konnte die Gruppe von »%s« nicht geändert werden: %s"), file_name,
 					   error->message);
 	}
 	
 	
-	eel_show_error_dialog (_("The group could not be changed."), message, parent_window);
+	eel_show_error_dialog (_("Die Gruppe konnte nicht verändert werden."), message, parent_window);
 	
 	g_free (file_name);
 	g_free (message);
@@ -142,9 +142,9 @@ nolphin_report_error_setting_owner (NolphinFile *file,
 
 	file_name = nolphin_file_get_display_name (file);
 
-	message = g_strdup_printf (_("Sorry, could not change the owner of \"%s\": %s"), file_name, error->message);
+	message = g_strdup_printf (_("Leider konnte der Besitzer von »%s« nicht geändert werden: %s"), file_name, error->message);
 
-	eel_show_error_dialog (_("The owner could not be changed."), message, parent_window);
+	eel_show_error_dialog (_("Der Besitzer konnte nicht geändert werden."), message, parent_window);
 
 	g_free (file_name);
 	g_free (message);
@@ -164,9 +164,9 @@ nolphin_report_error_setting_permissions (NolphinFile *file,
 
 	file_name = nolphin_file_get_display_name (file);
 
-	message = g_strdup_printf (_("Sorry, could not change the permissions of \"%s\": %s"), file_name, error->message);
+	message = g_strdup_printf (_("Entschuldigung, die Zugriffsrechte von »%s« konnten nicht geändert werden: %s"), file_name, error->message);
 
-	eel_show_error_dialog (_("The permissions could not be changed."), message, parent_window);
+	eel_show_error_dialog (_("Die Zugriffsrechte konnten nicht geändert werden."), message, parent_window);
 
 	g_free (file_name);
 	g_free (message);
@@ -201,33 +201,28 @@ nolphin_report_error_renaming_file (NolphinFile *file,
 	if (error->domain == G_IO_ERROR) {
 		switch (error->code) {
 		case G_IO_ERROR_EXISTS:
-			message = g_strdup_printf (_("The name \"%s\" is already used in this folder. "
-						     "Please use a different name."), 
+			message = g_strdup_printf (_("Der Name »%s« wird in diesem Ordner bereits verwendet. Bitte einen anderen Namen wählen."), 
 						   new_name_truncated);
 			break;
 		case G_IO_ERROR_NOT_FOUND:
-			message = g_strdup_printf (_("There is no \"%s\" in this folder. "
-						     "Perhaps it was just moved or deleted?"), 
+			message = g_strdup_printf (_("Es gibt kein »%s« in diesem Ordner. Vielleicht wurde es gerade verschoben oder gelöscht?"), 
 						   original_name_truncated);
 			break;
 		case G_IO_ERROR_PERMISSION_DENIED:
-			message = g_strdup_printf (_("You do not have the permissions necessary to rename \"%s\"."),
+			message = g_strdup_printf (_("Ihnen fehlen die nötigen Zugriffsrechte, um »%s« umzubenennen."),
 						   original_name_truncated);
 			break;
 		case G_IO_ERROR_INVALID_FILENAME:
 			if (strchr (new_name, '/') != NULL) {
-				message = g_strdup_printf (_("The name \"%s\" is not valid because it contains the character \"/\". "
-							     "Please use a different name."),
+				message = g_strdup_printf (_("Der Name »%s« ist nicht erlaubt, da er das Zeichen »/« enthält. Bitte einen anderen Namen verwenden."),
 							   new_name_truncated);
 			} else {
-				message = g_strdup_printf (_("The name \"%s\" is not valid. "
-							     "Please use a different name."),
+				message = g_strdup_printf (_("Der Name »%s« ist nicht gültig. Bitte einen anderen Namen verwenden."),
 							   new_name_truncated);
 			}
 			break;
                 case G_IO_ERROR_FILENAME_TOO_LONG:
-                        message = g_strdup_printf (_("The name \"%s\" is too long. "
-                                                     "Please use a different name."),
+                        message = g_strdup_printf (_("Der Name »%s« ist zu lang. Bitte einen kürzeren Namen verwenden."),
                                                      new_name_truncated);
                         break;
 		default:
@@ -240,7 +235,7 @@ nolphin_report_error_renaming_file (NolphinFile *file,
 		g_warning ("Hit unhandled case %s:%d in nolphin_report_error_renaming_file", 
 			   g_quark_to_string (error->domain), error->code);
 		/* fall through */
-		message = g_strdup_printf (_("Sorry, could not rename \"%s\" to \"%s\": %s"), 
+		message = g_strdup_printf (_("Leider konnte »%s« nicht in »%s« umbenannt werden: %s"), 
 					   original_name_truncated, new_name_truncated,
 					   error->message);
 	}
@@ -248,7 +243,7 @@ nolphin_report_error_renaming_file (NolphinFile *file,
 	g_free (original_name_truncated);
 	g_free (new_name_truncated);
 
-	eel_show_error_dialog (_("The item could not be renamed."), message, parent_window);
+	eel_show_error_dialog (_("Objekt konnte nicht umbenannt werden."), message, parent_window);
 	g_free (message);
 }
 
@@ -345,7 +340,7 @@ nolphin_rename_file (NolphinFile *file,
 
 	/* Start the timed wait to cancel the rename. */
 	old_name = nolphin_file_get_display_name (file);
-	wait_message = g_strdup_printf (_("Renaming \"%s\" to \"%s\"."),
+	wait_message = g_strdup_printf (_("»%s« wird in »%s« umbenannt."),
 					old_name,
 					new_name);
 	g_free (old_name);

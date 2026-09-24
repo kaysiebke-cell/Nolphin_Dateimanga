@@ -151,7 +151,7 @@ desktop_icon_file_get_date (NolphinFile *file,
 static char *
 desktop_icon_file_get_where_string (NolphinFile *file)
 {
-	return g_strdup (_("on the desktop"));
+	return g_strdup (_("auf dem Schreibtisch"));
 }
 
 static void

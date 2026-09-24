@@ -56,7 +56,7 @@ child_spawned_cb (VteTerminal *vte,
     terminal->spawn_pending = FALSE;
 
     if (error != NULL) {
-        gchar *message = g_strdup_printf (_("Failed to start terminal: %s\r\n"), error->message);
+        gchar *message = g_strdup_printf (_("Terminal konnte nicht gestartet werden: %s\r\n"), error->message);
         vte_terminal_feed (vte, message, -1);
         g_free (message);
         return;

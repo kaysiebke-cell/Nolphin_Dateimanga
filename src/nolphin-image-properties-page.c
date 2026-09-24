@@ -328,19 +328,19 @@ append_basic_info (NolphinImagePropertiesPage *page)
 	value = g_strdup_printf ("%s (%s)", name, desc);
 	g_free (name);
 	g_free (desc);
-	append_item (page, _("Image Type"), value);
+	append_item (page, _("Bildtyp"), value);
 	g_free (value);
-	value = g_strdup_printf (ngettext ("%d pixel",
-					   "%d pixels",
+	value = g_strdup_printf (ngettext ("%d Pixel",
+					   "%d Pixel",
 					   page->details->width),
 				 page->details->width);
-	append_item (page, _("Width"), value);
+	append_item (page, _("Breite"), value);
 	g_free (value);
-	value = g_strdup_printf (ngettext ("%d pixel",
-					   "%d pixels",
+	value = g_strdup_printf (ngettext ("%d Pixel",
+					   "%d Pixel",
 					   page->details->height),
 				 page->details->height);
-	append_item (page, _("Height"), value);
+	append_item (page, _("Höhe"), value);
 	g_free (value);
 }
 
@@ -353,19 +353,19 @@ append_options_info (NolphinImagePropertiesPage *page)
 	if (pixbuf == NULL)
 		return;
 
-	if (!append_option_value_pair (page, pixbuf, "Title", _("Title")))
+	if (!append_option_value_pair (page, pixbuf, "Titel", _("Title")))
 		append_option_value_pair (page, pixbuf, "tEXt::Title", _("Title"));
-	if (!append_option_value_pair (page, pixbuf, "Author", _("Author")))
+	if (!append_option_value_pair (page, pixbuf, "Verfasser", _("Author")))
 		append_option_value_pair (page, pixbuf, "tEXt::Author", _("Author"));
 
-	append_option_value_pair (page, pixbuf, "tEXt::Description", _("Description"));
-	append_option_value_pair (page, pixbuf, "tEXt::Copyright", _("Copyright"));
-	append_option_value_pair (page, pixbuf, "tEXt::Creation Time", _("Created On"));
-	append_option_value_pair (page, pixbuf, "tEXt::Software", _("Created By"));
-	append_option_value_pair (page, pixbuf, "tEXt::Disclaimer", _("Disclaimer"));
-	append_option_value_pair (page, pixbuf, "tEXt::Warning", _("Warning"));
-	append_option_value_pair (page, pixbuf, "tEXt::Source", _("Source"));
-	append_option_value_pair (page, pixbuf, "tEXt::Comment", _("Comment"));
+	append_option_value_pair (page, pixbuf, "tEXt::Description", _("Beschreibung"));
+	append_option_value_pair (page, pixbuf, "tEXt::Copyright", _("Urheberrecht"));
+	append_option_value_pair (page, pixbuf, "tEXt::Creation Time", _("Erstellt am"));
+	append_option_value_pair (page, pixbuf, "tEXt::Software", _("Erstellt Von"));
+	append_option_value_pair (page, pixbuf, "tEXt::Disclaimer", _("Haftungsausschluss"));
+	append_option_value_pair (page, pixbuf, "tEXt::Warning", _("Warnung!"));
+	append_option_value_pair (page, pixbuf, "tEXt::Source", _("Quelle"));
+	append_option_value_pair (page, pixbuf, "tEXt::Comment", _("Bemerkung"));
 }
 
 static void
@@ -379,24 +379,24 @@ append_exif_info (NolphinImagePropertiesPage *page)
 		return;
 
 	if (exifdata->ifd[0] && exifdata->ifd[0]->count) {
-                append_tag_value_pair (page, exifdata, EXIF_TAG_MAKE, _("Camera Brand"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_MODEL, _("Camera Model"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_MAKE, _("Marke der Kamera"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_MODEL, _("Modell der Kamera"));
 
                 /* Choose which date to show in order of relevance */
-                if (!append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME_ORIGINAL, _("Date Taken"))) {
-			if (!append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME_DIGITIZED, _("Date Digitized"))) {
-				append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME, _("Date Modified"));
+                if (!append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME_ORIGINAL, _("Aufnahmedatum"))) {
+			if (!append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME_DIGITIZED, _("Digitalisierungsdatum"))) {
+				append_tag_value_pair (page, exifdata, EXIF_TAG_DATE_TIME, _("Änderungsdatum"));
 			}
 		}
 
-                append_tag_value_pair (page, exifdata, EXIF_TAG_EXPOSURE_TIME, _("Exposure Time"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_APERTURE_VALUE, _("Aperture Value"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_ISO_SPEED_RATINGS, _("ISO Speed Rating"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_FLASH,_("Flash Fired"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_METERING_MODE, _("Metering Mode"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_EXPOSURE_PROGRAM, _("Exposure Program"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_FOCAL_LENGTH,_("Focal Length"));
-                append_tag_value_pair (page, exifdata, EXIF_TAG_SOFTWARE, _("Software"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_EXPOSURE_TIME, _("Belichtungsdauer"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_APERTURE_VALUE, _("Blendenwert"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_ISO_SPEED_RATINGS, _("ISO-Empfindlichkeit"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_FLASH,_("Blitz ausgelöst"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_METERING_MODE, _("Messmethode"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_EXPOSURE_PROGRAM, _("Belichtungsprogramm"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_FOCAL_LENGTH,_("Brennweite"));
+                append_tag_value_pair (page, exifdata, EXIF_TAG_SOFTWARE, _("Anwendungen"));
 	}
 
 	exif_data_unref (exifdata);
@@ -410,12 +410,12 @@ append_xmp_info (NolphinImagePropertiesPage *page)
 	if (page->details->xmp == NULL)
 		return;
 
-	append_xmp_value_pair (page, page->details->xmp, NS_IPTC4XMP, "Location", _("Location"));
-	append_xmp_value_pair (page, page->details->xmp, NS_DC, "description", _("Description"));
-	append_xmp_value_pair (page, page->details->xmp, NS_DC, "subject", _("Keywords"));
-	append_xmp_value_pair (page, page->details->xmp, NS_DC, "creator", _("Creator"));
-	append_xmp_value_pair (page, page->details->xmp, NS_DC, "rights", _("Copyright"));
-	append_xmp_value_pair (page, page->details->xmp, NS_XAP,"Rating", _("Rating"));
+	append_xmp_value_pair (page, page->details->xmp, NS_IPTC4XMP, "Speicherort", _("Location"));
+	append_xmp_value_pair (page, page->details->xmp, NS_DC, "description", _("Beschreibung"));
+	append_xmp_value_pair (page, page->details->xmp, NS_DC, "subject", _("Stichworte"));
+	append_xmp_value_pair (page, page->details->xmp, NS_DC, "creator", _("Ersteller"));
+	append_xmp_value_pair (page, page->details->xmp, NS_DC, "rights", _("Urheberrecht"));
+	append_xmp_value_pair (page, page->details->xmp, NS_XAP,"Bewertung", _("Rating"));
 	/* TODO add CC licenses */
 #endif /*HAVE EXEMPI*/
 }
@@ -438,7 +438,7 @@ load_finished (NolphinImagePropertiesPage *page)
 		append_exif_info (page);
 		append_xmp_info (page);
 	} else {
-		append_item (page, _("Failed to load image information"), NULL);
+		append_item (page, _("Bildinformationen konnten nicht geladen werden"), NULL);
 	}
 
 	if (page->details->loader != NULL) {
@@ -703,7 +703,7 @@ nolphin_image_properties_page_init (NolphinImagePropertiesPage *page)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (page->details->grid), GTK_ORIENTATION_VERTICAL);
 	gtk_grid_set_row_spacing (GTK_GRID (page->details->grid), 6);
 	gtk_grid_set_column_spacing (GTK_GRID (page->details->grid), 20);
-	append_item (page, _("Loading..."), NULL);
+	append_item (page, _("Ladevorgang …"), NULL);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), page->details->grid);
 
 	gtk_widget_show_all (GTK_WIDGET (page));
@@ -764,7 +764,7 @@ get_property_pages (NolphinPropertyPageProvider *provider,
 		load_location (page, file);
 
 		real_page = nolphin_property_page_new ("NolphinImagePropertiesPage::property_page",
-		                            	    gtk_label_new (_("Image")),
+		                            	    gtk_label_new (_("Bild")),
 		                                    GTK_WIDGET (page));
 		pages = g_list_append (pages, real_page);
 	}

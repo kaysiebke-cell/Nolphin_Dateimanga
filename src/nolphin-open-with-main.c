@@ -102,8 +102,7 @@ main (int argc, char *argv[])
 	error = NULL;
 	/* Translators: This is the --help description for the open-with app,
 	   the initial newlines are between the command line arg and the description */
-	context = g_option_context_new (N_("\n\nShow an open-with dialog given a uri, "
-                                       "to allow the user to change the default mimetype handler."));
+	context = g_option_context_new (N_("\n\nEin Öffnen-mit-Dialog bei einer Adresse anzeigen, um dem Benutzer zu erlauben, das Standard-MIME-Typ-Programm zu ändern."));
 	g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
 	g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
@@ -149,7 +148,7 @@ main (int argc, char *argv[])
 
     g_clear_pointer (&basename, g_free);
 
-    dialog = gtk_dialog_new_with_buttons (_("Open with"),
+    dialog = gtk_dialog_new_with_buttons (_("Öffnen mit"),
                                           NULL,
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_STOCK_CANCEL,

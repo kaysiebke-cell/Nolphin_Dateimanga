@@ -169,7 +169,7 @@ setup_empty_list (void)
 	gtk_list_store_append (bookmark_empty_list_store, &iter);
 
 	gtk_list_store_set (bookmark_empty_list_store, &iter,
-			    BOOKMARK_LIST_COLUMN_NAME, _("No bookmarks defined"),
+			    BOOKMARK_LIST_COLUMN_NAME, _("Keine Lesezeichen vorhanden"),
 			    BOOKMARK_LIST_COLUMN_STYLE, PANGO_STYLE_ITALIC,
 			    -1);
 }

@@ -502,8 +502,8 @@ nolphin_properties_window_drag_data_received (GtkWidget *widget, GdkDragContext 
 
 	if (!exactly_one) {
 		eel_show_error_dialog
-			(_("You cannot assign more than one custom icon at a time!"),
-			 _("Please drag just one image to set a custom icon."),
+			(_("Mehr als ein benutzerdefiniertes Symbol kann nicht auf einmal zugewiesen werden."),
+			 _("Bitte ziehen Sie immer nur ein Bild, um ein benutzerdefiniertes Symbol festzulegen."),
 			 window);
 	} else {
 		if (uri_is_local_image (uris[0])) {
@@ -514,14 +514,14 @@ nolphin_properties_window_drag_data_received (GtkWidget *widget, GdkDragContext 
 			f = g_file_new_for_uri (uris[0]);
 			if (!g_file_is_native (f)) {
 				eel_show_error_dialog
-					(_("The file that you dropped is not local."),
-					 _("You can only use local images as custom icons."),
+					(_("Die abgelegte Datei ist nicht lokal."),
+					 _("Sie können ausschließlich lokale Bilder als benutzerdefinierte Symbole benutzen."),
 					 window);
 
 			} else {
 				eel_show_error_dialog
-					(_("The file that you dropped is not an image."),
-					 _("You can only use local images as custom icons."),
+					(_("Die abgelegte Datei ist kein Bild."),
+					 _("Sie können ausschließlich lokale Bilder als benutzerdefinierte Symbole benutzen."),
 					 window);
 			}
 			g_object_unref (f);
@@ -650,7 +650,7 @@ update_name_field (NolphinPropertiesWindow *window)
 	NolphinFile *file;
 
 	gtk_label_set_text_with_mnemonic (window->details->name_label,
-					  ngettext ("_Name:", "_Names:",
+					  ngettext ("_Name:", "_Namen:",
 						    get_not_gone_original_file_count (window)));
 
 	if (is_multi_file_window (window)) {
@@ -845,7 +845,7 @@ update_properties_window_title (NolphinPropertiesWindow *window)
 
 	g_return_if_fail (GTK_IS_WINDOW (window));
 
-	title = g_strdup_printf (_("Properties"));
+	title = g_strdup_printf (_("Eigenschaften"));
 
 	if (!is_multi_file_window (window)) {
 		file = get_original_file (window);
@@ -853,7 +853,7 @@ update_properties_window_title (NolphinPropertiesWindow *window)
 		if (file != NULL) {
 			g_free (title);
 			name = nolphin_file_get_display_name (file);
-			title = g_strdup_printf (_("%s Properties"), name);
+			title = g_strdup_printf (_("Eigenschaften von %s"), name);
 			g_free (name);
 		}
 	}
@@ -1132,7 +1132,7 @@ file_list_get_string_attribute (GList *file_list,
 					 attribute_name);
 			}
 		}
-		return g_strdup (_("unknown"));
+		return g_strdup (_("Unbekannt"));
 	} else {
 		return g_strdup (inconsistent_value);
 	}
@@ -1364,7 +1364,7 @@ schedule_group_change_timeout (NolphinPropertiesWindow *window)
 	eel_timed_wait_start
 		((EelCancelCallback) cancel_group_change_callback,
 		 window,
-		 _("Cancel Group Change?"),
+		 _("Gruppenwechsel abbrechen?"),
 		 GTK_WINDOW (window));
 
 	nolphin_file_set_group
@@ -1779,7 +1779,7 @@ schedule_owner_change_timeout (NolphinPropertiesWindow *window)
 	eel_timed_wait_start
 		((EelCancelCallback) cancel_owner_change_callback,
 		 window,
-		 _("Cancel Owner Change?"),
+		 _("Besitzerwechsel abbrechen?"),
 		 GTK_WINDOW (window));
 
 	nolphin_file_set_owner
@@ -2113,9 +2113,9 @@ directory_contents_value_field_update (NolphinPropertiesWindow *window)
 		switch (status) {
 		case NOLPHIN_REQUEST_DONE:
 			if (unreadable_directory_count == 0) {
-				text = g_strdup (_("nothing"));
+				text = g_strdup (_("Nichts"));
 			} else {
-				text = g_strdup (_("unreadable"));
+				text = g_strdup (_("nicht lesbar"));
 			}
 
 			break;
@@ -2126,18 +2126,18 @@ directory_contents_value_field_update (NolphinPropertiesWindow *window)
 		}
 	} else {
 		if (total_hidden > 0) {
-			text = g_strdup_printf (ngettext("%1$s item (and %2$s hidden)", "%1$s items (and %2$s hidden)", total_count),
+			text = g_strdup_printf (ngettext("%1$s Objekt (und %2$s verborgen)", "%1$s Objekte (und %2$s verborgen)", total_count),
 						g_strdup_printf("%'d", total_count),
 						g_strdup_printf("%'d", total_hidden));
 		} else {
-			text = g_strdup_printf (ngettext("%1$s item", "%1$s items", total_count),
+			text = g_strdup_printf (ngettext("%1$s Objekt", "%1$s Objekte", total_count),
 						g_strdup_printf("%'d", total_count));
 		}
 
 		if (unreadable_directory_count != 0) {
 			temp = text;
 			text = g_strconcat (temp, "\n",
-					    _("(some contents unreadable)"),
+					    _("(Einige Inhalte sind nicht lesbar)"),
 					    NULL);
 			g_free (temp);
 			used_two_lines = TRUE;
@@ -2154,7 +2154,7 @@ directory_contents_value_field_update (NolphinPropertiesWindow *window)
 	 * 2-line value. Maybe there's a better way to do this, but I
 	 * couldn't think of one.
 	 */
-	text = g_strdup (_("Contents:"));
+	text = g_strdup (_("Inhalte:"));
 	if (used_two_lines) {
 		temp = text;
 		text = g_strconcat (temp, "\n ", NULL);
@@ -2320,7 +2320,7 @@ append_size_field (NolphinPropertiesWindow *window,
 {
 	GtkLabel *title_field, *value_field;
 
-	title_field = attach_title_field (grid, _("Size:"));
+	title_field = attach_title_field (grid, _("Größe:"));
 	value_field = attach_value_label (grid, GTK_WIDGET (title_field), NULL);
 
 	g_assert (window->details->size_value_field == NULL);
@@ -2977,17 +2977,17 @@ create_pie_widget (NolphinPropertiesWindow *window)
 	gtk_widget_set_valign (used_canvas, GTK_ALIGN_CENTER);
 	gtk_widget_set_halign (used_canvas, GTK_ALIGN_CENTER);
 	gtk_widget_set_size_request (used_canvas, 20, 20);
-	/* Translators: "used" refers to the capacity of the filesystem */
+	/* Translators: "benutzt" refers to the capacity of the filesystem */
 	used_label = gtk_label_new (g_strconcat (used, " ", _("used"), NULL));
 
 	free_canvas = gtk_drawing_area_new ();
 	gtk_widget_set_valign (free_canvas, GTK_ALIGN_CENTER);
 	gtk_widget_set_halign (free_canvas, GTK_ALIGN_CENTER);
 	gtk_widget_set_size_request (free_canvas, 20, 20);
-	/* Translators: "free" refers to the capacity of the filesystem */
+	/* Translators: "frei" refers to the capacity of the filesystem */
 	free_label = gtk_label_new (g_strconcat (free, " ", _("free"), NULL));
 
-	capacity_label = gtk_label_new (g_strconcat (_("Total capacity:"), " ", capacity, NULL));
+	capacity_label = gtk_label_new (g_strconcat (_("Gesamtkapazität:"), " ", capacity, NULL));
 	fstype_label = gtk_label_new (NULL);
 
 	location = g_file_new_for_uri (uri);
@@ -2996,7 +2996,7 @@ create_pie_widget (NolphinPropertiesWindow *window)
 	if (info) {
 		fs_type = g_file_info_get_attribute_string (info, G_FILE_ATTRIBUTE_FILESYSTEM_TYPE);
 		if (fs_type != NULL) {
-			gchar *str = g_strconcat (_("Filesystem type:"), " ", fs_type, NULL);
+			gchar *str = g_strconcat (_("Dateisystemtyp:"), " ", fs_type, NULL);
 			gtk_label_set_text (GTK_LABEL (fstype_label), str);
 			g_free (str);
 		}
@@ -3082,7 +3082,7 @@ create_basic_page (NolphinPropertiesWindow *window)
 	GtkWidget *icon_pixmap_widget;
 	GtkWidget *volume_usage;
 	GtkWidget *hbox, *vbox;
-	hbox = create_page_with_hbox (window->details->stack, "basic", _("Basic"),
+	hbox = create_page_with_hbox (window->details->stack, "basic", _("Standard"),
 				      "help:gnome-help/nolphin-file-properties-basic");
 
 	/* Icon pixmap */
@@ -3139,7 +3139,7 @@ create_basic_page (NolphinPropertiesWindow *window)
 
 	if (should_show_file_type (window)) {
 		append_title_and_ellipsizing_value (window, grid,
-						    _("Type:"),
+						    _("Typ:"),
 						    "type",
 						    INCONSISTENT_STATE_STRING,
 						    FALSE,
@@ -3148,7 +3148,7 @@ create_basic_page (NolphinPropertiesWindow *window)
 
 	if (should_show_link_target (window)) {
 		append_title_and_ellipsizing_value (window, grid,
-						    _("Link target:"),
+						    _("Verknüpfungsziel:"),
 						    "link_target",
 						    INCONSISTENT_STATE_STRING,
 						    FALSE,
@@ -3173,14 +3173,14 @@ create_basic_page (NolphinPropertiesWindow *window)
 	append_blank_row (grid);
 
 	if (should_show_location_info (window)) {
-		append_title_and_ellipsizing_value (window, grid, _("Location:"),
+		append_title_and_ellipsizing_value (window, grid, _("Ort:"),
 						    "where",
 						    INCONSISTENT_STATE_STRING,
 						    location_show_original (window),
 						    PANGO_ELLIPSIZE_MIDDLE);
 
 		append_title_and_ellipsizing_value (window, grid,
-						    _("Volume:"),
+						    _("Datenträger:"),
 						    "volume",
 						    INCONSISTENT_STATE_STRING,
 						    FALSE,
@@ -3193,19 +3193,19 @@ create_basic_page (NolphinPropertiesWindow *window)
 	}
 	
 	if (should_show_accessed_date (window)) {
-		append_title_value_pair (window, grid, _("Accessed:"),
+		append_title_value_pair (window, grid, _("Zugegriffen:"),
 					 "date_accessed_full",
 					 INCONSISTENT_STATE_STRING,
 					 FALSE);
 		
-		append_title_value_pair (window, grid, _("Created:"),
+		append_title_value_pair (window, grid, _("Erstellt:"),
                      "date_created_full",
                      INCONSISTENT_STATE_STRING,
                      FALSE);
 	}
 	
 	if (should_show_modified_date (window)) {
-		append_title_value_pair (window, grid, _("Modified:"),
+		append_title_value_pair (window, grid, _("Geändert:"),
 					 "date_modified_full",
 					 INCONSISTENT_STATE_STRING,
 					 FALSE);
@@ -3214,7 +3214,7 @@ create_basic_page (NolphinPropertiesWindow *window)
 	if (should_show_free_space (window)) {
 		append_blank_row (grid);
 
-		append_title_value_pair (window, grid, _("Free space:"),
+		append_title_value_pair (window, grid, _("Freier Speicherplatz:"),
 					 "free_space",
 					 INCONSISTENT_STATE_STRING,
 					 FALSE);
@@ -3658,11 +3658,11 @@ add_permissions_checkbox (NolphinPropertiesWindow *window,
 	const gchar *label;
 
 	if (type == PERMISSIONS_CHECKBOXES_READ) {
-		label = _("_Read");
+		label = _("_Lesen");
 	} else if (type == PERMISSIONS_CHECKBOXES_WRITE) {
-		label = _("_Write");
+		label = _("_Schreiben");
 	} else {
-		label = _("E_xecute");
+		label = _("_Ausführen");
 	}
 
 	return add_permissions_checkbox_with_label (window, grid,
@@ -3930,32 +3930,32 @@ permission_combo_update (NolphinPropertiesWindow *window,
 				/* translators: this gets concatenated to "no read",
 				 * "no access", etc. (see following strings)
 				 */
-				g_string_append (str, _("no "));
+				g_string_append (str, _("Nein "));
 			}
 			if (is_folder) {
-				g_string_append (str, _("list"));
+				g_string_append (str, _("Liste"));
 			} else {
-				g_string_append (str, _("read"));
+				g_string_append (str, _("lesen"));
 			}
 
 			g_string_append (str, ", ");
 
 			if (!(all_perm & PERMISSION_WRITE)) {
-				g_string_append (str, _("no "));
+				g_string_append (str, _("Nein "));
 			}
 			if (is_folder) {
-				g_string_append (str, _("create/delete"));
+				g_string_append (str, _("erstellen/löschen"));
 			} else {
-				g_string_append (str, _("write"));
+				g_string_append (str, _("schreiben"));
 			}
 
 			if (is_folder) {
 				g_string_append (str, ", ");
 
 				if (!(all_perm & PERMISSION_EXEC)) {
-					g_string_append (str, _("no "));
+					g_string_append (str, _("Nein "));
 				}
-				g_string_append (str, _("access"));
+				g_string_append (str, _("Zugriff"));
 			}
 
 			gtk_list_store_append (store, &iter);
@@ -4003,11 +4003,11 @@ add_permissions_combo_box (NolphinPropertiesWindow *window, GtkGrid *grid,
 	GtkTreeIter iter;
 
 	if (short_label) {
-		label = attach_title_field (grid, _("Access:"));
+		label = attach_title_field (grid, _("Zugriff:"));
 	} else if (is_folder) {
-		label = attach_title_field (grid, _("Folder access:"));
+		label = attach_title_field (grid, _("Ordnerzugriff:"));
 	} else {
-		label = attach_title_field (grid, _("File access:"));
+		label = attach_title_field (grid, _("Dateizugriff:"));
 	}
 
 	store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN);
@@ -4022,23 +4022,23 @@ add_permissions_combo_box (NolphinPropertiesWindow *window, GtkGrid *grid,
 			/* Translators: this is referred to the permissions
 			 * the user has in a directory.
 			 */
-			gtk_list_store_set (store, &iter, 0, _("None"), 1, 0, -1);
+			gtk_list_store_set (store, &iter, 0, _("Keine"), 1, 0, -1);
 		}
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set (store, &iter, 0, _("List files only"), 1, PERMISSION_READ, -1);
+		gtk_list_store_set (store, &iter, 0, _("Dateien nur auflisten"), 1, PERMISSION_READ, -1);
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set (store, &iter, 0, _("Access files"), 1, PERMISSION_READ|PERMISSION_EXEC, -1);
+		gtk_list_store_set (store, &iter, 0, _("Auf Dateien zugreifen"), 1, PERMISSION_READ|PERMISSION_EXEC, -1);
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set (store, &iter, 0, _("Create and delete files"), 1, PERMISSION_READ|PERMISSION_EXEC|PERMISSION_WRITE, -1);
+		gtk_list_store_set (store, &iter, 0, _("Dateien erstellen und löschen"), 1, PERMISSION_READ|PERMISSION_EXEC|PERMISSION_WRITE, -1);
 	} else {
 		if (type != PERMISSION_USER) {
 			gtk_list_store_append (store, &iter);
-			gtk_list_store_set (store, &iter, 0, _("None"), 1, 0, -1);
+			gtk_list_store_set (store, &iter, 0, _("Keine"), 1, 0, -1);
 		}
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set (store, &iter, 0, _("Read-only"), 1, PERMISSION_READ, -1);
+		gtk_list_store_set (store, &iter, 0, _("Nur lesen"), 1, PERMISSION_READ, -1);
 		gtk_list_store_append (store, &iter);
-		gtk_list_store_set (store, &iter, 0, _("Read and write"), 1, PERMISSION_READ|PERMISSION_WRITE, -1);
+		gtk_list_store_set (store, &iter, 0, _("Lesen und schreiben"), 1, PERMISSION_READ|PERMISSION_WRITE, -1);
 	}
 	if (window->details->has_recursive_apply) {
 		permission_combo_add_multiple_choice (GTK_COMBO_BOX (combo), &iter);
@@ -4103,11 +4103,11 @@ append_special_execution_flags (NolphinPropertiesWindow *window, GtkGrid *grid)
 	GtkWidget *title;
 
 	append_blank_slim_row (grid);
-	title = GTK_WIDGET (attach_title_field (grid, _("Special flags:")));
+	title = GTK_WIDGET (attach_title_field (grid, _("Besondere Attribute:")));
 
-	append_special_execution_checkbox (window, grid, title, _("Set _user ID"), UNIX_PERM_SUID);
-	append_special_execution_checkbox (window, grid, NULL, _("Set gro_up ID"), UNIX_PERM_SGID);
-	append_special_execution_checkbox (window, grid, NULL, _("_Sticky"), UNIX_PERM_STICKY);
+	append_special_execution_checkbox (window, grid, title, _("_Benutzerkennung festlegen"), UNIX_PERM_SUID);
+	append_special_execution_checkbox (window, grid, NULL, _("_Gruppenkennung festlegen"), UNIX_PERM_SGID);
+	append_special_execution_checkbox (window, grid, NULL, _("_Klebrig"), UNIX_PERM_STICKY);
 }
 
 static gboolean
@@ -4181,7 +4181,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 	has_directory = files_has_directory (window);
 
 	if (!is_multi_file_window (window) && nolphin_file_can_set_owner (get_target_file (window))) {
-		owner_label = attach_title_field (page_grid, _("_Owner:"));
+		owner_label = attach_title_field (page_grid, _("_Besitzer:"));
 		/* Combo box in this case. */
 		owner_combo_box = attach_owner_combo_box (page_grid,
 							  GTK_WIDGET (owner_label),
@@ -4189,7 +4189,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 		gtk_label_set_mnemonic_widget (owner_label,
 					       GTK_WIDGET (owner_combo_box));
 	} else {
-		owner_label = attach_title_field (page_grid, _("Owner:"));
+		owner_label = attach_title_field (page_grid, _("Eigentümer:"));
 		/* Static text in this case. */
 		value = attach_value_field (window,
 					    page_grid, GTK_WIDGET (owner_label),
@@ -4211,7 +4211,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 	append_blank_slim_row (page_grid);
 
 	if (!is_multi_file_window (window) && nolphin_file_can_set_group (get_target_file (window))) {
-		group_label = attach_title_field (page_grid, _("_Group:"));
+		group_label = attach_title_field (page_grid, _("_Gruppe:"));
 
 		/* Combo box in this case. */
 		group_combo_box = attach_group_combo_box (page_grid, GTK_WIDGET (group_label),
@@ -4219,7 +4219,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 		gtk_label_set_mnemonic_widget (group_label,
 					       GTK_WIDGET (group_combo_box));
 	} else {
-		group_label = attach_title_field (page_grid, _("Group:"));
+		group_label = attach_title_field (page_grid, _("Gruppe:"));
 
 		/* Static text in this case. */
 		value = attach_value_field (window, page_grid,
@@ -4258,10 +4258,10 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
         GtkLabel *execute_label;
         append_blank_slim_row (page_grid);
 
-        execute_label = attach_title_field (page_grid, _("Execute:"));
+        execute_label = attach_title_field (page_grid, _("Ausführen:"));
         add_permissions_checkbox_with_label (window, page_grid,
                              GTK_WIDGET (execute_label),
-                             _("Allow _executing file as program"),
+                             _("_Der Datei erlauben sie als Programm auszuführen"),
                              UNIX_PERM_USER_EXEC|UNIX_PERM_GROUP_EXEC|UNIX_PERM_OTHER_EXEC,
                              execute_label, FALSE);
     }
@@ -4278,9 +4278,9 @@ create_permission_checkboxes (NolphinPropertiesWindow *window,
 	GtkGrid *check_button_grid;
 	GtkWidget *w;
 
-	owner_perm_label = attach_title_field (page_grid, _("Owner:"));
-	group_perm_label = attach_title_field (page_grid, _("Group:"));
-	other_perm_label = attach_title_field (page_grid, _("Others:"));
+	owner_perm_label = attach_title_field (page_grid, _("Eigentümer:"));
+	group_perm_label = attach_title_field (page_grid, _("Gruppe:"));
+	other_perm_label = attach_title_field (page_grid, _("Andere:"));
 
 	check_button_grid = GTK_GRID (create_grid_with_standard_properties ());
 	gtk_widget_show (GTK_WIDGET (check_button_grid));
@@ -4373,7 +4373,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 
 	if (!is_multi_file_window (window) && nolphin_file_can_set_owner (get_target_file (window))) {
 
-		owner_label  = attach_title_field (page_grid, _("_Owner:"));
+		owner_label  = attach_title_field (page_grid, _("_Besitzer:"));
 		/* Combo box in this case. */
 		owner_combo_box = attach_owner_combo_box (page_grid,
 							  GTK_WIDGET (owner_label),
@@ -4383,7 +4383,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 	} else {
 		GtkWidget *value;
 
-		owner_label = attach_title_field (page_grid, _("Owner:"));
+		owner_label = attach_title_field (page_grid, _("Eigentümer:"));
 		/* Static text in this case. */
 		value = attach_value_field (window,
 					    page_grid,
@@ -4395,7 +4395,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 	}
 
 	if (!is_multi_file_window (window) && nolphin_file_can_set_group (get_target_file (window))) {
-		group_label = attach_title_field (page_grid, _("_Group:"));
+		group_label = attach_title_field (page_grid, _("_Gruppe:"));
 
 		/* Combo box in this case. */
 		group_combo_box = attach_group_combo_box (page_grid, GTK_WIDGET (group_label),
@@ -4403,7 +4403,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 		gtk_label_set_mnemonic_widget (group_label,
 					       GTK_WIDGET (group_combo_box));
 	} else {
-		group_label = attach_title_field (page_grid, _("Group:"));
+		group_label = attach_title_field (page_grid, _("Gruppe:"));
 
 		/* Static text in this case. */
 		attach_value_field (window, page_grid, GTK_WIDGET (group_label),
@@ -4419,7 +4419,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 
 	if (has_directory) {
 		if (has_file || window->details->has_recursive_apply) {
-			attach_title_field (page_grid, _("Folder Permissions:"));
+			attach_title_field (page_grid, _("Zugriffsrechte für Ordner:"));
 		}
 		create_permission_checkboxes (window, page_grid, TRUE);
 	}
@@ -4427,7 +4427,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 
 	if (has_file || window->details->has_recursive_apply) {
 		if (has_directory) {
-			attach_title_field (page_grid, _("File Permissions:"));
+			attach_title_field (page_grid, _("Zugriffsrechte für Dateien:"));
 		}
 		create_permission_checkboxes (window, page_grid, FALSE);
 	}
@@ -4436,7 +4436,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 	append_special_execution_flags (window, page_grid);
 
 	append_title_value_pair
-		(window, page_grid, _("Text view:"),
+		(window, page_grid, _("Textansicht:"),
 		 "permissions", INCONSISTENT_STATE_STRING,
 		 FALSE);
 }
@@ -4570,7 +4570,7 @@ create_permissions_page (NolphinPropertiesWindow *window)
 	GList *file_list;
 
 	vbox = create_page_with_vbox (window->details->stack, "permissions",
-				      _("Permissions"),
+				      _("Zugriffsrechte"),
 				      "help:gnome-help/nolphin-file-properties-permissions");
 
 	file_list = window->details->original_files;
@@ -4584,7 +4584,7 @@ create_permissions_page (NolphinPropertiesWindow *window)
 		if (!all_can_set_permissions (file_list)) {
 			add_prompt_and_separator (
 				vbox,
-				_("You are not the owner, so you cannot change these permissions."));
+				_("Sie sind nicht der Besitzer, daher können Sie die Zugriffsrechte nicht ändern."));
 		}
 
 		page_grid = GTK_GRID (create_grid_with_standard_properties ());
@@ -4604,12 +4604,12 @@ create_permissions_page (NolphinPropertiesWindow *window)
 
 #ifdef HAVE_SELINUX
 		append_title_value_pair
-			(window, page_grid, _("SELinux context:"),
+			(window, page_grid, _("SELinux-Kontext:"),
 			 "selinux_context", INCONSISTENT_STATE_STRING,
 			 FALSE);
 #endif
 		append_title_value_pair
-			(window, page_grid, _("Last changed:"),
+			(window, page_grid, _("Letzte Änderung:"),
 			 "date_permissions", INCONSISTENT_STATE_STRING,
 			 FALSE);
 
@@ -4621,7 +4621,7 @@ create_permissions_page (NolphinPropertiesWindow *window)
 							   "width", 2,
 							   NULL);
 
-			button = gtk_button_new_with_mnemonic (_("Apply Permissions to Enclosed Files"));
+			button = gtk_button_new_with_mnemonic (_("Zugriffsrechte auf enthaltene Dateien übertragen"));
 			gtk_widget_show (button);
 			gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 			g_signal_connect (button, "clicked",
@@ -4631,10 +4631,10 @@ create_permissions_page (NolphinPropertiesWindow *window)
 	} else {
 		if (!is_multi_file_window (window)) {
 			file_name = nolphin_file_get_display_name (get_target_file (window));
-			prompt_text = g_strdup_printf (_("The permissions of \"%s\" could not be determined."), file_name);
+			prompt_text = g_strdup_printf (_("Die Zugriffsrechte auf »%s« konnten nicht ermittelt werden."), file_name);
 			g_free (file_name);
 		} else {
-			prompt_text = g_strdup (_("The permissions of the selected file could not be determined."));
+			prompt_text = g_strdup (_("Die Zugriffsrechte auf die gewählte Datei konnten nicht ermittelt werden."));
 		}
 
 		add_prompt (vbox, prompt_text, TRUE);
@@ -4870,7 +4870,7 @@ create_open_with_page (NolphinPropertiesWindow *window)
 	g_object_set_data_full (G_OBJECT (vbox), "help-uri", g_strdup ("help:gnome-help/files-open"), g_free);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), STACK_INNER_BORDER);
 	gtk_stack_add_titled (window->details->stack,
-				  vbox, "open_with", _("Open With"));
+				  vbox, "open_with", _("Öffnen Mit"));
 }
 
 
@@ -5008,8 +5008,8 @@ create_properties_window (StartupData *startup_data)
 	append_extension_pages (window);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (window),
-				_("Help"), GTK_RESPONSE_HELP,
-				_("Close"), GTK_RESPONSE_CLOSE,
+				_("Hilfe"), GTK_RESPONSE_HELP,
+				_("Schließen"), GTK_RESPONSE_CLOSE,
 				NULL);
 
 	/* FIXME - HIGificiation, should be done inside GTK+ */
@@ -5227,7 +5227,7 @@ nolphin_properties_window_present (GList       *original_files,
 	eel_timed_wait_start
 		(cancel_create_properties_window_callback,
 		 startup_data,
-		 _("Creating Properties window."),
+		 _("Eigenschaftsfenster wird erzeugt."),
 		 parent_window == NULL ? NULL : GTK_WINDOW (parent_window));
 
 	for (l = startup_data->target_files; l != NULL; l = next) {
@@ -5258,7 +5258,7 @@ real_response (GtkDialog *dialog,
 			      gtk_get_current_event_time (),
 			      &error);
 		if (error != NULL) {
-			eel_show_error_dialog (_("There was an error displaying help."), error->message,
+			eel_show_error_dialog (_("Beim Anzeigen der Hilfe ist ein Fehler aufgetreten."), error->message,
 					       GTK_WINDOW (dialog));
 			g_error_free (error);
 		}
@@ -5488,7 +5488,7 @@ select_image_button_callback (GtkWidget *widget,
                       "allow-paths", TRUE,
                       NULL);
 
-        revert_button = gtk_button_new_with_label (_("Revert"));
+        revert_button = gtk_button_new_with_label (_("Rückgängig"));
 
         gtk_widget_show (revert_button);
 

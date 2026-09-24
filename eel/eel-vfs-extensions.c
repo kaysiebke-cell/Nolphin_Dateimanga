@@ -131,7 +131,7 @@ eel_make_valid_utf8 (const char *name)
 	}
 
 	g_string_append (string, remainder);
-	g_string_append (string, _(" (invalid Unicode)"));
+	g_string_append (string, _(" (ungültiger Unicode)"));
 	g_assert (g_utf8_validate (string->str, -1, NULL));
 
 	return g_string_free (string, FALSE);

@@ -161,7 +161,7 @@ search_directory_file_get_deep_counts (NolphinFile *file,
 static char *
 search_directory_file_get_where_string (NolphinFile *file)
 {
-	return g_strdup (_("Search"));
+	return g_strdup (_("Suche"));
 }
 
 static gboolean
@@ -195,7 +195,7 @@ nolphin_search_directory_file_update_display_name (NolphinSearchDirectoryFile *s
 	}
 
 	if (display_name == NULL) {
-		display_name = g_strdup (_("Search"));
+		display_name = g_strdup (_("Suche"));
 	}
 
 	changed = nolphin_file_set_display_name (file, display_name, NULL, TRUE);
@@ -229,7 +229,7 @@ nolphin_search_directory_file_init (NolphinSearchDirectoryFile *search_file)
 	file->details->got_directory_count = TRUE;
 	file->details->directory_count_is_up_to_date = TRUE;
 
-	nolphin_file_set_display_name (file, _("Search"), NULL, TRUE);
+	nolphin_file_set_display_name (file, _("Suche"), NULL, TRUE);
 }
 
 static void

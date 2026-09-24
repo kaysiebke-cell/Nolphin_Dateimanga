@@ -1413,7 +1413,7 @@ start_rubberbanding (NolphinIconContainer *container,
 	accessible = atk_gobject_accessible_for_object
 		(G_OBJECT (band_info->selection_rectangle));
 	atk_object_set_name (accessible, "selection");
-	atk_object_set_description (accessible, _("The selection rectangle"));
+	atk_object_set_description (accessible, _("Das Auswahlrechteck"));
 
 	band_info->prev_x = event->x - gtk_adjustment_get_value (gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (container)));
 	band_info->prev_y = event->y - gtk_adjustment_get_value (gtk_scrollable_get_vadjustment (GTK_SCROLLABLE (container)));

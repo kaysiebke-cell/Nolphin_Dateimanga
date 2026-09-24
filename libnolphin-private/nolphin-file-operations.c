@@ -220,15 +220,15 @@ typedef struct {
 
 #define IS_IO_ERROR(__error, KIND) (((__error)->domain == G_IO_ERROR && (__error)->code == G_IO_ERROR_ ## KIND))
 
-#define SKIP _("_Skip")
-#define SKIP_ALL _("S_kip All")
-#define RETRY _("_Retry")
-#define DELETE_ALL _("Delete _All")
-#define REPLACE _("_Replace")
-#define REPLACE_ALL _("Replace _All")
-#define MERGE _("_Merge")
-#define MERGE_ALL _("Merge _All")
-#define COPY_FORCE _("Copy _Anyway")
+#define SKIP _("_Überspringen")
+#define SKIP_ALL _("_Alle überspringen")
+#define RETRY _("_Erneut versuchen")
+#define DELETE_ALL _("Alles _Löschen")
+#define REPLACE _("_Ersetzen")
+#define REPLACE_ALL _("_Alle ersetzen")
+#define MERGE _("_Zusammenführen")
+#define MERGE_ALL _("_Alle zusammenführen")
+#define COPY_FORCE _("_Trotzdem kopieren")
 ;
 static void add_job_to_job_queue (GIOSchedulerJobFunc job_func,
                                              gpointer user_data,
@@ -319,12 +319,12 @@ format_time (int seconds)
 	}
 
 	if (seconds < 60) {
-		return g_strdup_printf (ngettext ("%'d second","%'d seconds", (int) seconds), (int) seconds);
+		return g_strdup_printf (ngettext ("%'d Sekunde","%'d Sekunden", (int) seconds), (int) seconds);
 	}
 
 	if (seconds < 60*60) {
 		minutes = seconds / 60;
-		return g_strdup_printf (ngettext ("%'d minute", "%'d minutes", minutes), minutes);
+		return g_strdup_printf (ngettext ("%'d Minute", "%'d Minuten", minutes), minutes);
 	}
 
 	hours = seconds / (60*60);
@@ -334,16 +334,16 @@ format_time (int seconds)
 
 		minutes = (seconds - hours * 60 * 60) / 60;
 
-		h = g_strdup_printf (ngettext ("%'d hour", "%'d hours", hours), hours);
-		m = g_strdup_printf (ngettext ("%'d minute", "%'d minutes", minutes), minutes);
+		h = g_strdup_printf (ngettext ("%'d Stunde", "%'d Stunden", hours), hours);
+		m = g_strdup_printf (ngettext ("%'d Minute", "%'d Minuten", minutes), minutes);
 		res = g_strconcat (h, ", ", m, NULL);
 		g_free (h);
 		g_free (m);
 		return res;
 	}
 
-	return g_strdup_printf (ngettext ("approximately %'d hour",
-					  "approximately %'d hours",
+	return g_strdup_printf (ngettext ("ungefähr %'d Stunde",
+					  "ungefähr %'d Stunden",
 					  hours), hours);
 }
 
@@ -418,11 +418,11 @@ get_link_name (const char *name, int count, int max_length)
 			break;
 		case 1:
 			/* appended to new link file */
-			format = _("Link to %s");
+			format = _("Verknüpfung mit %s");
 			break;
 		case 2:
 			/* appended to new link file */
-			format = _("Another link to %s");
+			format = _("Eine weitere Verknüpfung mit %s");
 			break;
 		}
 
@@ -438,19 +438,19 @@ get_link_name (const char *name, int count, int max_length)
 			 * if there's no way to do that nicely for a
 			 * particular language.
 			 */
-			format = _("%'dst link to %s");
+			format = _("%'d. Verknüpfung mit %s");
 			break;
 		case 2:
 			/* appended to new link file */
-			format = _("%'dnd link to %s");
+			format = _("%'d. Verknüpfung mit %s");
 			break;
 		case 3:
 			/* appended to new link file */
-			format = _("%'drd link to %s");
+			format = _("%'d. Verknüpfung mit %s");
 			break;
 		default:
 			/* appended to new link file */
-			format = _("%'dth link to %s");
+			format = _("%'d. Verknüpfung mit %s");
 			break;
 		}
 
@@ -489,26 +489,26 @@ get_link_name (const char *name, int count, int max_length)
  */
 
 /* localizers: tag used to detect the first copy of a file */
-static const char untranslated_copy_duplicate_tag[] = N_(" (copy)");
+static const char untranslated_copy_duplicate_tag[] = N_(" (Kopie)");
 /* localizers: tag used to detect the second copy of a file */
-static const char untranslated_another_copy_duplicate_tag[] = N_(" (another copy)");
+static const char untranslated_another_copy_duplicate_tag[] = N_(" (weitere Kopie)");
 
 /* localizers: tag used to detect the x11th copy of a file */
-static const char untranslated_x11th_copy_duplicate_tag[] = N_("th copy)");
+static const char untranslated_x11th_copy_duplicate_tag[] = N_(". Kopie)");
 /* localizers: tag used to detect the x12th copy of a file */
-static const char untranslated_x12th_copy_duplicate_tag[] = N_("th copy)");
+static const char untranslated_x12th_copy_duplicate_tag[] = N_(". Kopie)");
 /* localizers: tag used to detect the x13th copy of a file */
 static const char untranslated_x13th_copy_duplicate_tag[] = N_("th copy)");
 
 /* localizers: tag used to detect the x1st copy of a file */
-static const char untranslated_st_copy_duplicate_tag[] = N_("st copy)");
+static const char untranslated_st_copy_duplicate_tag[] = N_(". Kopie)");
 /* localizers: tag used to detect the x2nd copy of a file */
-static const char untranslated_nd_copy_duplicate_tag[] = N_("nd copy)");
+static const char untranslated_nd_copy_duplicate_tag[] = N_(". Kopie)");
 /* localizers: tag used to detect the x3rd copy of a file */
-static const char untranslated_rd_copy_duplicate_tag[] = N_("rd copy)");
+static const char untranslated_rd_copy_duplicate_tag[] = N_(". Kopie)");
 
 /* localizers: tag used to detect the xxth copy of a file */
-static const char untranslated_th_copy_duplicate_tag[] = N_("th copy)");
+static const char untranslated_th_copy_duplicate_tag[] = N_(". Kopie)");
 
 #define COPY_DUPLICATE_TAG _(untranslated_copy_duplicate_tag)
 #define ANOTHER_COPY_DUPLICATE_TAG _(untranslated_another_copy_duplicate_tag)
@@ -522,14 +522,14 @@ static const char untranslated_th_copy_duplicate_tag[] = N_("th copy)");
 #define TH_COPY_DUPLICATE_TAG _(untranslated_th_copy_duplicate_tag)
 
 /* localizers: appended to first file copy */
-static const char untranslated_first_copy_duplicate_format[] = N_("%s (copy)%s");
+static const char untranslated_first_copy_duplicate_format[] = N_("%s (Kopie)%s");
 /* localizers: appended to second file copy */
-static const char untranslated_second_copy_duplicate_format[] = N_("%s (another copy)%s");
+static const char untranslated_second_copy_duplicate_format[] = N_("%s (weitere Kopie)%s");
 
 /* localizers: appended to x11th file copy */
-static const char untranslated_x11th_copy_duplicate_format[] = N_("%s (%'dth copy)%s");
+static const char untranslated_x11th_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 /* localizers: appended to x12th file copy */
-static const char untranslated_x12th_copy_duplicate_format[] = N_("%s (%'dth copy)%s");
+static const char untranslated_x12th_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 /* localizers: appended to x13th file copy */
 static const char untranslated_x13th_copy_duplicate_format[] = N_("%s (%'dth copy)%s");
 
@@ -539,13 +539,13 @@ static const char untranslated_x13th_copy_duplicate_format[] = N_("%s (%'dth cop
  */
 
 /* localizers: appended to x1st file copy */
-static const char untranslated_st_copy_duplicate_format[] = N_("%s (%'dst copy)%s");
+static const char untranslated_st_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 /* localizers: appended to x2nd file copy */
-static const char untranslated_nd_copy_duplicate_format[] = N_("%s (%'dnd copy)%s");
+static const char untranslated_nd_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 /* localizers: appended to x3rd file copy */
-static const char untranslated_rd_copy_duplicate_format[] = N_("%s (%'drd copy)%s");
+static const char untranslated_rd_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 /* localizers: appended to xxth file copy */
-static const char untranslated_th_copy_duplicate_format[] = N_("%s (%'dth copy)%s");
+static const char untranslated_th_copy_duplicate_format[] = N_("%s (%'d. Kopie)%s");
 
 #define FIRST_COPY_DUPLICATE_FORMAT _(untranslated_first_copy_duplicate_format)
 #define SECOND_COPY_DUPLICATE_FORMAT _(untranslated_second_copy_duplicate_format)
@@ -1033,7 +1033,7 @@ _g_local_file_delete (GFile         *file,
 
         g_set_error (error, G_IO_ERROR,
                      g_io_error_from_errno (errsv),
-                     _("Error removing file: %s"),
+                     _("Fehler beim Entfernen der Datei: %s"),
                      g_strerror (errsv));
 
         g_free (path);
@@ -1088,8 +1088,8 @@ generate_initial_job_details (NolphinProgressInfo *info,
             g_return_if_fail (files != NULL);
             g_return_if_fail (destination != NULL);
 
-            s = f (ngettext("Waiting to copy a file from '%1$s' to '%2$s'",
-                            "Waiting to copy files from '%1$s' to '%2$s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei von »%1$s» nach «%2$s« zu kopieren",
+                            "Es wird gewartet, um Dateien von »%1$s» nach «%2$s« zu kopieren",
                             g_list_length (files)),
                             src_name, dest_name);
             break;
@@ -1097,50 +1097,50 @@ generate_initial_job_details (NolphinProgressInfo *info,
             g_return_if_fail (files != NULL);
             g_return_if_fail (destination != NULL);
 
-            s = f (ngettext("Waiting to move a file from '%1$s' to '%2$s'",
-                            "Waiting to move files from '%1$s' to '%2$s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei von »%1$s» nach «%2$s« zu verschieben",
+                            "Es wird gewartet, um Dateien von »%1$s» nach «%2$s« zu verschieben",
                             g_list_length (files)),
                             src_name, dest_name);
             break;
         case OP_KIND_DELETE:
             g_return_if_fail (files != NULL);
 
-            s = f (ngettext("Waiting to permanently delete a file from '%s'",
-                            "Waiting to permanently delete files from '%s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei dauerhaft von »%s« zu löschen",
+                            "Es wird gewartet, um Dateien dauerhaft von »%s« zu löschen",
                             g_list_length (files)),
                             src_name);
             break;
         case OP_KIND_TRASH:
             g_return_if_fail (files != NULL);
 
-            s = f (ngettext("Waiting to trash a file in '%s'",
-                            "Waiting to trash files in '%s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei in »%s« zu löschen",
+                            "Es wird gewartet, um Dateien in »%s« zu löschen",
                             g_list_length (files)),
                             src_name);
             break;
         case OP_KIND_EMPTY_TRASH:
-            s = f (_("Waiting to empty the trash"));
+            s = f (_("Es wird gewartet, um den Papierkorb zu leeren"));
             break;
         case OP_KIND_DUPE:
             g_return_if_fail (files != NULL);
             g_return_if_fail (destination != NULL);
 
-            s = f (ngettext("Waiting to duplicate a file in '%s'",
-                            "Waiting to duplicate files in '%s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei in »%s« zu verdoppeln",
+                            "Es wird gewartet, um Dateien in »%s« zu verdoppeln",
                             g_list_length (files)),
                             dest_name);
             break;
         case OP_KIND_PERMISSIONS:
             g_return_if_fail (destination != NULL);
 
-            s = f (_("Waiting to change permissions of files in '%s'"), dest_name);
+            s = f (_("Es wird gewartet, um die Zugriffsrechte von Dateien in »%s« zu ändern"), dest_name);
             break;
         case OP_KIND_LINK:
             g_return_if_fail (files != NULL);
             g_return_if_fail (destination != NULL);
 
-            s = f (ngettext("Waiting to link a file from '%1$s' to '%2$s'",
-                            "Waiting to link files from '%1$s' to '%2$s'",
+            s = f (ngettext("Es wird gewartet, um eine Datei von »%1$s» nach «%2$s« zu verknüpfen",
+                            "Es wird gewartet, um Dateien von »%1$s» nach «%2$s« zu verknüpfen",
                             g_list_length (files)),
                             src_name, dest_name);
             break;
@@ -1334,7 +1334,7 @@ do_run_simple_dialog (gpointer _data)
 		gtk_dialog_add_button (GTK_DIALOG (dialog), button_title, response_id);
 	}
 	if (response_id > 1) {
-		if (button_title == _("Empty _Trash")) {
+		if (button_title == _("_Papierkorb leeren")) {
 			gtk_dialog_set_default_response (GTK_DIALOG (dialog), 0);
 		} else {
 			gtk_dialog_set_default_response (GTK_DIALOG (dialog), response_id - 1);
@@ -1564,23 +1564,21 @@ confirm_move_to_trash (CommonJob *job,
 	g_assert (file_count > 0);
 
     if (file_count == 1) {
-        prompt = f (_("Are you sure you want to move \"%B\" "
-                      "to the trash?"), files->data);
+        prompt = f (_("Möchten Sie %B« wirklich in den Papierkorb verschieben?"), files->data);
     } else {
         /* translators: the singular form here can be skipped. */
-        prompt = f (ngettext("unused %'d",
-                             "Are you sure you want to move "
-                             "the %'d selected items to the trash?",
+        prompt = f (ngettext("Sind Sie sicher, dass Sie den %'d ausgewählten Eintrag in den Papierkorb verschieben möchten?",
+                             "Sind Sie sicher, dass Sie die %'d ausgewählten Einträge in den Papierkorb verschieben möchten?",
                              file_count),
                     file_count);
     }
 
 	response = run_warning (job,
 				prompt,
-				f (_("You can restore an item from the trash, if you later change your mind.")),
+				f (_("Wenn Sie später Ihre Meinung ändern, können Sie ein Element aus dem Papierkorb wieder herstellen.")),
 				NULL,
 				FALSE,
-				GTK_STOCK_CANCEL, _("Move to _Trash"),
+				GTK_STOCK_CANCEL, _("In den _Papierkorb verschieben"),
 				NULL);
 
 	return (response == 1);
@@ -1613,20 +1611,17 @@ confirm_delete_from_trash (CommonJob *job,
 	g_assert (file_count > 0);
 
 	if (file_count == 1) {
-		prompt = f (_("Are you sure you want to permanently delete \"%B\" "
-					    "from the trash?"), files->data);
+		prompt = f (_("Sind Sie sicher, dass Sie »%B« dauerhaft aus dem Papierkorb löschen möchten?"), files->data);
 	} else {
-		prompt = f (ngettext("Are you sure you want to permanently delete "
-				     "the %'d selected item from the trash?",
-				     "Are you sure you want to permanently delete "
-				     "the %'d selected items from the trash?",
+		prompt = f (ngettext("Sind Sie sicher, dass Sie das %'d gewählte Objekt dauerhaft aus dem Papierkorb löschen möchten?",
+				     "Sind Sie sicher, dass Sie die %'d gewählten Objekte dauerhaft aus dem Papierkorb löschen möchten?",
 				     file_count),
 			    file_count);
 	}
 
 	response = run_warning (job,
 				prompt,
-				f (_("If you delete an item, it will be permanently lost.")),
+				f (_("Sobald Sie ein Objekt löschen, ist es dauerhaft verloren.")),
 				NULL,
 				FALSE,
 				GTK_STOCK_CANCEL, GTK_STOCK_DELETE,
@@ -1646,14 +1641,14 @@ confirm_empty_trash (CommonJob *job)
 		return TRUE;
 	}
 
-	prompt = f (_("Empty all items from Trash?"));
+	prompt = f (_("Sollen alle Objekte aus dem Papierkorb entfernt werden?"));
 
 	response = run_warning (job,
 				prompt,
-				f(_("All items in the Trash will be permanently deleted.")),
+				f(_("Alle Objekte im Papierkorb werden dauerhaft gelöscht.")),
 				NULL,
 				FALSE,
-				GTK_STOCK_CANCEL, _("Empty _Trash"),
+				GTK_STOCK_CANCEL, _("_Papierkorb leeren"),
 				NULL);
 
 	return (response == 1);
@@ -1680,19 +1675,17 @@ confirm_delete_directly (CommonJob *job,
 	}
 
 	if (file_count == 1) {
-		prompt = f (_("Are you sure you want to permanently delete \"%B\"?"),
+		prompt = f (_("Sind Sie sicher, dass Sie »%B« unwiderruflich löschen wollen?"),
 			    files->data);
 	} else {
-		prompt = f (ngettext("Are you sure you want to permanently delete "
-				     "the %'d selected item?",
-				     "Are you sure you want to permanently delete "
-				     "the %'d selected items?", file_count),
+		prompt = f (ngettext("Soll das %'d gewählte Objekt dauerhaft gelöscht werden?",
+				     "Sollen die %'d gewählten Objekte dauerhaft gelöscht werden?", file_count),
 			    file_count);
 	}
 
 	response = run_warning (job,
 				prompt,
-				f (_("If you delete an item, it will be permanently lost.")),
+				f (_("Sobald Sie ein Objekt löschen, ist es dauerhaft verloren.")),
 				NULL,
 				FALSE,
 				GTK_STOCK_CANCEL, GTK_STOCK_DELETE,
@@ -1726,18 +1719,18 @@ report_delete_progress (CommonJob *job,
 		files_left = 1;
 	}
 
-	files_left_s = f (ngettext ("%'d file left to delete",
-				    "%'d files left to delete",
+	files_left_s = f (ngettext ("Noch %'d zu entfernende Datei",
+				    "Noch %'d zu entfernende Dateien",
 				    files_left),
 			  files_left);
 
 	nolphin_progress_info_take_status (job->progress,
-					    f (_("Deleting files")));
+					    f (_("Dateien werden gelöscht")));
 
 	elapsed = nolphin_progress_info_get_elapsed_time (job->progress);
 	if (elapsed < SECONDS_NEEDED_FOR_RELIABLE_TRANSFER_RATE) {
         if (nolphin_progress_info_get_is_paused (job->progress)) {
-            nolphin_progress_info_set_details (job->progress, _("Paused"));
+            nolphin_progress_info_set_details (job->progress, _("Angehalten"));
         } else {
             nolphin_progress_info_set_details (job->progress, files_left_s);
         }
@@ -1745,7 +1738,7 @@ report_delete_progress (CommonJob *job,
         char *details, *time_left_s;
 
         if (nolphin_progress_info_get_is_paused (job->progress)) {
-            time_left_s = g_strdup (_("Paused"));
+            time_left_s = g_strdup (_("Angehalten"));
         } else {
             transfer_rate = transfer_info->num_files / elapsed;
             remaining_time = files_left / transfer_rate;
@@ -1753,8 +1746,8 @@ report_delete_progress (CommonJob *job,
             /* To translators: %T will expand to a time like "2 minutes".
                  * The singular/plural form will be used depending on the remaining time (i.e. the %T argument).
                  */
-            time_left_s = f (ngettext ("%T left",
-                           "%T left",
+            time_left_s = f (ngettext ("%T übrig",
+                           "%T übrig",
                            seconds_count_format_time_units (remaining_time)),
                      remaining_time);
         }
@@ -1820,14 +1813,13 @@ delete_dir (CommonJob *job, GFile *dir,
 		if (error && IS_IO_ERROR (error, CANCELLED)) {
 			g_error_free (error);
 		} else if (error) {
-			primary = f (_("Error while deleting."));
+			primary = f (_("Fehler beim Löschen."));
 			details = NULL;
 
 			if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-				secondary = f (_("Files in the folder \"%B\" cannot be deleted because you do "
-						 "not have permissions to see them."), dir);
+				secondary = f (_("Dateien im Ordner »%B« können nicht gelöscht werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), dir);
 			} else {
-				secondary = f (_("There was an error getting information about the files in the folder \"%B\"."), dir);
+				secondary = f (_("Fehler beim Einlesen der Informationen über die Dateien im Ordner »%B«."), dir);
 				details = error->message;
 			}
 
@@ -1836,7 +1828,7 @@ delete_dir (CommonJob *job, GFile *dir,
 						secondary,
 						details,
 						FALSE,
-						GTK_STOCK_CANCEL, _("_Skip files"),
+						GTK_STOCK_CANCEL, _("Dateien ü_berspringen"),
 						NULL);
 
 			g_error_free (error);
@@ -1854,13 +1846,12 @@ delete_dir (CommonJob *job, GFile *dir,
 	} else if (IS_IO_ERROR (error, CANCELLED)) {
 		g_error_free (error);
 	} else {
-		primary = f (_("Error while deleting."));
+		primary = f (_("Fehler beim Löschen."));
 		details = NULL;
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("The folder \"%B\" cannot be deleted because you do not have "
-					 "permissions to read it."), dir);
+			secondary = f (_("Der Ordner »%B« kann nicht gelöscht werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), dir);
 		} else {
-			secondary = f (_("There was an error reading the folder \"%B\"."), dir);
+			secondary = f (_("Fehler beim Lesen des Ordners »%B«."), dir);
 			details = error->message;
 		}
 
@@ -1893,8 +1884,8 @@ delete_dir (CommonJob *job, GFile *dir,
 			if (job->skip_all_error) {
 				goto skip;
 			}
-			primary = f (_("Error while deleting."));
-			secondary = f (_("Could not remove the folder %B."), dir);
+			primary = f (_("Fehler beim Löschen."));
+			secondary = f (_("Ordner »%B« konnte nicht entfernt werden."), dir);
 			details = error->message;
 
 			response = run_warning (job,
@@ -1987,8 +1978,8 @@ delete_file (CommonJob *job, GFile *file,
 		if (job->skip_all_error) {
 			goto skip;
 		}
-		primary = f (_("Error while deleting."));
-		secondary = f (_("There was an error deleting %B."), file);
+		primary = f (_("Fehler beim Löschen."));
+		secondary = f (_("Fehler beim Löschen von »%B«."), file);
 		details = error->message;
 
 		response = run_warning (job,
@@ -2068,10 +2059,10 @@ report_trash_progress (CommonJob *job,
 	files_left = total_files - files_trashed;
 
 	nolphin_progress_info_take_status (job->progress,
-					    f (_("Moving files to trash")));
+					    f (_("Dateien werden in den Papierkorb verschoben")));
 
-	s = f (ngettext ("%'d file left to trash",
-			 "%'d files left to trash",
+	s = f (ngettext ("Noch %'d in den Papierkorb zu verschiebende Datei",
+			 "Noch %'d in den Papierkorb zu verschiebende Dateien",
 			 files_left),
 	       files_left);
 	nolphin_progress_info_take_details (job->progress, s);
@@ -2121,8 +2112,8 @@ trash_files (CommonJob *job, GList *files, guint *files_skipped)
 				goto skip;
 			}
 
-			primary = f (_("Cannot move file to trash, do you want to delete immediately?"));
-			secondary = f (_("The file \"%B\" cannot be moved to the trash."), file);
+			primary = f (_("Die Datei konnte nicht in den Papierkorb verschoben werden. Soll sie unwiderruflich gelöscht werden?"));
+			secondary = f (_("Die Datei »%B« konnte nicht in den Papierkorb verschoben werden."), file);
 			details = NULL;
 			if (!IS_IO_ERROR (error, NOT_SUPPORTED)) {
 				details = error->message;
@@ -2341,9 +2332,9 @@ trash_or_delete_internal (GList                  *files,
 	job->done_callback_data = done_callback_data;
 
 	if (try_trash) {
-		inhibit_power_manager ((CommonJob *)job, _("Trashing Files"));
+		inhibit_power_manager ((CommonJob *)job, _("Dateien werden in den Papierkorb verschoben"));
 	} else {
-		inhibit_power_manager ((CommonJob *)job, _("Deleting Files"));
+		inhibit_power_manager ((CommonJob *)job, _("Dateien werden gelöscht"));
 	}
 
 	if (try_trash && !nolphin_file_undo_manager_pop_flag ()) {
@@ -2426,9 +2417,9 @@ unmount_mount_callback (GObject *source_object,
 	if (! unmounted) {
 		if (error->code != G_IO_ERROR_FAILED_HANDLED) {
 			if (data->eject) {
-				primary = f (_("Unable to eject %V"), source_object);
+				primary = f (_("%V kann nicht ausgeworfen werden"), source_object);
 			} else {
-				primary = f (_("Unable to unmount %V"), source_object);
+				primary = f (_("%V kann nicht ausgehängt werden"), source_object);
 			}
 			eel_show_error_dialog (primary,
 					       error->message,
@@ -2585,17 +2576,13 @@ prompt_empty_trash (GtkWindow *parent_window)
 	/* Do we need to be modal ? */
 	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL,
 					 GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
-					 _("Do you want to empty the trash before you unmount?"));
+					 _("Soll der Papierkorb vor dem Aushängen geleert werden?"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  _("In order to regain the "
-						    "free space on this volume "
-						    "the trash must be emptied. "
-						    "All trashed items on the volume "
-						    "will be permanently lost."));
+						  _("Um den freien Speicherplatz auf diesem Datenträger verfügbar zu machen, muss der Papierkorb geleert werden. Alle im Papierkorb dieses Datenträgers enthaltenen Objekte werden dauerhaft gelöscht."));
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-	                        _("Do _not Empty Trash"), GTK_RESPONSE_REJECT,
+	                        _("Papierkorb _nicht leeren"), GTK_RESPONSE_REJECT,
 	                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	                        _("Empty _Trash"), GTK_RESPONSE_ACCEPT, NULL);
+	                        _("_Papierkorb leeren"), GTK_RESPONSE_ACCEPT, NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT);
 	gtk_window_set_title (GTK_WINDOW (dialog), ""); /* as per HIG */
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), TRUE);
@@ -2723,7 +2710,7 @@ volume_mount_cb (GObject *source_object,
 		if (error->code != G_IO_ERROR_FAILED_HANDLED &&
                     error->code != G_IO_ERROR_ALREADY_MOUNTED) {
 			name = g_volume_get_name (G_VOLUME (source_object));
-			primary = g_strdup_printf (_("Unable to mount %s"), name);
+			primary = g_strdup_printf (_("Einhängen von %s nicht möglich"), name);
 			g_free (name);
 			success = FALSE;
 			eel_show_error_dialog (primary,
@@ -2805,34 +2792,34 @@ report_count_progress (CommonJob *job,
 	default:
     case OP_KIND_DUPE:
 	case OP_KIND_COPY:
-		s = f (ngettext("Preparing to copy %'d file (%S)",
-		                "Preparing to copy %'d files (%S)",
+		s = f (ngettext("Kopieren von %'d Datei wird vorbereitet (%S)",
+		                "Kopieren von %'d Dateien wird vorbereitet (%S)",
 		                source_info->num_files),
 		       source_info->num_files, source_info->num_bytes);
 		break;
 	case OP_KIND_MOVE:
-		s = f (ngettext("Preparing to move %'d file (%S)",
-		                "Preparing to move %'d files (%S)",
+		s = f (ngettext("Verschieben von %'d Datei wird vorbereitet (%S)",
+		                "Verschieben von %'d Dateien wird vorbereitet (%S)",
 		                source_info->num_files),
 		       source_info->num_files, source_info->num_bytes);
 		break;
 	case OP_KIND_DELETE:
-		s = f (ngettext("Preparing to delete %'d file (%S)",
-		                "Preparing to delete %'d files (%S)",
+		s = f (ngettext("Löschen von %'d Datei wird vorbereitet (%S)",
+		                "Löschen von %'d Dateien wird vorbereitet (%S)",
 		                source_info->num_files),
 		       source_info->num_files, source_info->num_bytes);
 		break;
 	case OP_KIND_TRASH:
     case OP_KIND_EMPTY_TRASH:
-		s = f (ngettext("Preparing to trash %'d file",
-		                "Preparing to trash %'d files",
+		s = f (ngettext("Löschen von %d Datei wird vorbereitet",
+		                "Löschen von %d Dateien wird vorbereitet",
 		                source_info->num_files),
 		       source_info->num_files);
 		break;
 	}
 
     if (nolphin_progress_info_get_is_paused (job->progress)) {
-        details = g_strconcat (s, "\xE2\x80\x94", _("Paused"), NULL);
+        details = g_strconcat (s, "\xE2\x80\x94", _("Angehalten"), NULL);
         g_free (s);
     } else {
         details = s;
@@ -2867,14 +2854,14 @@ get_scan_primary (OpKind kind)
 	default:
 	case OP_KIND_COPY:
     case OP_KIND_DUPE:
-		return f (_("Error while copying."));
+		return f (_("Fehler beim Kopieren."));
 	case OP_KIND_MOVE:
-		return f (_("Error while moving."));
+		return f (_("Fehler beim Verschieben."));
 	case OP_KIND_DELETE:
-		return f (_("Error while deleting."));
+		return f (_("Fehler beim Löschen."));
 	case OP_KIND_TRASH:
     case OP_KIND_EMPTY_TRASH:
-		return f (_("Error while moving files to trash."));
+		return f (_("Fehler beim Verschieben von Objekten in den Papierkorb."));
 	}
 }
 
@@ -2928,10 +2915,9 @@ scan_dir (GFile *dir,
 			details = NULL;
 
 			if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-				secondary = f (_("Files in the folder \"%B\" cannot be handled because you do "
-						 "not have permissions to see them."), dir);
+				secondary = f (_("Auf Dateien im Ordner »%B« kann nicht zugegriffen werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), dir);
 			} else {
-				secondary = f (_("There was an error getting information about the files in the folder \"%B\"."), dir);
+				secondary = f (_("Fehler beim Einlesen der Informationen über die Dateien im Ordner »%B«."), dir);
 				details = error->message;
 			}
 
@@ -2967,10 +2953,9 @@ scan_dir (GFile *dir,
 		details = NULL;
 
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("The folder \"%B\" cannot be handled because you do not have "
-					 "permissions to read it."), dir);
+			secondary = f (_("Auf den Ordner »%B« kann nicht zugegriffen werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), dir);
 		} else {
-			secondary = f (_("There was an error reading the folder \"%B\"."), dir);
+			secondary = f (_("Fehler beim Lesen des Ordners »%B«."), dir);
 			details = error->message;
 		}
 		/* set show_all to TRUE here, as we don't know how many
@@ -3047,10 +3032,9 @@ scan_file (GFile *file,
 		details = NULL;
 
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("The file \"%B\" cannot be handled because you do not have "
-					 "permissions to read it."), file);
+			secondary = f (_("Auf die Datei »%B« kann nicht zugegriffen werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), file);
 		} else {
-			secondary = f (_("There was an error getting information about \"%B\"."), file);
+			secondary = f (_("Fehler beim Einlesen der Informationen über »%B«."), file);
 			details = error->message;
 		}
 		/* set show_all to TRUE here, as we don't know how many
@@ -3151,13 +3135,13 @@ verify_destination (CommonJob *job,
 			return;
 		}
 
-		primary = f (_("Error while copying to \"%B\"."), dest);
+		primary = f (_("Fehler beim Kopieren nach »%B«."), dest);
 		details = NULL;
 
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("You do not have permissions to access the destination folder."));
+			secondary = f (_("Sie besitzen nicht die nötigen Rechte, um auf den Zielordner zuzugreifen."));
 		} else {
-			secondary = f (_("There was an error getting information about the destination."));
+			secondary = f (_("Fehler beim Einlesen der Informationen über das Ziel."));
 			details = error->message;
 		}
 
@@ -3193,8 +3177,8 @@ verify_destination (CommonJob *job,
 	g_object_unref (info);
 
 	if (file_type != G_FILE_TYPE_DIRECTORY) {
-		primary = f (_("Error while copying to \"%B\"."), dest);
-		secondary = f (_("The destination is not a folder."));
+		primary = f (_("Fehler beim Kopieren nach »%B«."), dest);
+		secondary = f (_("Das Ziel ist kein Ordner."));
 
 		response = run_error (job,
 				      primary,
@@ -3227,10 +3211,10 @@ verify_destination (CommonJob *job,
 
 		if (free_size < required_size) {
 			size_difference = required_size - free_size;
-			primary = f (_("Error while copying to \"%B\"."), dest);
-			secondary = f (_("There is not enough space on the destination. Try to remove files to make space."));
+			primary = f (_("Fehler beim Kopieren nach »%B«."), dest);
+			secondary = f (_("Am Ziel ist nicht genügend freier Platz. Löschen Sie einige Dateien, um Platz zu schaffen."));
 
-			details = f (_("%S more space is required to copy to the destination."), size_difference);
+			details = f (_("%S mehr Speicherplatz wird benötigt, um zum Ziel zu kopieren"), size_difference);
 
 			response = run_warning (job,
 						primary,
@@ -3257,8 +3241,8 @@ verify_destination (CommonJob *job,
 	if (!job_aborted (job) &&
 	    g_file_info_get_attribute_boolean (fsinfo,
 					       G_FILE_ATTRIBUTE_FILESYSTEM_READONLY)) {
-		primary = f (_("Error while copying to \"%B\"."), dest);
-		secondary = f (_("The destination is read-only."));
+		primary = f (_("Fehler beim Kopieren nach »%B«."), dest);
+		secondary = f (_("Das Ziel ist schreibgeschützt."));
 
 		response = run_error (job,
 				      primary,
@@ -3317,15 +3301,15 @@ report_copy_progress (CopyMoveJob *copy_job,
 			if (copy_job->destination != NULL) {
 				nolphin_progress_info_take_status (job->progress,
 								    f (is_move ?
-								       _("Moving \"%B\" to \"%B\""):
-								       _("Copying \"%B\" to \"%B\""),
+								       _("»%B« wird nach »%B« verschoben"):
+								       _("»%B« wird nach »%B« kopiert"),
 								       copy_job->fake_display_source != NULL ?
 								       copy_job->fake_display_source :
 								       (GFile *)copy_job->files->data,
 								       copy_job->destination));
 			} else {
 				nolphin_progress_info_take_status (job->progress,
-								    f (_("Duplicating \"%B\""),
+								    f (_("»%B« wird verdoppelt"),
 								       (GFile *)copy_job->files->data));
 			}
 		} else if (copy_job->files != NULL &&
@@ -3333,16 +3317,16 @@ report_copy_progress (CopyMoveJob *copy_job,
 			if (copy_job->destination != NULL) {
 				nolphin_progress_info_take_status (job->progress,
 								    f (is_move ?
-								       _("Moving file %'d of %'d (in \"%B\") to \"%B\"")
+								       _("Datei %'d von %'d (in »%B«) wird nach »%B« verschoben")
 								       :
-								       _("Copying file %'d of %'d (in \"%B\") to \"%B\""),
+								       _("Datei %'d von %'d (in »%B«) wird nach »%B« kopiert"),
 								       transfer_info->num_files + 1,
 								       source_info->num_files,
 								       (GFile *)copy_job->files->data,
 								       copy_job->destination));
 			} else {
 				nolphin_progress_info_take_status (job->progress,
-								    f (_("Duplicating file %'d of %'d (in \"%B\")"),
+								    f (_("Datei %'d von %'d (in »%B«) wird verdoppelt"),
 								       transfer_info->num_files + 1,
 								       source_info->num_files,
 								       (GFile *)copy_job->files->data));
@@ -3351,15 +3335,15 @@ report_copy_progress (CopyMoveJob *copy_job,
 			if (copy_job->destination != NULL) {
 				nolphin_progress_info_take_status (job->progress,
 								    f (is_move ?
-								       _("Moving file %'d of %'d to \"%B\"")
+								       _("Datei %'d von %'d wird nach »%B« verschoben")
 								       :
-								       _ ("Copying file %'d of %'d to \"%B\""),
+								       _ ("Datei %'d von %'d wird nach »%B« kopiert"),
 								       transfer_info->num_files + 1,
 								       source_info->num_files,
 								       copy_job->destination));
 			} else {
 				nolphin_progress_info_take_status (job->progress,
-								    f (_("Duplicating file %'d of %'d"),
+								    f (_("Datei %'d von %'d wird verdoppelt"),
 								       transfer_info->num_files + 1,
 								       source_info->num_files));
 			}
@@ -3379,16 +3363,16 @@ report_copy_progress (CopyMoveJob *copy_job,
 		char *s;
 
         if (nolphin_progress_info_get_is_paused (job->progress)) {
-            s = g_strdup (_("Paused"));
+            s = g_strdup (_("Angehalten"));
         } else {
             /* To translators: %S will expand to a size like "2 bytes" or "3 MB", so something like "4 kb of 4 MB" */
-            s = f (_("%S of %S"), transfer_info->num_bytes, total_size);
+            s = f (_("%S von %S"), transfer_info->num_bytes, total_size);
         }
 
         nolphin_progress_info_take_details (job->progress, s);
 	} else {
         if (nolphin_progress_info_get_is_paused (job->progress)) {
-            nolphin_progress_info_take_details (job->progress, g_strdup (_("Paused")));
+            nolphin_progress_info_take_details (job->progress, g_strdup (_("Angehalten")));
         } else {
             char *s;
             remaining_time = (total_size - transfer_info->num_bytes) / transfer_rate;
@@ -3398,8 +3382,8 @@ report_copy_progress (CopyMoveJob *copy_job,
              *
              * The singular/plural form will be used depending on the remaining time (i.e. the %T argument).
              */
-            s = f (ngettext ("%S of %S \xE2\x80\x94 %T left (%S/sec)",
-                     "%S of %S \xE2\x80\x94 %T left (%S/sec)",
+            s = f (ngettext ("%S von %S — noch %T verbleibend (%S/Sekunde)",
+                     "%S von %S — noch %T verbleibend (%S/Sekunde)",
                      seconds_count_format_time_units (remaining_time)),
                    transfer_info->num_bytes, total_size,
                    remaining_time,
@@ -3810,14 +3794,13 @@ create_dest_dir (CommonJob *job,
 			}
 		}
 
-		primary = f (_("Error while copying."));
+		primary = f (_("Fehler beim Kopieren."));
 		details = NULL;
 
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("The folder \"%B\" cannot be copied because you do not have "
-					 "permissions to create it in the destination."), src);
+			secondary = f (_("Der Ordner »%B« konnte nicht kopiert werden, da Sie nicht die nötigen Zugriffsrechte besitzen, um den Ordner im Ziel zu erstellen."), src);
 		} else {
-			secondary = f (_("There was an error creating the folder \"%B\"."), src);
+			secondary = f (_("Fehler beim Erstellen des Ordners »%B«."), src);
 			details = error->message;
 		}
 
@@ -3940,17 +3923,16 @@ copy_move_directory (CopyMoveJob *copy_job,
 			g_error_free (error);
 		} else if (error) {
 			if (copy_job->is_move) {
-				primary = f (_("Error while moving."));
+				primary = f (_("Fehler beim Verschieben."));
 			} else {
-				primary = f (_("Error while copying."));
+				primary = f (_("Fehler beim Kopieren."));
 			}
 			details = NULL;
 
 			if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-				secondary = f (_("Files in the folder \"%B\" cannot be copied because you do "
-						 "not have permissions to see them."), src);
+				secondary = f (_("Dateien im Ordner »%B« können nicht kopiert werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), src);
 			} else {
-				secondary = f (_("There was an error getting information about the files in the folder \"%B\"."), src);
+				secondary = f (_("Fehler beim Einlesen der Informationen über die Dateien im Ordner »%B«."), src);
 				details = error->message;
 			}
 
@@ -3959,7 +3941,7 @@ copy_move_directory (CopyMoveJob *copy_job,
 						secondary,
 						details,
 						FALSE,
-						GTK_STOCK_CANCEL, _("_Skip files"),
+						GTK_STOCK_CANCEL, _("Dateien ü_berspringen"),
 						NULL);
 
 			g_error_free (error);
@@ -3985,17 +3967,16 @@ copy_move_directory (CopyMoveJob *copy_job,
 		g_error_free (error);
 	} else {
 		if (copy_job->is_move) {
-			primary = f (_("Error while moving."));
+			primary = f (_("Fehler beim Verschieben."));
 		} else {
-			primary = f (_("Error while copying."));
+			primary = f (_("Fehler beim Kopieren."));
 		}
 		details = NULL;
 
 		if (IS_IO_ERROR (error, PERMISSION_DENIED)) {
-			secondary = f (_("The folder \"%B\" cannot be copied because you do not have "
-					 "permissions to read it."), src);
+			secondary = f (_("Der Ordner »%B« kann nicht kopiert werden, da Sie nicht die nötigen Lesezugriffsrechte besitzen."), src);
 		} else {
-			secondary = f (_("There was an error reading the folder \"%B\"."), src);
+			secondary = f (_("Fehler beim Lesen des Ordners »%B«."), src);
 			details = error->message;
 		}
 
@@ -4042,8 +4023,8 @@ copy_move_directory (CopyMoveJob *copy_job,
 			if (job->skip_all_error) {
 				goto skip;
 			}
-			primary = f (_("Error while moving \"%B\"."), src);
-			secondary = f (_("Could not remove the source folder."));
+			primary = f (_("Fehler beim Verschieben von »%B«."), src);
+			secondary = f (_("Der Quellordner konnte nicht entfernt werden."));
 			details = error->message;
 
 			response = run_warning (job,
@@ -4128,8 +4109,8 @@ remove_target_recursively (CommonJob *job,
 			goto skip1;
 		}
 
-		primary = f (_("Error while copying \"%B\"."), src);
-		secondary = f (_("Could not remove files from the already existing folder %F."), file);
+		primary = f (_("Fehler beim Kopieren von »%B«."), src);
+		secondary = f (_("Die Dateien aus dem bereits bestehenden Ordner %F konnten nicht entfernt werden."), file);
 		details = error->message;
 
 		/* set show_all to TRUE here, as we don't know how many
@@ -4169,8 +4150,8 @@ remove_target_recursively (CommonJob *job,
 		    IS_IO_ERROR (error, CANCELLED)) {
 			goto skip2;
 		}
-		primary = f (_("Error while copying \"%B\"."), src);
-		secondary = f (_("Could not remove the already existing file %F."), file);
+		primary = f (_("Fehler beim Kopieren von »%B«."), src);
+		secondary = f (_("Die bereits bestehende Datei %F konnte nicht entfernt werden."), file);
 		details = error->message;
 
 		/* set show_all to TRUE here, as we don't know how many
@@ -4511,9 +4492,9 @@ copy_move_file (CopyMoveJob *copy_job,
 		}
 
 		/*  the run_warning() frees all strings passed in automatically  */
-		primary = copy_job->is_move ? g_strdup (_("You cannot move a folder into itself."))
-					    : g_strdup (_("You cannot copy a folder into itself."));
-		secondary = g_strdup (_("The destination folder is inside the source folder."));
+		primary = copy_job->is_move ? g_strdup (_("Sie können einen Ordner nicht in sich selbst verschieben."))
+					    : g_strdup (_("Sie können einen Ordner nicht in sich selbst kopieren."));
+		secondary = g_strdup (_("Der Zielordner befindet sich im Quellordner."));
 
 		response = run_warning (job,
 					primary,
@@ -4544,9 +4525,9 @@ copy_move_file (CopyMoveJob *copy_job,
 		}
 
 		/*  the run_warning() frees all strings passed in automatically  */
-		primary = copy_job->is_move ? g_strdup (_("You cannot move a file over itself."))
-					    : g_strdup (_("You cannot copy a file over itself."));
-		secondary = g_strdup (_("The source file would be overwritten by the destination."));
+		primary = copy_job->is_move ? g_strdup (_("Sie können eine Datei nicht über sich selbst verschieben."))
+					    : g_strdup (_("Sie können eine Datei nicht über sich selbst kopieren."));
+		secondary = g_strdup (_("Die Quelldatei würde durch das Ziel überschrieben werden."));
 
 		response = run_warning (job,
 					primary,
@@ -4773,11 +4754,11 @@ copy_move_file (CopyMoveJob *copy_job,
 					goto out;
 				}
 				if (copy_job->is_move) {
-					primary = f (_("Error while moving \"%B\"."), src);
+					primary = f (_("Fehler beim Verschieben von »%B«."), src);
 				} else {
-					primary = f (_("Error while copying \"%B\"."), src);
+					primary = f (_("Fehler beim Kopieren von »%B«."), src);
 				}
-				secondary = f (_("Could not remove the already existing file with the same name in %F."), dest_dir);
+				secondary = f (_("Die bereits in %F bestehende Datei mit dem selben Namen konnte nicht entfernt werden."), dest_dir);
 				details = error->message;
 
 				/* setting TRUE on show_all here, as we could have
@@ -4846,8 +4827,8 @@ copy_move_file (CopyMoveJob *copy_job,
 			g_error_free (error);
 			goto out;
 		}
-		primary = f (_("Error while copying \"%B\"."), src);
-		secondary = f (_("There was an error copying the file into %F."), dest_dir);
+		primary = f (_("Fehler beim Kopieren von »%B«."), src);
+		secondary = f (_("Beim Kopieren der Datei nach %F ist ein Fehler aufgetreten."), dest_dir);
 		details = error->message;
 
 		response = run_warning (job,
@@ -5080,7 +5061,7 @@ nolphin_file_operations_copy_file (GFile *source_file,
 		g_free (path);
 	}
 
-	inhibit_power_manager ((CommonJob *)job, _("Copying Files"));
+	inhibit_power_manager ((CommonJob *)job, _("Dateien werden kopiert"));
 
     generate_initial_job_details (job->common.progress, OP_KIND_COPY, job->files, job->destination);
 
@@ -5112,7 +5093,7 @@ nolphin_file_operations_copy (GList *files,
 	}
 	job->debuting_files = g_hash_table_new_full (g_file_hash, (GEqualFunc)g_file_equal, g_object_unref, NULL);
 
-	inhibit_power_manager ((CommonJob *)job, _("Copying Files"));
+	inhibit_power_manager ((CommonJob *)job, _("Dateien werden kopiert"));
 
 	if (!nolphin_file_undo_manager_pop_flag ()) {
 		GFile* src_dir;
@@ -5138,15 +5119,15 @@ report_move_progress (CopyMoveJob *move_job, int total, int left)
 	job = (CommonJob *)move_job;
 
 	nolphin_progress_info_take_status (job->progress,
-					    f (_("Preparing to Move to \"%B\""),
+					    f (_("Verschieben nach »%B« wird vorbereitet …"),
 					       move_job->destination));
 
     if (nolphin_progress_info_get_is_paused (job->progress)) {
-        nolphin_progress_info_set_details (job->progress, _("Paused"));
+        nolphin_progress_info_set_details (job->progress, _("Angehalten"));
     } else {
     	nolphin_progress_info_take_details (job->progress,
-    					     f (ngettext ("Preparing to move %'d file",
-    							  "Preparing to move %'d files",
+    					     f (ngettext ("Verschieben von %'d Datei wird vorbereitet",
+    							  "Verschieben von %'d Dateien wird vorbereitet",
     							  left), left));
     }
 
@@ -5267,9 +5248,9 @@ move_file_prepare (CopyMoveJob *move_job,
 		}
 
 		/*  the run_warning() frees all strings passed in automatically  */
-		primary = move_job->is_move ? g_strdup (_("You cannot move a folder into itself."))
-					    : g_strdup (_("You cannot copy a folder into itself."));
-		secondary = g_strdup (_("The destination folder is inside the source folder."));
+		primary = move_job->is_move ? g_strdup (_("Sie können einen Ordner nicht in sich selbst verschieben."))
+					    : g_strdup (_("Sie können einen Ordner nicht in sich selbst kopieren."));
+		secondary = g_strdup (_("Der Zielordner befindet sich im Quellordner."));
 
 		response = run_warning (job,
 					primary,
@@ -5446,8 +5427,8 @@ move_file_prepare (CopyMoveJob *move_job,
 		if (job->skip_all_error) {
 			goto out;
 		}
-		primary = f (_("Error while moving \"%B\"."), src);
-		secondary = f (_("There was an error moving the file into %F."), dest_dir);
+		primary = f (_("Fehler beim Verschieben von »%B«."), src);
+		secondary = f (_("Fehler beim Verschieben der Datei nach %F."), dest_dir);
 		details = error->message;
 
 		response = run_warning (job,
@@ -5712,7 +5693,7 @@ nolphin_file_operations_move (GList *files,
 	}
 	job->debuting_files = g_hash_table_new_full (g_file_hash, (GEqualFunc)g_file_equal, g_object_unref, NULL);
 
-	inhibit_power_manager ((CommonJob *)job, _("Moving Files"));
+	inhibit_power_manager ((CommonJob *)job, _("Dateien werden verschoben"));
 
 	if (!nolphin_file_undo_manager_pop_flag ()) {
 		GFile* src_dir;
@@ -5745,12 +5726,12 @@ report_link_progress (CopyMoveJob *link_job, int total, int left)
 	job = (CommonJob *)link_job;
 
 	nolphin_progress_info_take_status (job->progress,
-					    f (_("Creating links in \"%B\""),
+					    f (_("Verknüpfungen werden in »%B« angelegt"),
 					       link_job->destination));
 
 	nolphin_progress_info_take_details (job->progress,
-					     f (ngettext ("Making link to %'d file",
-							  "Making links to %'d files",
+					     f (ngettext ("Verknüpfung mit %'d Datei wird angelegt",
+							  "Verknüpfungen mit %'d Dateien werden angelegt",
 							  left), left));
 
 	nolphin_progress_info_set_progress (job->progress, left, total);
@@ -5887,15 +5868,15 @@ link_file (CopyMoveJob *job,
 		if (common->skip_all_error) {
 			goto out;
 		}
-		primary = f (_("Error while creating link to %B."), src);
+		primary = f (_("Fehler beim Anlegen einer Verknüpfung mit »%B«."), src);
 		if (not_local) {
-			secondary = f (_("Symbolic links only supported for local files"));
+			secondary = f (_("Symbolische Verknüpfungen werden ausschließlich auf lokalen Dateisystemen unterstützt."));
 			details = NULL;
 		} else if (error != NULL && IS_IO_ERROR (error, NOT_SUPPORTED)) {
-			secondary = f (_("The target doesn't support symbolic links."));
+			secondary = f (_("Dieses Ziel unterstützt keine symbolischen Verknüpfungen."));
 			details = NULL;
 		} else {
-			secondary = f (_("There was an error creating the symlink in %F."), dest_dir);
+			secondary = f (_("Beim Erstellen der symbolischen Verknüpfung in »%F« ist ein Fehler aufgetreten."), dest_dir);
 			details = error->message;
 		}
 
@@ -6213,7 +6194,7 @@ set_permissions_job (GIOSchedulerJob *io_job,
 	common->io_job = io_job;
 
 	nolphin_progress_info_set_status (common->progress,
-					   _("Setting permissions"));
+					   _("Zugriffsrechte werden eingestellt"));
 
     nolphin_progress_info_start (common->progress);
 
@@ -6358,7 +6339,7 @@ set_ownership_job (GIOSchedulerJob *io_job, GCancellable *cancellable, gpointer 
 
 	nolphin_progress_info_set_status (common->progress,
 					  g_strcmp0 (job->attribute, G_FILE_ATTRIBUTE_UNIX_UID) == 0 ?
-					  _("Setting owner") : _("Setting group"));
+					  _("Besitzer wird gesetzt") : _("Gruppe wird gesetzt"));
 	nolphin_progress_info_start (common->progress);
 
 	set_ownership_file (job, job->file, NULL);
@@ -6615,7 +6596,7 @@ create_job (GIOSchedulerJob *io_job,
 	if (filename == NULL) {
 		if (job->make_dir) {
 			/* localizers: the initial name of a new folder  */
-			filename = g_strdup (_("Untitled Folder"));
+			filename = g_strdup (_("Unbenannter Ordner"));
 			filename_is_utf8 = TRUE; /* Pass in utf8 */
 		} else {
 			if (job->src != NULL) {
@@ -6627,7 +6608,7 @@ create_job (GIOSchedulerJob *io_job,
 			}
 			if (filename == NULL) {
 				/* localizers: the initial name of a new empty document */
-				filename = g_strdup (_("Untitled Document"));
+				filename = g_strdup (_("Unbenanntes Dokument"));
 				filename_is_utf8 = TRUE; /* Pass in utf8 */
 			}
 		}
@@ -6803,11 +6784,11 @@ create_job (GIOSchedulerJob *io_job,
 		/* Other error */
 		else {
 			if (job->make_dir) {
-				primary = f (_("Error while creating directory %B."), dest);
+				primary = f (_("Fehler beim Erstellen des Ordners »%B«."), dest);
 			} else {
-				primary = f (_("Error while creating file %B."), dest);
+				primary = f (_("Fehler beim Erstellen der Datei »%B«."), dest);
 			}
-			secondary = f (_("There was an error creating the directory in %F."), job->dest_dir);
+			secondary = f (_("Fehler beim Erstellen des Ordners in »%F«"), job->dest_dir);
 			details = error->message;
 
 			response = run_warning (common,
@@ -7049,7 +7030,7 @@ empty_trash_job (GIOSchedulerJob *io_job,
 		confirmed = TRUE;
 	}
 	if (confirmed) {
-		nolphin_progress_info_set_status (common->progress, _("Emptying Trash"));
+		nolphin_progress_info_set_status (common->progress, _("Papierkorb wird geleert"));
 		nolphin_progress_info_set_details (common->progress, _("Emptying Trash"));
 
 		for (l = job->trash_dirs;
@@ -7083,7 +7064,7 @@ nolphin_file_operations_empty_trash (GtkWidget *parent_view)
 					  g_file_new_for_uri ("trash:"));
 	job->should_confirm = TRUE;
 
-	inhibit_power_manager ((CommonJob *)job, _("Emptying Trash"));
+	inhibit_power_manager ((CommonJob *)job, _("Papierkorb wird geleert"));
 
     generate_initial_job_details (job->common.progress, OP_KIND_EMPTY_TRASH, NULL, NULL);
 
@@ -7129,7 +7110,7 @@ mark_desktop_file_trusted (CommonJob *common,
 				  NULL, &error)) {
 		if (interactive) {
 			response = run_error (common,
-					      g_strdup (_("Unable to mark launcher trusted (executable)")),
+					      g_strdup (_("Den Starter vertrauenswürdig (ausführbar) zu markieren ist nicht möglich")),
 					      error->message,
 					      NULL,
 					      FALSE,
@@ -7170,7 +7151,7 @@ mark_desktop_file_trusted (CommonJob *common,
 
 			if (interactive) {
 				response = run_error (common,
-						      g_strdup (_("Unable to mark launcher trusted (executable)")),
+						      g_strdup (_("Den Starter vertrauenswürdig (ausführbar) zu markieren ist nicht möglich")),
 						      error->message,
 						      NULL,
 						      FALSE,
@@ -7205,7 +7186,7 @@ mark_desktop_file_trusted (CommonJob *common,
 	if (info == NULL) {
 		if (interactive) {
 			response = run_error (common,
-					      g_strdup (_("Unable to mark launcher trusted (executable)")),
+					      g_strdup (_("Den Starter vertrauenswürdig (ausführbar) zu markieren ist nicht möglich")),
 					      error->message,
 					      NULL,
 					      FALSE,
@@ -7240,7 +7221,7 @@ mark_desktop_file_trusted (CommonJob *common,
 
 				if (interactive) {
 					response = run_error (common,
-							      g_strdup (_("Unable to mark launcher trusted (executable)")),
+							      g_strdup (_("Den Starter vertrauenswürdig (ausführbar) zu markieren ist nicht möglich")),
 							      error->message,
 							      NULL,
 							      FALSE,

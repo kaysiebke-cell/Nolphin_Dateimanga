@@ -1258,7 +1258,7 @@ fm_tree_model_get_value (GtkTreeModel *model, GtkTreeIter *iter, int column, GVa
 		if (node == NULL) {
 			parent = iter->user_data2;
 			g_value_set_static_string (value, parent->done_loading
-						   ? _("(Empty)") : _("Loading..."));
+						   ? _("(Leer)") : _("Ladevorgang …"));
 		} else {
 			g_value_set_string (value, tree_node_get_display_name (node));
 		}

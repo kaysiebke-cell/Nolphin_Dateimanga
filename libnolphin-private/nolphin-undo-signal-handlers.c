@@ -170,11 +170,11 @@ editable_register_edit_undo (GtkEditable *editable)
 		 restore_editable_from_undo_snapshot_callback,
 		 undo_data,
 		 (GDestroyNotify) free_editable_undo_data,
-		 _("Edit"),
-		 _("Undo Edit"),
-		 _("Undo the edit"),
-		 _("Redo Edit"),
-		 _("Redo the edit"));
+		 _("Bearbeiten"),
+		 _("Bearbeiten rückgängig machen"),
+		 _("Die Bearbeitung rückgängig machen"),
+		 _("Bearbeiten wiederherstellen"),
+		 _("Die Bearbeitung wiederherstellen"));
 
 	undo_info->undo_registered = TRUE;
 }

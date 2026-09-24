@@ -1500,7 +1500,7 @@ default_parent_display_name:
                 gchar *parent_display_name;
                 gchar *real_display_name = nolphin_file_get_display_name (parent);
                 if (g_strcmp0 (real_display_name, "x-nolphin-desktop") == 0)
-                    parent_display_name = g_strdup_printf (_("Desktop"));
+                    parent_display_name = g_strdup_printf (_("Schreibtisch"));
                 else
                     parent_display_name = nolphin_file_get_display_name (parent);
                 g_free (real_display_name);

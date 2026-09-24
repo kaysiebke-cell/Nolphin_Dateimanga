@@ -140,13 +140,13 @@ autorun (GMount *mount)
         if (path_to_spawn != NULL && cwd_for_program != NULL) {
                 if (chdir (cwd_for_program) == 0)  {
                         execl (path_to_spawn, path_to_spawn, program_parameter, NULL);
-			error_string = g_strdup_printf (_("Error starting autorun program: %s"), strerror (errno));
+			error_string = g_strdup_printf (_("Fehler beim Starten eines Autostartprogramms: %s"), strerror (errno));
 			goto out;
                 }
-                error_string = g_strdup_printf (_("Error starting autorun program: %s"), strerror (errno));
+                error_string = g_strdup_printf (_("Fehler beim Starten eines Autostartprogramms: %s"), strerror (errno));
 		goto out;
         }
-	error_string = g_strdup_printf (_("Cannot find the autorun program"));
+	error_string = g_strdup_printf (_("Das automatisch zu startende Programm konnte nicht gefunden werden"));
 
 out:
         if (program_to_spawn != NULL) {
@@ -168,7 +168,7 @@ out:
 							     0,
 							     GTK_MESSAGE_ERROR,
 							     GTK_BUTTONS_OK,
-							     _("<big><b>Error autorunning software</b></big>"));
+							     _("<big><b>Fehler beim automatischen Starten</b></big>"));
 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", error_string);
 		gtk_dialog_run (GTK_DIALOG (dialog));
 		gtk_widget_destroy (dialog);
@@ -194,12 +194,9 @@ present_autorun_for_software_dialog (GMount *mount)
 						     0,
 						     GTK_MESSAGE_OTHER,
 						     GTK_BUTTONS_CANCEL,
-						     _("<big><b>This medium contains software intended to be automatically started. Would you like to run it?</b></big>"));
+						     _("<big><b>Dieser Datenträger enthält Programme, die automatisch gestartet werden sollen. Sollen sie gestartet werden?</b></big>"));
 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-						  _("The software will run directly from the medium \"%s\". "
-						    "You should never run software that you don't trust.\n"
-						    "\n"
-						    "If in doubt, press Cancel."),
+						  _("Die Programme werden direkt vom Datenträger »%s« starten. Sie sollten niemals Programme starten, denen Sie nicht vertrauen.\n\nIm Zweifelsfall bitte auf »Abbrechen« klicken."),
                                                   mount_name);
 
 	/* TODO: in a star trek future add support for verifying
@@ -231,7 +228,7 @@ present_autorun_for_software_dialog (GMount *mount)
 			  data);
 
 	gtk_dialog_add_button (GTK_DIALOG (dialog),
-			       _("_Run"),
+			       _("Ausfüh_ren"),
 			       GTK_RESPONSE_OK);
 
         gtk_widget_show_all (dialog);

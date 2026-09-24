@@ -111,14 +111,14 @@ nolphin_thumbnail_problem_bar_constructed (GObject *obj)
     gtk_orientable_set_orientation (GTK_ORIENTABLE (action_area),
                                     GTK_ORIENTATION_HORIZONTAL);
 
-    label = gtk_label_new (_("A problem has been detected with your thumbnail cache.  Fixing it will require administrative privileges."));
+    label = gtk_label_new (_("Ein Problem wurde mit Ihrem Vorschaubildpuffer festgestellt. Das zu reparieren benötigt Systemverwaltungsrechte."));
 
     /* w is useless - this method creates the widget and adds/refs it to the info bar at the same time */
     w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-                                 _("Fix now"),
+                                 _("Jetzt reparieren"),
                                  FIX_CACHE);
     w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-                                 _("Dismiss"),
+                                 _("Verwerfen"),
                                  DISMISS);
 
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);

@@ -124,22 +124,21 @@ nolphin_interesting_folder_bar_constructed (GObject *obj)
 
     switch (bar->priv->type) {
         case TYPE_ACTIONS_FOLDER:
-            label = gtk_label_new (_("Actions: Action files can be added to this folder and will appear in the menu."));
+            label = gtk_label_new (_("Aktionen: Aktionsdateien können zu diesem Ordner hinzugefügt werden und erscheinen im Menü."));
             w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-                                         _("More info"),
+                                         _("Weitere Informationen"),
                                          INTERESTING_FOLDER_BAR_ACTION_OPEN_DOC);
-            gtk_widget_set_tooltip_text (w, _("View a sample action file with documentation"));
+            gtk_widget_set_tooltip_text (w, _("Eine Beispielaktionsdatei mit Dokumentation ansehen"));
             break;
         case TYPE_SCRIPTS_FOLDER:
-            label = gtk_label_new (_("Scripts: All executable files in this folder will appear in the "
-                                     "Scripts menu."));
+            label = gtk_label_new (_("Skripte: Alle ausführbaren Dateien, in diesem Ordner, werden im Skriptmenü erscheinen."));
             w = gtk_info_bar_add_button (GTK_INFO_BAR (bar),
-                                         _("More info"),
+                                         _("Weitere Informationen"),
                                          INTERESTING_FOLDER_BAR_SCRIPT_OPEN_DOC);
-            gtk_widget_set_tooltip_text (w, _("View additional information about creating scripts"));
+            gtk_widget_set_tooltip_text (w, _("Zusätzliche Informationen über das Erstellen von Skripten ansehen"));
             break;
         case TYPE_TEMPLATES_FOLDER:
-            label = gtk_label_new (_("The files in this folder are used as templates in the 'Create New Document' section of your context menu."));
+            label = gtk_label_new (_("Die Dateien in diesem Ordner werden als Vorlagen im Abschnitt »Neues Dokument erstellen« des Kontextmenüs verwendet."));
             break;
         case TYPE_NONE_FOLDER:
         default:

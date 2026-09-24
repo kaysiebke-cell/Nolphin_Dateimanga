@@ -86,7 +86,7 @@ volume_delete_dialog (GtkWidget *parent_view,
 
 	if (mount != NULL) {
 		display_name = nolphin_desktop_link_get_display_name (link);
-		dialog_str = g_strdup_printf (_("You cannot move the volume \"%s\" to the trash."),
+		dialog_str = g_strdup_printf (_("Sie können den Datenträger »%s« nicht in den Papierkorb verschieben."),
 					      display_name);
 		g_free (display_name);
 
@@ -96,8 +96,7 @@ volume_delete_dialog (GtkWidget *parent_view,
 				 FALSE,
 				 GTK_MESSAGE_ERROR,
 				 dialog_str,
-				 _("If you want to eject the volume, please use \"Eject\" in the "
-				   "popup menu of the volume."),
+				 _("Wenn Sie den Datenträger auswerfen möchten, verwenden Sie bitte »Auswerfen« im Kontextmenü des Datenträgers."),
 				 GTK_STOCK_OK, NULL);
 		} else {
 			eel_run_simple_dialog
@@ -105,8 +104,7 @@ volume_delete_dialog (GtkWidget *parent_view,
 				 FALSE,
 				 GTK_MESSAGE_ERROR,
 				 dialog_str,
-				 _("If you want to unmount the volume, please use \"Unmount Volume\" in the "
-				   "popup menu of the volume."),
+				 _("Zum Aushängen des Datenträgers bitte »Aushängen« im Kontextmenü des Datenträgers verwenden."),
 				 GTK_STOCK_OK, NULL);
 		}
 

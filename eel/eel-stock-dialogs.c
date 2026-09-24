@@ -202,7 +202,7 @@ timed_wait_callback (gpointer callback_data)
 
 	g_object_set (dialog,
 		      "text", wait->wait_message,
-		      "secondary-text", _("You can stop this operation by clicking cancel."),
+		      "secondary-text", _("Sie können diese Aktion anhalten, indem Sie »Abbrechen« anklicken."),
 		      NULL);
 
 	gtk_dialog_add_button (GTK_DIALOG (dialog), button, GTK_RESPONSE_OK);

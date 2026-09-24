@@ -336,17 +336,9 @@ action_about_nolphin_callback (GtkAction *action,
 				gpointer user_data)
 {
 	const gchar *license[] = {
-		N_("Nolphin is free software; you can redistribute it and/or modify "
-		   "it under the terms of the GNU General Public License as published by "
-		   "the Free Software Foundation; either version 2 of the License, or "
-		   "(at your option) any later version."),
-		N_("Nolphin is distributed in the hope that it will be useful, "
-		   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-		   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-		   "GNU General Public License for more details."),
-		N_("You should have received a copy of the GNU General Public License "
-		   "along with Nolphin; if not, write to the Free Software Foundation, Inc., "
-		   "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA")
+		N_("Nolphin ist freie Software und kann, unter den Bedingungen der GNU General Public License wie durch die Freie Software Stiftung veröffentlicht, als solche nach belieben weiter verteilt und/oder modifiziert werden; entweder unter Version 2 der Lizenz, oder (wie Sie möchten) gemäß irgend einer späteren Version."),
+		N_("Nolphin wird verteilt in der Hoffnung dass es Brauchbar sein möge, aber OHNE JEGLICHE GEWÄHRLEISTUNG; selbst ohne die ausdrückliche Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public License für Einzelheiten."),
+		N_("Mit Nolphin sollten Sie eine Kopie der GNU General Public License erhalen haben; falls nicht, schreiben Sie an die  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA")
 	};
 	gchar *license_trans;
 	GDateTime *date;
@@ -359,9 +351,7 @@ action_about_nolphin_callback (GtkAction *action,
 	gtk_show_about_dialog (GTK_WINDOW (user_data),
 			       "program-name", _("Nolphin"),
 			       "version", VERSION,
-			       "comments", _("Nolphin lets you organize "
-					     "files and folders, both on "
-					     "your computer and online."),
+			       "comments", _("Mit Nolphin können Ordner und Dateien verwaltet werden, sowohl auf Ihrem Rechner als auch im Internet."),
 			       "license", license_trans,
 			       "wrap-license", TRUE,
 			      "logo-icon-name", "folder",
@@ -420,7 +410,7 @@ action_nolphin_manual_callback (GtkAction *action,
 						 GTK_DIALOG_MODAL,
 						 GTK_MESSAGE_ERROR,
 						 GTK_BUTTONS_OK,
-						 _("There was an error displaying help: \n%s"),
+						 _("Beim Anzeigen der Hilfe ist ein Fehler aufgetreten: \n%s"),
 						 error->message);
 		g_signal_connect (G_OBJECT (dialog), "response",
 				  G_CALLBACK (gtk_widget_destroy),
@@ -1477,60 +1467,60 @@ on_file_menu_show (GtkWidget *widget, gpointer user_data)
 }
 
 static const GtkActionEntry main_entries[] = {
-  /* name, stock id, label */  { "File", NULL, N_("_File") },
-  /* name, stock id, label */  { "Edit", NULL, N_("_Edit") },
-  /* name, stock id, label */  { "View", NULL, N_("_View") },
-  /* name, stock id, label */  { "Help", NULL, N_("_Help") },
+  /* name, stock id, label */  { "File", NULL, N_("_Datei") },
+  /* name, stock id, label */  { "Edit", NULL, N_("_Bearbeiten") },
+  /* name, stock id, label */  { "View", NULL, N_("_Ansicht") },
+  /* name, stock id, label */  { "Help", NULL, N_("_Hilfe") },
   /* name, stock id */         { "Close", "xsi-window-close-symbolic",
-  /* label, accelerator */       N_("_Close"), "<control>W",
-  /* tooltip */                  N_("Close this folder"),
+  /* label, accelerator */       N_("_Beenden"), "<control>W",
+  /* tooltip */                  N_("Diesen Ordner schließen"),
                                  G_CALLBACK (action_close_window_slot_callback) },
                                { "Preferences", "xsi-toolbox-symbolic",
-                                 N_("Prefere_nces"),
-                                 NULL, N_("Edit Nolphin preferences"),
+                                 N_("_Einstellungen"),
+                                 NULL, N_("Nolphin-Einstellungen bearbeiten"),
                                  G_CALLBACK (action_preferences_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_SPLIT_VIEW_HORIZONTAL, NULL,
-  /* label, accelerator */       N_("Split View _Horizontally"), "<shift>F3",
-  /* tooltip */                  N_("Open an extra folder view stacked below (or re-orient an open extra pane)"),
+  /* label, accelerator */       N_("Ansicht _horizontal teilen"), "<shift>F3",
+  /* tooltip */                  N_("Eine zusätzliche Ordneransicht darunter öffnen (oder ein bereits geöffnetes zusätzliches Fenster neu ausrichten)"),
                                  G_CALLBACK (action_split_view_horizontal_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_DUPLICATE_TAB, NULL,
-  /* label, accelerator */       N_("Duplicate _Tab"), NULL,
-  /* tooltip */                  N_("Open a new tab at the same location as this one"),
+  /* label, accelerator */       N_("Reiter _duplizieren"), NULL,
+  /* tooltip */                  N_("Einen neuen Reiter am selben Ort wie diesen öffnen"),
                                  G_CALLBACK (action_duplicate_tab_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_CLOSE_ALL_TABS, NULL,
-  /* label, accelerator */       N_("Close _All Tabs"), NULL,
-  /* tooltip */                  N_("Close every tab in this window"),
+  /* label, accelerator */       N_("_Alle Reiter schließen"), NULL,
+  /* tooltip */                  N_("Jeden Reiter in diesem Fenster schließen"),
                                  G_CALLBACK (action_close_all_tabs_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_RESTORE_CLOSED_TAB, NULL,
-  /* label, accelerator */       N_("Reopen Closed _Tab"), "<control><shift>T",
-  /* tooltip */                  N_("Reopen the most recently closed tab"),
+  /* label, accelerator */       N_("Geschlossenen _Reiter wiederherstellen"), "<control><shift>T",
+  /* tooltip */                  N_("Den zuletzt geschlossenen Reiter wiederherstellen"),
                                  G_CALLBACK (action_restore_closed_tab_callback) },
 #ifdef TEXT_CHANGE_UNDO
-  /* name, stock id, label */  { "Undo", NULL, N_("_Undo"),
-                                 "<control>Z", N_("Undo the last text change"),
+  /* name, stock id, label */  { "Undo", NULL, N_("_Rückgängig"),
+                                 "<control>Z", N_("Die letzte Änderung am Text rückgängig machen"),
                                  G_CALLBACK (action_undo_callback) },
 #endif
-  /* name, stock id, label */  { "Up", "xsi-go-up-symbolic", N_("Open _Parent"),
-                                 "<alt>Up", N_("Open the parent folder"),
+  /* name, stock id, label */  { "Up", "xsi-go-up-symbolic", N_("_Übergeordneten Ordner öffnen"),
+                                 "<alt>Up", N_("Den übergeordneten Ordner öffnen"),
                                  G_CALLBACK (action_up_callback) },
   /* name, stock id, label */  { "UpAccel", NULL, "UpAccel",
                                  "", NULL,
                                  G_CALLBACK (action_up_callback) },
   /* name, stock id */         { "Stop", "xsi-process-stop-symbolic",
-  /* label, accelerator */       N_("_Stop"), NULL,
-  /* tooltip */                  N_("Stop loading the current location"),
+  /* label, accelerator */       N_("_Anhalten"), NULL,
+  /* tooltip */                  N_("Das Laden des aktuellen Ortes anhalten"),
                                  G_CALLBACK (action_stop_callback) },
   /* name, stock id */         { "Reload", "xsi-view-refresh-symbolic",
-  /* label, accelerator */       N_("_Reload"), "<control>R",
-  /* tooltip */                  N_("Reload the current location"),
+  /* label, accelerator */       N_("_Aktualisieren"), "<control>R",
+  /* tooltip */                  N_("Den aktuellen Ort aktualisieren"),
                                  G_CALLBACK (action_reload_callback) },
   /* name, stock id */         { "NolphinHelp", "xsi-help-contents-symbolic",
-  /* label, accelerator */       N_("_All Topics"), "F1",
-  /* tooltip */                  N_("Display Nolphin help"),
+  /* label, accelerator */       N_("_Alle Themen"), "F1",
+  /* tooltip */                  N_("Nolphin-Hilfethemen anzeigen"),
                                  G_CALLBACK (action_nolphin_manual_callback) },
                                { "NolphinShortcuts", "xsi-keyboard-shortcuts-symbolic",
-                                 N_("_Keyboard Shortcuts"), "<control>F1",
-                                 N_("Display keyboard shortcuts"),
+                                 N_("_Tastenkombinationen"), "<control>F1",
+                                 N_("Tastenkombinationen anzeigen"),
                                  G_CALLBACK (action_show_shortcuts_window) },
   /** name, stock id          { "NolphinHelpSearch", NULL,
      label, accelerator        N_("Search for files"), NULL,
@@ -1549,12 +1539,12 @@ static const GtkActionEntry main_entries[] = {
      tooltip                   N_("Easily transfer files to your contacts and devices from the file manager."),
                                  G_CALLBACK (action_nolphin_manual_callback) }, **/
   /* name, stock id */         { "About Nolphin", "xsi-help-about-symbolic",
-  /* label, accelerator */       N_("_About"), NULL,
-  /* tooltip */                  N_("Display credits for the creators of Nolphin"),
+  /* label, accelerator */       N_("_Über"), NULL,
+  /* tooltip */                  N_("Danksagungen für die Urheber von Nolphin anzeigen"),
                                  G_CALLBACK (action_about_nolphin_callback) },
   /* name, stock id */         { "Zoom In", "xsi-zoom-in-symbolic",
-  /* label, accelerator */       N_("Zoom _In"), "<control>plus",
-  /* tooltip */                  N_("Increase the view size"),
+  /* label, accelerator */       N_("Ver_größern"), "<control>plus",
+  /* tooltip */                  N_("Ansicht vergrößern"),
                                  G_CALLBACK (action_zoom_in_callback) },
   /* name, stock id */         { "ZoomInAccel", NULL,
   /* label, accelerator */       "ZoomInAccel", "<control>equal",
@@ -1565,170 +1555,170 @@ static const GtkActionEntry main_entries[] = {
   /* tooltip */                  NULL,
                                  G_CALLBACK (action_zoom_in_callback) },
   /* name, stock id */         { "Zoom Out", "xsi-zoom-out-symbolic",
-  /* label, accelerator */       N_("Zoom _Out"), "<control>minus",
-  /* tooltip */                  N_("Decrease the view size"),
+  /* label, accelerator */       N_("Ver_kleinern"), "<control>minus",
+  /* tooltip */                  N_("Ansicht verkleinern"),
                                  G_CALLBACK (action_zoom_out_callback) },
   /* name, stock id */         { "ZoomOutAccel", NULL,
   /* label, accelerator */       "ZoomOutAccel", "<control>KP_Subtract",
   /* tooltip */                  NULL,
                                  G_CALLBACK (action_zoom_out_callback) },
   /* name, stock id */         { "Zoom Normal", "xsi-zoom-original-symbolic",
-  /* label, accelerator */       N_("Normal Si_ze"), "<control>0",
-  /* tooltip */                  N_("Use the normal view size"),
+  /* label, accelerator */       N_("_Normale Größe"), "<control>0",
+  /* tooltip */                  N_("Die normale Ansichtsgröße verwenden"),
                                  G_CALLBACK (action_zoom_normal_callback) },
   /* name, stock id */         { "Connect to Server", NULL,
-  /* label, accelerator */       N_("Connect to _Server..."), NULL,
-  /* tooltip */                  N_("Connect to a remote computer or shared disk"),
+  /* label, accelerator */       N_("Mit _Server verbinden …"), NULL,
+  /* tooltip */                  N_("Verbinden mit einem entfernten Rechner oder freigegebenen Datenträger"),
                                  G_CALLBACK (action_connect_to_server_callback) },
   /* name, stock id */         { "Home", NOLPHIN_ICON_SYMBOLIC_HOME,
-  /* label, accelerator */       N_("_Home"), "<alt>Home",
-  /* tooltip */                  N_("Open your personal folder"),
+  /* label, accelerator */       N_("_Persönlicher Ordner"), "<alt>Home",
+  /* tooltip */                  N_("Persönlichen Ordner öffnen"),
                                  G_CALLBACK (action_home_callback) },
   /* name, stock id */         { "Go to Computer", NOLPHIN_ICON_SYMBOLIC_COMPUTER,
-  /* label, accelerator */       N_("_Computer"), NULL,
-  /* tooltip */                  N_("Browse all local and remote disks and folders accessible from this computer"),
+  /* label, accelerator */       N_("_Rechner"), NULL,
+  /* tooltip */                  N_("Alle lokalen und entfernten Laufwerke und Ordner durchsuchen, die von diesem Rechner aus erreichbar sind"),
                                  G_CALLBACK (action_go_to_computer_callback) },
   /* name, stock id */         { "Go to Network", NOLPHIN_ICON_SYMBOLIC_NETWORK,
-  /* label, accelerator */       N_("_Network"), NULL,
-  /* tooltip */                  N_("Browse bookmarked and local network locations"),
+  /* label, accelerator */       N_("_Netzwerk"), NULL,
+  /* tooltip */                  N_("Lokale und als Lesezeichen gespeicherte Orte durchsuchen"),
                                  G_CALLBACK (action_go_to_network_callback) },
   /* name, stock id */         { "Go to Templates", NOLPHIN_ICON_SYMBOLIC_FOLDER_TEMPLATES,
-  /* label, accelerator */       N_("T_emplates"), NULL,
-  /* tooltip */                  N_("Open your personal templates folder"),
+  /* label, accelerator */       N_("_Vorlagen"), NULL,
+  /* tooltip */                  N_("Persönlichen Vorlagenordner öffnen"),
                                  G_CALLBACK (action_go_to_templates_callback) },
   /* name, stock id */         { "Go to Trash", NOLPHIN_ICON_SYMBOLIC_TRASH,
-  /* label, accelerator */       N_("_Trash"), NULL,
-  /* tooltip */                  N_("Open your personal trash folder"),
+  /* label, accelerator */       N_("_Papierkorb"), NULL,
+  /* tooltip */                  N_("Persönlichen Papierkorb öffnen"),
                                  G_CALLBACK (action_go_to_trash_callback) },
-  /* name, stock id, label */  { "Go", NULL, N_("_Go") },
-  /* name, stock id, label */  { "Bookmarks", NULL, N_("_Bookmarks") },
-  /* name, stock id, label */  { "Tabs", NULL, N_("_Tabs") },
-  /* name, stock id, label */  { "New Window", NULL, N_("New _Window"),
-                                 "<control>N", N_("Open another Nolphin window for the displayed location"),
+  /* name, stock id, label */  { "Go", NULL, N_("_Gehen zu") },
+  /* name, stock id, label */  { "Bookmarks", NULL, N_("_Lesezeichen") },
+  /* name, stock id, label */  { "Tabs", NULL, N_("_Reiter") },
+  /* name, stock id, label */  { "New Window", NULL, N_("Neues _Fenster"),
+                                 "<control>N", N_("Ein neues Nolphin-Fenster für den angezeigten Ort öffnen"),
                                  G_CALLBACK (action_new_window_callback) },
-  /* name, stock id, label */  { "New Tab", "xsi-tab-new-symbolic", N_("New _Tab"),
-                                 "<control>T", N_("Open another tab for the displayed location"),
+  /* name, stock id, label */  { "New Tab", "xsi-tab-new-symbolic", N_("Neuer _Reiter"),
+                                 "<control>T", N_("Einen weiteren Reiter für diesen Ort öffnen"),
                                  G_CALLBACK (action_new_tab_callback) },
-  /* name, stock id, label */  { "Close All Windows", NULL, N_("Close _All Windows"),
-                                 "<control>Q", N_("Close all Navigation windows"),
+  /* name, stock id, label */  { "Close All Windows", NULL, N_("Alle _Fenster schließen"),
+                                 "<control>Q", N_("Alle Navigationsfenster schließen"),
                                  G_CALLBACK (action_close_all_windows_callback) },
-  /* name, stock id, label */  { NOLPHIN_ACTION_BACK, "xsi-go-previous-symbolic", N_("_Back"),
-				 "<alt>Left", N_("Go to the previous visited location"),
+  /* name, stock id, label */  { NOLPHIN_ACTION_BACK, "xsi-go-previous-symbolic", N_("_Zurück"),
+				 "<alt>Left", N_("Zum vorher besuchten Ort gehen"),
 				 G_CALLBACK (action_back_callback) },
-  /* name, stock id, label */  { NOLPHIN_ACTION_FORWARD, "xsi-go-next-symbolic", N_("_Forward"),
-				 "<alt>Right", N_("Go to the next visited location"),
+  /* name, stock id, label */  { NOLPHIN_ACTION_FORWARD, "xsi-go-next-symbolic", N_("_Vorwärts"),
+				 "<alt>Right", N_("Zum als nächstes besuchten Ort gehen"),
 				 G_CALLBACK (action_forward_callback) },
-  /* name, stock id, label */  { NOLPHIN_ACTION_EDIT_LOCATION, NULL, N_("Toggle _Location Entry"),
-                                 "<control>L", N_("Switch between location entry and breadcrumbs"),
+  /* name, stock id, label */  { NOLPHIN_ACTION_EDIT_LOCATION, NULL, N_("_Pfadeingabe ein/aus"),
+                                 "<control>L", N_("Zwischen Pfadeingabe und Verlaufsnavigation umschalten"),
                                  G_CALLBACK (action_menu_edit_location_callback) },
-  /* name, stock id, label */  { "SplitViewNextPane", NULL, N_("S_witch to Other Pane"),
-				 "F6", N_("Move focus to the other pane in a split view window"),
+  /* name, stock id, label */  { "SplitViewNextPane", NULL, N_("Zur anderen Leiste _wechseln"),
+				 "F6", N_("Den Fokus, in einem Fenster mit geteilter Ansicht, an die andere Leiste übergeben"),
 				 G_CALLBACK (action_split_view_switch_next_pane_callback) },
-  /* name, stock id, label */  { "SplitViewSameLocation", NULL, N_("Sa_me Location as Other Pane"),
-				 "<alt>S", N_("Go to the same location as in the extra pane"),
+  /* name, stock id, label */  { "SplitViewSameLocation", NULL, N_("Gleicher Ort wie _andere Leiste"),
+				 "<alt>S", N_("Zum selben Ort wie in der zusätzlichen Leiste gehen"),
 				 G_CALLBACK (action_split_view_same_location_callback) },
-  /* name, stock id, label */  { "Add Bookmark", "xsi-bookmark-new-symbolic", N_("_Add Bookmark"),
-                                 "<control>d", N_("Add a bookmark for the current location to this menu"),
+  /* name, stock id, label */  { "Add Bookmark", "xsi-bookmark-new-symbolic", N_("Lesezeichen _hinzufügen"),
+                                 "<control>d", N_("Ein Lesezeichen für den aktuellen Ort zu diesem Menü hinzufügen"),
                                  G_CALLBACK (action_add_bookmark_callback) },
-  /* name, stock id, label */  { "Edit Bookmarks", NULL, N_("_Edit Bookmarks..."),
-                                 "<control>b", N_("Display a window that allows editing the bookmarks in this menu"),
+  /* name, stock id, label */  { "Edit Bookmarks", NULL, N_("Lesezeichen _bearbeiten …"),
+                                 "<control>b", N_("Ein Fenster anzeigen, dass das Bearbeiten der Lesezeichen in diesem Menü erlaubt"),
                                  G_CALLBACK (action_edit_bookmarks_callback) },
-  { "TabsPrevious", NULL, N_("_Previous Tab"), "<control>Page_Up",
-    N_("Activate previous tab"),
+  { "TabsPrevious", NULL, N_("_Vorheriger Reiter"), "<control>Page_Up",
+    N_("Vorherigen Reiter aktivieren"),
     G_CALLBACK (action_tabs_previous_callback) },
-  { "TabsNext", NULL, N_("_Next Tab"), "<control>Page_Down",
-    N_("Activate next tab"),
+  { "TabsNext", NULL, N_("_Nächster Reiter"), "<control>Page_Down",
+    N_("Nächsten Reiter aktivieren"),
     G_CALLBACK (action_tabs_next_callback) },
-  { "TabsMoveLeft", NULL, N_("Move Tab _Left"), "<shift><control>Page_Up",
-    N_("Move current tab to left"),
+  { "TabsMoveLeft", NULL, N_("Reiter nach _links verschieben"), "<shift><control>Page_Up",
+    N_("Aktuellen Reiter nach links verschieben"),
     G_CALLBACK (action_tabs_move_left_callback) },
-  { "TabsMoveRight", NULL, N_("Move Tab _Right"), "<shift><control>Page_Down",
-    N_("Move current tab to right"),
+  { "TabsMoveRight", NULL, N_("Reiter nach _rechts verschieben"), "<shift><control>Page_Down",
+    N_("Aktuellen Reiter nach rechts verschieben"),
     G_CALLBACK (action_tabs_move_right_callback) },
-  { "Sidebar List", NULL, N_("Sidebar") },
-  { "Toolbar List", NULL, N_("Toolbar") }
+  { "Sidebar List", NULL, N_("Seitenleiste") },
+  { "Toolbar List", NULL, N_("Werkzeugleiste") }
 };
 
 static const GtkToggleActionEntry main_toggle_entries[] = {
   /* name, stock id */         { "Show Hidden Files", NULL,
-  /* label, accelerator */       N_("Show _Hidden Files"), "<control>H",
-  /* tooltip */                  N_("Toggle the display of hidden files in the current window"),
+  /* label, accelerator */       N_("_Verborgene Dateien anzeigen"), "<control>H",
+  /* tooltip */                  N_("Verborgene Dateien im momentan geöffneten Fenster anzeigen/verbergen"),
                                  G_CALLBACK (action_show_hidden_files_callback),
                                  TRUE },
   /* name, stock id */     { "Show Hide Toolbar", NULL,
-  /* label, accelerator */   N_("_Main Toolbar"), NULL,
-  /* tooltip */              N_("Change the visibility of this window's main toolbar"),
+  /* label, accelerator */   N_("_Hauptwerkzeugleiste"), NULL,
+  /* tooltip */              N_("Die Sichtbarkeit der Hauptwerkzeugleiste dieses Fensters ändern"),
 			     NULL,
   /* is_active */            TRUE },
   /* name, stock id */     { "Show Hide Sidebar", NULL,
-  /* label, accelerator */   N_("_Show Sidebar"), "F9",
-  /* tooltip */              N_("Change the visibility of this window's side pane"),
+  /* label, accelerator */   N_("Seitenleiste _anzeigen"), "F9",
+  /* tooltip */              N_("Die Sichtbarkeit der Seitenleiste dieses Fensters ändern"),
                              G_CALLBACK (action_show_hide_sidebar_callback),
   /* is_active */            TRUE },
   /* name, stock id */     { "Show Hide Statusbar", NULL,
-  /* label, accelerator */   N_("St_atusbar"), NULL,
-  /* tooltip */              N_("Change the visibility of this window's statusbar"),
+  /* label, accelerator */   N_("St_atusleiste"), NULL,
+  /* tooltip */              N_("Die Sichtbarkeit der Statusleiste dieses Fensters ändern"),
                              NULL,
   /* is_active */            TRUE },
   /* name, stock id */     { NOLPHIN_ACTION_SHOW_HIDE_MENUBAR, NULL,
-  /* label, accelerator */   N_("M_enubar"), NULL,
-  /* tooltip */              N_("Change the default visibility of the menubar"),
+  /* label, accelerator */   N_("_Menüleiste"), NULL,
+  /* tooltip */              N_("Die Standardsichtbarkeit der Menüleiste ändern"),
                              NULL,
   /* is_active */            TRUE },
   /* name, stock id */     { "Search", "xsi-edit-find-symbolic",
-  /* label, accelerator */   N_("_Search for Files..."), "<control>f",
-  /* tooltip */              N_("Search documents and folders"),
+  /* label, accelerator */   N_("Nach Dateien _suchen …"), "<control>f",
+  /* tooltip */              N_("Dokumente und Ordner suchen"),
 			     NULL,
   /* is_active */            FALSE },
   /* name, stock id */     { NOLPHIN_ACTION_SHOW_HIDE_EXTRA_PANE, NULL,
-  /* label, accelerator */   N_("E_xtra Pane"), "F3",
-  /* tooltip */              N_("Open an extra folder view side-by-side"),
+  /* label, accelerator */   N_("_Zusätzliche Leiste"), "F3",
+  /* tooltip */              N_("Eine weitere Ordneransicht nebeneinander öffnen"),
                              G_CALLBACK (action_split_view_callback),
   /* is_active */            FALSE },
   /* name, stock id */     { NOLPHIN_ACTION_SHOW_HIDE_TERMINAL, NULL,
   /* label, accelerator */   N_("_Terminal"), "F4",
-  /* tooltip */              N_("Open an integrated terminal in the current directory"),
+  /* tooltip */              N_("Ein integriertes Terminal im aktuellen Ordner öffnen"),
                              G_CALLBACK (action_show_hide_terminal_callback),
   /* is_active */            FALSE },
   /* name, stock id */     { NOLPHIN_ACTION_SHOW_HIDE_PREVIEW, NULL,
-  /* label, accelerator */   N_("Info & Pre_view"), "F11",
-  /* tooltip */              N_("Show information and a preview for the selected file"),
+  /* label, accelerator */   N_("Info & _Vorschau"), "F11",
+  /* tooltip */              N_("Informationen und eine Vorschau der ausgewählten Datei anzeigen"),
                              G_CALLBACK (action_show_hide_preview_callback),
   /* is_active */            FALSE },
     /* name, stock id */         { NOLPHIN_ACTION_SHOW_THUMBNAILS, NULL,
-  /* label, accelerator */       N_("Show _Thumbnails"), NULL,
-  /* tooltip */                  N_("Toggle the display of thumbnails in the current directory"),
+  /* label, accelerator */       N_("_Vorschaubilder anzeigen"), NULL,
+  /* tooltip */                  N_("Die Anzeige der Vorschaubilder im aktuellen Verzeichnis umschalten"),
   /* callback */                 G_CALLBACK (action_show_thumbnails_callback),
   /* default */                  FALSE },
 };
 
 static const GtkRadioActionEntry sidebar_radio_entries[] = {
 	{ "Sidebar Places", NULL,
-	  N_("Places"), NULL, N_("Select Places as the default sidebar"),
+	  N_("Orte"), NULL, N_("»Orte« als Voreinstellung für die Seitenleiste festlegen"),
 	  SIDEBAR_PLACES },
 	{ "Sidebar Tree", NULL,
-	  N_("Tree"), NULL, N_("Select Tree as the default sidebar"),
+	  N_("Baumansicht"), NULL, N_("»Baumansicht« als Voreinstellung für die Seitenleiste festlegen"),
 	  SIDEBAR_TREE }
 };
 
 static const GtkRadioActionEntry view_radio_entries[] = {
     { "IconView", NULL,
-      N_("Icon View"), "<ctrl>1", N_("Icon View"),
+      N_("Symbolansicht"), "<ctrl>1", N_("Icon View"),
       ICON_VIEW },
     { "ListView", NULL,
-      N_("List View"), "<ctrl>2", N_("List View"),
+      N_("Listenansicht"), "<ctrl>2", N_("List View"),
       LIST_VIEW },
     { "CompactView", NULL,
-      N_("Compact View"), "<ctrl>3", N_("Compact View"),
+      N_("Kompaktansicht"), "<ctrl>3", N_("Compact View"),
       COMPACT_VIEW }
 };
 
 static const GtkRadioActionEntry toolbar_radio_entries[] = {
     { NOLPHIN_ACTION_TOOLBAR_ALWAYS_SHOW_PATHBAR, NULL,
-      N_("Path Bar"), NULL, N_("Always prefer the path bar"),
+      N_("Pfadleiste"), NULL, N_("Pfadleiste immer bevorzugen"),
       TOOLBAR_PATHBAR },
     { NOLPHIN_ACTION_TOOLBAR_ALWAYS_SHOW_ENTRY, NULL,
-      N_("Location Entry"), NULL, N_("Always prefer the location entry"),
+      N_("Pfadeingabe"), NULL, N_("Pfadeingabe immer bevorzugen"),
       TOOLBAR_ENTRY }
 };
 
@@ -1746,10 +1736,10 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
 	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
 			       "name", NOLPHIN_ACTION_BACK,
-			       "label", _("_Back"),
+			       "label", _("_Zurück"),
 			       "icon_name", "xsi-go-previous-symbolic",
-			       "tooltip", _("Go to the previous visited location"),
-			       "arrow-tooltip", _("Back history"),
+			       "tooltip", _("Zum vorher besuchten Ort gehen"),
+			       "arrow-tooltip", _("Im Verlauf zurück bewegen"),
 			       "window", window,
 			       "direction", NOLPHIN_NAVIGATION_DIRECTION_BACK,
 			       "sensitive", FALSE,
@@ -1762,10 +1752,10 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
 	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
 			       "name", NOLPHIN_ACTION_FORWARD,
-			       "label", _("_Forward"),
+			       "label", _("_Vorwärts"),
 			       "icon_name", "xsi-go-next-symbolic",
-			       "tooltip", _("Go to the next visited location"),
-			       "arrow-tooltip", _("Forward history"),
+			       "tooltip", _("Zum als nächstes besuchten Ort gehen"),
+			       "arrow-tooltip", _("Im Verlauf vorwärts bewegen"),
 			       "window", window,
 			       "direction", NOLPHIN_NAVIGATION_DIRECTION_FORWARD,
 			       "sensitive", FALSE,
@@ -1781,10 +1771,10 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 	 */
    	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
    			       "name", NOLPHIN_ACTION_UP,
-   			       "label", _("_Up"),
+   			       "label", _("_Hoch"),
    			       "icon_name", "xsi-go-up-symbolic",
-   			       "tooltip", _("Go to parent folder"),
-   			       "arrow-tooltip", _("Forward history"),
+   			       "tooltip", _("Zum übergeordneten Ordner gehen"),
+   			       "arrow-tooltip", _("Im Verlauf vorwärts bewegen"),
    			       "window", window,
    			       "direction", NOLPHIN_NAVIGATION_DIRECTION_UP,
    			       NULL);
@@ -1796,9 +1786,9 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
    	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
    			       "name", NOLPHIN_ACTION_RELOAD,
-   			       "label", _("_Reload"),
+   			       "label", _("_Aktualisieren"),
    			       "icon_name", "xsi-view-refresh-symbolic",
-   			       "tooltip", _("Reload the current location"),
+   			       "tooltip", _("Den aktuellen Ort aktualisieren"),
    			       "window", window,
    			       "direction", NOLPHIN_NAVIGATION_DIRECTION_RELOAD,
    			       NULL);
@@ -1810,9 +1800,9 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
    	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
    			       "name", NOLPHIN_ACTION_HOME,
-   			       "label", _("_Home"),
+   			       "label", _("_Persönlicher Ordner"),
    			       "icon_name", "xsi-go-home-symbolic",
-   			       "tooltip", _("Go to home directory"),
+   			       "tooltip", _("Zum persönlichen Ordner gehen"),
    			       "window", window,
    			       "direction", NOLPHIN_NAVIGATION_DIRECTION_HOME,
    			       NULL);
@@ -1824,9 +1814,9 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
    	action = g_object_new (NOLPHIN_TYPE_NAVIGATION_ACTION,
    			       "name", NOLPHIN_ACTION_COMPUTER,
-   			       "label", _("_Computer"),
+   			       "label", _("_Rechner"),
    			       "icon_name", "xsi-computer-symbolic",
-   			       "tooltip", _("Go to Computer"),
+   			       "tooltip", _("Zum Rechner gehen"),
    			       "window", window,
    			       "direction", NOLPHIN_NAVIGATION_DIRECTION_COMPUTER,
    			       NULL);
@@ -1837,8 +1827,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
    	g_object_unref (action);
 
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_TOGGLE_LOCATION,
-                                                _("Location"),
-                                                _("Toggle Location Entry"),
+                                                _("Speicherort"),
+                                                _("Pfadeingabe ein/aus"),
                                                 NULL));
     gtk_action_group_add_action (action_group, GTK_ACTION (action));
     show_location_entry_initially = g_settings_get_boolean (nolphin_preferences, NOLPHIN_PREFERENCES_SHOW_LOCATION_ENTRY);
@@ -1850,8 +1840,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
     g_object_unref (action);
 
     action = GTK_ACTION (gtk_action_new (NOLPHIN_ACTION_NEW_FOLDER,
-                                                _("New folder"),
-                                                _("Create a new folder"),
+                                                _("Neuer Ordner"),
+                                                _("Neuen Ordner erstellen"),
                                                 NULL));
     gtk_action_group_add_action (action_group, GTK_ACTION (action));
     g_signal_connect (action, "activate",
@@ -1860,8 +1850,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
     g_object_unref (action);
 
     action = GTK_ACTION (gtk_action_new (NOLPHIN_ACTION_OPEN_IN_TERMINAL,
-                                                _("Open in Terminal"),
-                                                _("Open a terminal in the active folder"),
+                                                _("Im Terminal öffnen"),
+                                                _("Terminal im aktiven Ordner öffnen"),
                                                 NULL));
     gtk_action_group_add_action (action_group, GTK_ACTION (action));
     g_signal_connect (action, "activate",
@@ -1871,8 +1861,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
 
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_ICON_VIEW,
-                         _("Icons"),
-                         _("Icon View"),
+                         _("Symbole"),
+                         _("Symbolansicht"),
                          NULL));
     g_signal_connect (action, "activate",
                       G_CALLBACK (action_icon_view_callback),
@@ -1882,8 +1872,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
    	g_object_unref (action);
 
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_LIST_VIEW,
-                         _("List"),
-                         _("List View"),
+                         _("Liste"),
+                         _("Listenansicht"),
                          NULL));
     g_signal_connect (action, "activate",
                       G_CALLBACK (action_list_view_callback),
@@ -1894,8 +1884,8 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
    	g_object_unref (action);
 
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_COMPACT_VIEW,
-                         _("Compact"),
-                         _("Compact View"),
+                         _("Kompakt"),
+                         _("Kompaktansicht"),
                          NULL));
    	g_signal_connect (action, "activate",
                       G_CALLBACK (action_compact_view_callback),
@@ -1906,7 +1896,7 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
    	g_object_unref (action);
 
  	action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_SEARCH,
- 				_("Search"),_("Search documents and folders"),
+ 				_("Suche"),_("Dokumente und Ordner suchen"),
  				NULL));
 
   	gtk_action_group_add_action (action_group, action);
@@ -1915,7 +1905,7 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
   	g_object_unref (action);
     
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_SHOW_THUMBNAILS,
-                         _("Show Thumbnails"),
+                         _("Vorschaubilder anzeigen"),
                          _("Show Thumbnails"),
                          NULL));
    	g_signal_connect (action, "activate",
@@ -1928,7 +1918,7 @@ nolphin_window_create_toolbar_action_group (NolphinWindow *window)
 
     action = GTK_ACTION (gtk_toggle_action_new (NOLPHIN_ACTION_SHOW_HIDE_EXTRA_PANE,
                          NULL,
-                         _("Open an extra folder view side-by-side"),
+                         _("Eine weitere Ordneransicht nebeneinander öffnen"),
                          NULL));
     g_signal_connect (action, "activate",
                       G_CALLBACK (action_split_view_callback),
@@ -2073,13 +2063,13 @@ nolphin_window_initialize_menus (NolphinWindow *window)
                                         window);
 
 	action = gtk_action_group_get_action (action_group, NOLPHIN_ACTION_UP);
-	g_object_set (action, "short_label", _("_Up"), NULL);
+	g_object_set (action, "short_label", _("_Hoch"), NULL);
 
 	action = gtk_action_group_get_action (action_group, NOLPHIN_ACTION_HOME);
-	g_object_set (action, "short_label", _("_Home"), NULL);
+	g_object_set (action, "short_label", _("_Persönlicher Ordner"), NULL);
 
   	action = gtk_action_group_get_action (action_group, NOLPHIN_ACTION_EDIT_LOCATION);
-  	g_object_set (action, "short_label", _("_Location"), NULL);
+  	g_object_set (action, "short_label", _("_Ort"), NULL);
 
 	action = gtk_action_group_get_action (action_group, NOLPHIN_ACTION_SHOW_HIDDEN_FILES);
 

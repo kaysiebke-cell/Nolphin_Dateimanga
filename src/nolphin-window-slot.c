@@ -343,7 +343,7 @@ view_activate_filter_cb (NolphinView   *view,
         nolphin_filter_bar_set_text (NOLPHIN_FILTER_BAR (slot->filter_bar), filter_text);
 
         if (NOLPHIN_VIEW_CLASS (G_OBJECT_GET_CLASS (view))->is_empty (view)) {
-            gtk_label_set_text (GTK_LABEL (slot->no_results_label), _("No matching files"));
+            gtk_label_set_text (GTK_LABEL (slot->no_results_label), _("Keine passenden Dateien"));
             gtk_widget_show (slot->no_search_results_box);
         } else {
             gtk_widget_hide (slot->no_search_results_box);
@@ -424,7 +424,7 @@ nolphin_window_slot_init (NolphinWindowSlot *slot)
 
     slot->cache_bar = NULL;
 
-	slot->title = g_strdup (_("Loading..."));
+	slot->title = g_strdup (_("Ladevorgang …"));
 }
 
 static void
@@ -442,7 +442,7 @@ view_end_loading_cb (NolphinView       *view,
 
         if (NOLPHIN_IS_SEARCH_DIRECTORY (directory) &&
             !nolphin_directory_is_not_empty (directory)) {
-            gtk_label_set_text (GTK_LABEL (slot->no_results_label), _("No files found"));
+            gtk_label_set_text (GTK_LABEL (slot->no_results_label), _("Keine Dateien gefunden"));
             gtk_widget_show (slot->no_search_results_box);
         } else {
             gtk_widget_hide (slot->no_search_results_box);

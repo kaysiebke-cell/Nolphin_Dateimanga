@@ -71,7 +71,7 @@ nolphin_config_base_widget_init (NolphinConfigBaseWidget *self)
     gtk_style_context_add_class (context, "linked");
     self->lbuttonbox = w;
 
-    label = gtk_label_new (_("Disable all"));
+    label = gtk_label_new (_("Alle deaktivieren"));
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     self->disable_button = gtk_button_new ();
@@ -80,7 +80,7 @@ nolphin_config_base_widget_init (NolphinConfigBaseWidget *self)
     gtk_widget_show_all (self->disable_button);
     gtk_widget_set_no_show_all (self->disable_button, TRUE);
 
-    label = gtk_label_new (_("Enable all"));
+    label = gtk_label_new (_("Alle aktivieren"));
     gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 
     self->enable_button = gtk_button_new ();

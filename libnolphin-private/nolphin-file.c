@@ -1244,7 +1244,7 @@ nolphin_file_mount (NolphinFile                   *file,
 		if (callback) {
 			error = NULL;
 			g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-                                             _("This file cannot be mounted"));
+                                             _("Diese Datei kann nicht eingehängt werden"));
 			callback (file, NULL, error, callback_data);
 			g_error_free (error);
 		}
@@ -1289,7 +1289,7 @@ nolphin_file_unmount (NolphinFile                   *file,
 			if (callback) {
 				error = NULL;
 				g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-						     _("This file cannot be unmounted"));
+						     _("Diese Datei kann nicht ausgehängt werden"));
 				callback (file, NULL, error, callback_data);
 				g_error_free (error);
 			}
@@ -1323,7 +1323,7 @@ nolphin_file_eject (NolphinFile                   *file,
 			if (callback) {
 				error = NULL;
 				g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-						     _("This file cannot be ejected"));
+						     _("Diese Datei kann nicht ausgeworfen werden"));
 				callback (file, NULL, error, callback_data);
 				g_error_free (error);
 			}
@@ -1356,7 +1356,7 @@ nolphin_file_start (NolphinFile                   *file,
 		if (callback) {
 			error = NULL;
 			g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-                                             _("This file cannot be started"));
+                                             _("Diese Datei kann nicht gestartet werden"));
 			callback (file, NULL, error, callback_data);
 			g_error_free (error);
 		}
@@ -1408,7 +1408,7 @@ nolphin_file_stop (NolphinFile                   *file,
 			if (callback) {
 				error = NULL;
 				g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-						     _("This file cannot be stopped"));
+						     _("Diese Datei kann nicht angehalten werden"));
 				callback (file, NULL, error, callback_data);
 				g_error_free (error);
 			}
@@ -1439,7 +1439,7 @@ nolphin_file_stop (NolphinFile                   *file,
 			if (callback) {
 				error = NULL;
 				g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-						     _("This file cannot be stopped"));
+						     _("Diese Datei kann nicht angehalten werden"));
 				callback (file, NULL, error, callback_data);
 				g_error_free (error);
 			}
@@ -1920,7 +1920,7 @@ nolphin_file_rename (NolphinFile *file,
 	 * But not for .desktop files as '/' are allowed for them */
 	if (strstr (new_name, "/") != NULL && !is_renameable_desktop_file) {
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
-				     _("Slashes are not allowed in filenames"));
+				     _("Schrägstriche sind in Dateinamen nicht erlaubt"));
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -1938,7 +1938,7 @@ nolphin_file_rename (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
-				     _("File not found"));
+				     _("Datei nicht gefunden"));
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -1966,7 +1966,7 @@ nolphin_file_rename (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-				     _("Toplevel files cannot be renamed"));
+				     _("Dateien im obersten Ordner können nicht umbenannt werden"));
 
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
@@ -1989,7 +1989,7 @@ nolphin_file_rename (NolphinFile *file,
 			(* callback) (file, NULL, NULL, callback_data);
 		} else {
 			error = g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
-					     _("Unable to rename desktop icon"));
+					     _("Schreibtischsymbol konnte nicht umbenannt werden"));
 			(* callback) (file, NULL, error, callback_data);
 			g_error_free (error);
 		}
@@ -2018,7 +2018,7 @@ nolphin_file_rename (NolphinFile *file,
 
 		if (!success) {
 			error = g_error_new (G_IO_ERROR, G_IO_ERROR_FAILED,
-					     _("Unable to rename desktop file"));
+					     _("Schreibtischdatei konnte nicht umbenannt werden"));
 			(* callback) (file, NULL, error, callback_data);
 			g_error_free (error);
 			return;
@@ -3714,7 +3714,7 @@ group_key_for_type (NolphinFile *file, int *out_order)
 {
 	if (nolphin_file_is_directory (file)) {
 		*out_order = 0;
-		return g_strdup (_("Folders"));
+		return g_strdup (_("Ordner"));
 	}
 
 	*out_order = 1;
@@ -3728,29 +3728,29 @@ group_key_for_size (NolphinFile *file, int *out_order)
 
 	if (nolphin_file_is_directory (file)) {
 		*out_order = 0;
-		return g_strdup (_("Folders"));
+		return g_strdup (_("Ordner"));
 	}
 
 	size = nolphin_file_get_size (file);
 
 	if (size < 0) {
 		*out_order = 5;
-		return g_strdup (_("Unknown size"));
+		return g_strdup (_("Unbekannte Größe"));
 	}
 	if (size < 100 * 1024) {
 		*out_order = 1;
-		return g_strdup (_("Tiny (under 100 KB)"));
+		return g_strdup (_("Winzig (unter 100 KB)"));
 	}
 	if (size < 10 * 1024 * 1024) {
 		*out_order = 2;
-		return g_strdup (_("Small (under 10 MB)"));
+		return g_strdup (_("Klein (unter 10 MB)"));
 	}
 	if (size < 1024 * 1024 * 1024) {
 		*out_order = 3;
-		return g_strdup (_("Medium (under 1 GB)"));
+		return g_strdup (_("Mittel (unter 1 GB)"));
 	}
 	*out_order = 4;
-	return g_strdup (_("Large (1 GB or more)"));
+	return g_strdup (_("Groß (1 GB oder mehr)"));
 }
 
 /* Day-granularity difference between @mtime's local calendar day and
@@ -3796,7 +3796,7 @@ group_key_for_mtime (NolphinFile *file, int *out_order)
 
 	if (mtime <= 0) {
 		*out_order = 6;
-		return g_strdup (_("Unknown date"));
+		return g_strdup (_("Unbekanntes Datum"));
 	}
 
 	diff_days = days_before_today (mtime);
@@ -3810,15 +3810,15 @@ group_key_for_mtime (NolphinFile *file, int *out_order)
 
 	if (diff_days == 0) {
 		*out_order = 0;
-		return g_strdup (_("Today"));
+		return g_strdup (_("Heute"));
 	}
 	if (diff_days == 1) {
 		*out_order = 1;
-		return g_strdup (_("Yesterday"));
+		return g_strdup (_("Gestern"));
 	}
 	if (diff_days <= 7) {
 		*out_order = 2;
-		return g_strdup (_("This week"));
+		return g_strdup (_("Diese Woche"));
 	}
 
 	now = time (NULL);
@@ -3827,15 +3827,15 @@ group_key_for_mtime (NolphinFile *file, int *out_order)
 
 	if (tm_now.tm_year == tm_file.tm_year && tm_now.tm_mon == tm_file.tm_mon) {
 		*out_order = 3;
-		return g_strdup (_("This month"));
+		return g_strdup (_("Diesen Monat"));
 	}
 	if (tm_now.tm_year == tm_file.tm_year) {
 		*out_order = 4;
-		return g_strdup (_("This year"));
+		return g_strdup (_("Dieses Jahr"));
 	}
 
 	*out_order = 5;
-	return g_strdup (_("Older"));
+	return g_strdup (_("Älter"));
 }
 
 static char *
@@ -3900,20 +3900,20 @@ nolphin_file_type_category_get_label (NolphinFileTypeCategory category)
 {
 	switch (category) {
 	case NOLPHIN_FILE_TYPE_CATEGORY_FOLDER:
-		return _("Folders");
+		return _("Ordner");
 	case NOLPHIN_FILE_TYPE_CATEGORY_IMAGE:
-		return _("Images");
+		return _("Bilder");
 	case NOLPHIN_FILE_TYPE_CATEGORY_VIDEO:
 		return _("Videos");
 	case NOLPHIN_FILE_TYPE_CATEGORY_AUDIO:
-		return _("Audio");
+		return _("Ton");
 	case NOLPHIN_FILE_TYPE_CATEGORY_TEXT:
-		return _("Text files");
+		return _("Textdateien");
 	case NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE:
-		return _("Archives");
+		return _("Archive");
 	case NOLPHIN_FILE_TYPE_CATEGORY_OTHER:
 	default:
-		return _("Other");
+		return _("Sonstiges");
 	}
 }
 
@@ -5605,25 +5605,25 @@ nolphin_file_get_date_as_string (NolphinFile       *file,
 				format = _("%H:%M");
 			} else {
 				/* Translators: Time in 12h format */
-				format = _("%-l:%M %p");
+				format = _("%H:%M");
 			}
 		}
 		// Show the word "Yesterday" and time if date is on yesterday
 		else if (days_ago < 2) {
 			if (date_format == NOLPHIN_DATE_FORMAT_REGULAR) {
 				// xgettext:no-c-format
-				format = _("Yesterday");
+				format = _("Gestern");
 			} else {
 				if (use_24) {
 					/* Translators: this is the word Yesterday followed by
 					 * a time in 24h format. i.e. "Yesterday 23:04" */
 					// xgettext:no-c-format
-					format = _("Yesterday %H:%M");
+					format = _("Gestern %H:%M");
 				} else {
 					/* Translators: this is the word Yesterday followed by
 					 * a time in 12h format. i.e. "Yesterday 9:04 PM" */
 					// xgettext:no-c-format
-					format = _("Yesterday %-l:%M %p");
+					format = _("Gestern %H:%M");
 				}
 			}
 		}
@@ -5642,7 +5642,7 @@ nolphin_file_get_date_as_string (NolphinFile       *file,
 					/* Translators: this is the week day name followed by
 					 * a time in 12h format. i.e. "Monday 9:04 PM" */
 					// xgettext:no-c-format
-					format = _("%A %-l:%M %p");
+					format = _("%A %H:%M");
 				}
 			}
 		} else if (g_date_time_get_year (file_date) == g_date_time_get_year (now)) {
@@ -5650,20 +5650,20 @@ nolphin_file_get_date_as_string (NolphinFile       *file,
 				/* Translators: this is the day of the month followed
 				 * by the abbreviated month name i.e. "3 February" */
 				// xgettext:no-c-format
-				format = _("%-e %B");
+				format = _("%e. %B");
 			} else {
 				if (use_24) {
 					/* Translators: this is the day of the month followed
 					 * by the abbreviated month name followed by a time in
 					 * 24h format i.e. "3 February 23:04" */
 					// xgettext:no-c-format
-					format = _("%-e %B %H:%M");
+					format = _("%e. %B, %H:%M");
 				} else {
 					/* Translators: this is the day of the month followed
 					 * by the abbreviated month name followed by a time in
 					 * 12h format i.e. "3 February 9:04" */
 					// xgettext:no-c-format
-					format = _("%-e %B %-l:%M %p");
+					format = _("%e. %B %H:%M");
 				}
 			}
 		} else {
@@ -5671,20 +5671,20 @@ nolphin_file_get_date_as_string (NolphinFile       *file,
 				/* Translators: this is the day of the month followed by the abbreviated
 				 * month name followed by the year i.e. "3 Feb 2015" */
 				// xgettext:no-c-format
-				format = _("%-e %b %Y");
+				format = _("%e. %b. %Y");
 			} else {
 				if (use_24) {
 					/* Translators: this is the day number followed
 					 * by the abbreviated month name followed by the year followed
 					 * by a time in 24h format i.e. "3 Feb 2015 23:04" */
 					// xgettext:no-c-format
-					format = _("%-e %b %Y %H:%M");
+					format = _("%e. %b. %Y, %H:%M");
 				} else {
 					/* Translators: this is the day number followed
 					 * by the abbreviated month name followed by the year followed
 					 * by a time in 12h format i.e. "3 Feb 2015 9:04 PM" */
 					// xgettext:no-c-format
-					format = _("%-e %b %Y %-l:%M %p");
+					format = _("%e. %b. %Y %H:%M");
 				}
 			}
 		}
@@ -6142,7 +6142,7 @@ nolphin_file_set_permissions (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED,
-				     _("Not allowed to set permissions"));
+				     _("Einstellen der Zugriffsrechte ist nicht erlaubt"));
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -6439,7 +6439,7 @@ nolphin_file_set_owner (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED,
-				     _("Not allowed to set owner"));
+				     _("Einstellen des Besitzers ist nicht erlaubt"));
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -6457,7 +6457,7 @@ nolphin_file_set_owner (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
-				     _("Specified owner '%s' doesn't exist"), user_name_or_id);
+				     _("Der angegebene Besitzer »%s« existiert nicht"), user_name_or_id);
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -6722,7 +6722,7 @@ nolphin_file_set_group (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED,
-				     _("Not allowed to set group"));
+				     _("Einstellen der Gruppe nicht erlaubt"));
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -6740,7 +6740,7 @@ nolphin_file_set_group (NolphinFile *file,
 		 */
 		nolphin_file_changed (file);
 		error = g_error_new (G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
-				     _("Specified group '%s' doesn't exist"), group_name_or_id);
+				     _("Die angegebene Gruppe »%s« existiert nicht"), group_name_or_id);
 		(* callback) (file, NULL, error, callback_data);
 		g_error_free (error);
 		return;
@@ -6898,9 +6898,9 @@ format_item_count_for_display (guint item_count,
 
 	return g_strdup_printf (includes_directories
 			? (includes_files
-			   ? ngettext ("%'u item", "%'u items", item_count)
-			   : ngettext ("%'u folder", "%'u folders", item_count))
-			: ngettext ("%'u file", "%'u files", item_count), item_count);
+			   ? ngettext ("%'u Objekt", "%'u Objekte", item_count)
+			   : ngettext ("%'u Ordner", "%'u Ordner", item_count))
+			: ngettext ("%'u Datei", "%'u Dateien", item_count), item_count);
 }
 
 /**
@@ -7354,13 +7354,13 @@ nolphin_file_get_string_attribute_with_default_q (NolphinFile *file, GQuark attr
 		if (nolphin_file_is_directory (file)) {
 			nolphin_file_get_directory_item_count (file, &item_count, &count_unreadable);
 		}
-		return g_strdup (count_unreadable ? _("? items") : "...");
+		return g_strdup (count_unreadable ? _("? Objekte") : "...");
 	}
 	if (attribute_q == attribute_deep_size_q) {
 		status = nolphin_file_get_deep_counts (file, NULL, NULL, NULL, NULL, NULL, FALSE);
 		if (status == NOLPHIN_REQUEST_DONE) {
 			/* This means no contents at all were readable */
-			return g_strdup (_("? bytes"));
+			return g_strdup (_("? Byte"));
 		}
 		return g_strdup ("...");
 	}
@@ -7370,14 +7370,14 @@ nolphin_file_get_string_attribute_with_default_q (NolphinFile *file, GQuark attr
 		status = nolphin_file_get_deep_counts (file, NULL, NULL, NULL, NULL, NULL, FALSE);
 		if (status == NOLPHIN_REQUEST_DONE) {
 			/* This means no contents at all were readable */
-			return g_strdup (_("? items"));
+			return g_strdup (_("? Objekte"));
 		}
 		return g_strdup ("...");
 	}
     if (attribute_q == attribute_type_q
         || attribute_q == attribute_detailed_type_q
         || attribute_q == attribute_mime_type_q) {
-        return g_strdup (_("Unknown"));
+        return g_strdup (_("Unbekannt"));
     }
 	if (attribute_q == attribute_trashed_on_q) {
 		/* If n/a */
@@ -7391,7 +7391,7 @@ nolphin_file_get_string_attribute_with_default_q (NolphinFile *file, GQuark attr
 	/* Fallback, use for both unknown attributes and attributes
 	 * for which we have no more appropriate default.
 	 */
-	return g_strdup (_("unknown"));
+	return g_strdup (_("Unbekannt"));
 }
 
 char *
@@ -7443,21 +7443,21 @@ struct {
         const char *icon_name;
         const char *display_name;
 } mime_type_map[] = {
-    { "application-x-executable", N_("Program") },
-    { "audio-x-generic", N_("Audio") },
-    { "font-x-generic", N_("Font") },
-    { "image-x-generic", N_("Image") },
-    { "package-x-generic", N_("Archive") },
-    { "text-html", N_("Markup") },
+    { "application-x-executable", N_("Programm") },
+    { "audio-x-generic", N_("Ton") },
+    { "font-x-generic", N_("Schriftart") },
+    { "image-x-generic", N_("Bild") },
+    { "package-x-generic", N_("Archiv") },
+    { "text-html", N_("Auszeichnung") },
     { "text-x-generic", N_("Text") },
     { "text-x-generic-template", N_("Text") },
-    { "text-x-script", N_("Program") },
+    { "text-x-script", N_("Programm") },
     { "video-x-generic", N_("Video") },
-    { "x-office-address-book", N_("Contacts") },
-    { "x-office-calendar", N_("Calendar") },
-    { "x-office-document", N_("Document") },
-    { "x-office-presentation", N_("Presentation") },
-    { "x-office-spreadsheet", N_("Spreadsheet") },
+    { "x-office-address-book", N_("Kontakte") },
+    { "x-office-calendar", N_("Kalender") },
+    { "x-office-document", N_("Dokument") },
+    { "x-office-presentation", N_("Präsentation") },
+    { "x-office-spreadsheet", N_("Tabellendokument") },
 };
 
 static char *
@@ -7499,13 +7499,13 @@ get_description (NolphinFile     *file,
 
     if (g_content_type_is_unknown (mime_type)) {
         if (nolphin_file_is_executable (file)) {
-            return g_strdup (_("Program"));
+            return g_strdup (_("Programm"));
         }
-        return g_strdup (_("Binary"));
+        return g_strdup (_("Binär"));
     }
 
     if (strcmp (mime_type, "inode/directory") == 0) {
-        return g_strdup (_("Folder"));
+        return g_strdup (_("Ordner"));
      }
 
     if (detailed) {
@@ -7540,13 +7540,13 @@ update_description_for_link (NolphinFile *file, char *string)
 	if (nolphin_file_is_symbolic_link (file) && !nolphin_file_is_in_favorites (file)) {
 		g_assert (!nolphin_file_is_broken_symbolic_link (file));
 		if (string == NULL) {
-			return g_strdup (_("link"));
+			return g_strdup (_("Verknüpfung"));
 		}
 		/* Note to localizers: convert file type string for file
 		 * (e.g. "folder", "plain text") to file type for symbolic link
 		 * to that kind of file (e.g. "link to folder").
 		 */
-		res = g_strdup_printf (_("Link to %s"), string);
+		res = g_strdup_printf (_("Verknüpfung mit %s"), string);
 		g_free (string);
 		return res;
 	}
@@ -7562,7 +7562,7 @@ nolphin_file_get_type_as_string (NolphinFile *file)
 	}
 
 	if (nolphin_file_is_broken_symbolic_link (file)) {
-		return g_strdup (_("link (broken)"));
+		return g_strdup (_("Verknüpfung (fehlerhaft)"));
     }
 
     return update_description_for_link (file, get_description (file, FALSE));
@@ -7576,7 +7576,7 @@ nolphin_file_get_detailed_type_as_string (NolphinFile *file)
     }
 
     if (nolphin_file_is_broken_symbolic_link (file)) {
-        return g_strdup (_("link (broken)"));
+        return g_strdup (_("Verknüpfung (fehlerhaft)"));
 	}
 
 	return update_description_for_link (file, get_description (file, TRUE));
@@ -8557,7 +8557,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
 
     if (flags & NOLPHIN_FILE_TOOLTIP_FLAGS_FILE_TYPE) {
         tmp = nolphin_file_get_detailed_type_as_string (file);
-        nice = g_strdup_printf (_("Type: %s"), tmp);
+        nice = g_strdup_printf (_("Dateityp: %s"), tmp);
         string = add_line (string, nice, TRUE);
         g_free (tmp);
         g_free (nice);
@@ -8567,9 +8567,9 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
         guint item_count;
         if (nolphin_file_get_directory_item_count (file, &item_count, NULL)) {
             gchar *launchpad_sucks = THOU_TO_STR (item_count);
-            gchar *count = g_strdup_printf (ngettext ("%s item", "%s items", item_count), launchpad_sucks);
+            gchar *count = g_strdup_printf (ngettext ("%s Objekt", "%s Objekte", item_count), launchpad_sucks);
             g_free (launchpad_sucks);
-            nice = g_strdup_printf (_("Contains: %s"), count);
+            nice = g_strdup_printf (_("Enthält: %s"), count);
             string = add_line (string, nice, TRUE);
             g_free (count);
             g_free (nice);
@@ -8579,7 +8579,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
         gint prefix;
         prefix = nolphin_global_preferences_get_size_prefix_preference ();
         size_string = g_format_size_full (nolphin_file_get_size (file), prefix);
-        nice = g_strdup_printf (_("Size: %s"), size_string);
+        nice = g_strdup_printf (_("Größe: %s"), size_string);
         string = add_line (string, nice, TRUE);
         g_free (size_string);
         g_free (nice);
@@ -8587,7 +8587,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
 
     if (flags & NOLPHIN_FILE_TOOLTIP_FLAGS_ACCESS_DATE) {
         date = nolphin_file_get_date_as_string (file, NOLPHIN_DATE_TYPE_ACCESSED, TRUE);
-        tmp = g_strdup_printf (_("Accessed: %s"), date);
+        tmp = g_strdup_printf (_("Zugegriffen: %s"), date);
         g_free (date);
         string = add_line (string, tmp, TRUE);
         g_free (tmp);
@@ -8595,7 +8595,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
 
     if (flags & NOLPHIN_FILE_TOOLTIP_FLAGS_MOD_DATE) {
         date = nolphin_file_get_date_as_string (file, NOLPHIN_DATE_TYPE_MODIFIED, TRUE);
-        tmp = g_strdup_printf (_("Modified: %s"), date);
+        tmp = g_strdup_printf (_("Geändert: %s"), date);
         g_free (date);
         string = add_line (string, tmp, TRUE);
         g_free (tmp);
@@ -8603,7 +8603,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
 
     if (flags & NOLPHIN_FILE_TOOLTIP_FLAGS_CREATED_DATE) {
         date = nolphin_file_get_date_as_string (file, NOLPHIN_DATE_TYPE_CREATED, TRUE);
-        tmp = g_strdup_printf (_("Created: %s"), date);
+        tmp = g_strdup_printf (_("Erstellt: %s"), date);
         g_free (date);
         string = add_line (string, tmp, TRUE);
         g_free (tmp);
@@ -8613,7 +8613,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
         gchar *truncated;
         tmp = nolphin_file_get_where_string (file);
         truncated = eel_str_middle_truncate (tmp, 60);
-        nice = g_strdup_printf (_("Location: %s"), truncated);
+        nice = g_strdup_printf (_("Ort: %s"), truncated);
         string = add_line (string, nice, TRUE);
         g_free (tmp);
         g_free (truncated);
@@ -8621,7 +8621,7 @@ nolphin_file_construct_tooltip (NolphinFile *file, NolphinFileTooltipFlags flags
 
         if (nolphin_file_is_symbolic_link (file) && !nolphin_file_is_in_favorites (file)) {
             tmp = nolphin_file_get_symbolic_link_target_path (file);
-            const gchar *existing_i18n = _("Link target:");
+            const gchar *existing_i18n = _("Verknüpfungsziel:");
             nice = g_strdup_printf ("%s %s", existing_i18n, tmp);
             string = add_line (string, nice, TRUE);
             g_free (tmp);

@@ -116,8 +116,8 @@ progress_ui_handler_update_status_icon (NolphinProgressUIHandler *self)
 
 	progress_ui_handler_ensure_status_icon (self);
     gchar *launchpad_sucks = THOU_TO_STR (self->priv->active_infos);
-    tooltip = g_strdup_printf (ngettext ("%1$s file operation active.  %2$d%% complete.",
-                               "%1$s file operations active.  %2$d%% complete.",
+    tooltip = g_strdup_printf (ngettext ("%1$s aktiver Dateivorgang. %2$d%% abgeschlossen.",
+                               "%1$s aktive Dateivorgänge. %2$d%% abgeschlossen.",
                                self->priv->active_infos),
                                launchpad_sucks, self->priv->active_percent);
 	xapp_status_icon_set_tooltip_text (self->priv->status_icon, tooltip);
@@ -208,7 +208,7 @@ progress_ui_handler_ensure_window (NolphinProgressUIHandler *self)
     gtk_window_set_default_size (GTK_WINDOW (progress_window), 500, -1);
 
 	gtk_window_set_title (GTK_WINDOW (progress_window),
-			      _("File Operations"));
+			      _("Dateivorgänge"));
 	gtk_window_set_wmclass (GTK_WINDOW (progress_window),
 				"file_progress", "Nolphin");
 	gtk_window_set_position (GTK_WINDOW (progress_window),
@@ -265,12 +265,12 @@ progress_ui_handler_show_complete_notification (NolphinProgressUIHandler *self)
 {
 	GNotification *complete_notification;
 
-	complete_notification = g_notification_new (_("File Operations"));
+	complete_notification = g_notification_new (_("Dateivorgänge"));
 
 	if (self->priv->had_error) {
-		g_notification_set_body (complete_notification, _("Not all file operations completed successfully. See details in the affected operation's dialog."));
+		g_notification_set_body (complete_notification, _("Nicht alle Dateioperationen wurden erfolgreich abgeschlossen. Details siehe Dialog des betroffenen Vorgangs."));
 	} else {
-		g_notification_set_body (complete_notification, _("All file operations have been successfully completed"));
+		g_notification_set_body (complete_notification, _("Alle Dateivorgänge erfolgreich abgeschlossen"));
 	}
 
 	g_application_send_notification (G_APPLICATION (nolphin_application_get_singleton ()), NULL, complete_notification);

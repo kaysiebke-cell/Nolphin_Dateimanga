@@ -110,7 +110,7 @@ remove_clicked_cb (GtkMenuItem *item,
 		if (!g_app_info_remove_supports_type (info,
 						      chooser->details->content_type,
 						      &error)) {
-			eel_show_error_dialog (_("Could not forget association"),
+			eel_show_error_dialog (_("Verknüpfung konnte nicht aufgehoben werden"),
 					       error->message,
 					       GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (chooser))));
 			g_error_free (error);
@@ -134,7 +134,7 @@ populate_popup_cb (GtkAppChooserWidget *widget,
 	NolphinMimeApplicationChooser *chooser = user_data;
 
 	if (g_app_info_can_remove_supports_type (app)) {
-		item = gtk_menu_item_new_with_label (_("Forget association"));
+		item = gtk_menu_item_new_with_label (_("Verknüpfung aufheben"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
 		gtk_widget_show (item);
 
@@ -274,14 +274,14 @@ validate_entry (GtkEntry *entry, const gchar *str)
                                            "ok");
         gtk_entry_set_icon_tooltip_text (entry,
                                          GTK_ENTRY_ICON_SECONDARY,
-                                         _("Valid executable."));
+                                         _("Gültige ausführbare Datei."));
     } else {
         gtk_entry_set_icon_from_icon_name (entry,
                                            GTK_ENTRY_ICON_SECONDARY,
                                            "stop");
         gtk_entry_set_icon_tooltip_text (entry,
                                          GTK_ENTRY_ICON_SECONDARY,
-                                         _("Not a valid executable.  Spaces in the file path must be escaped with backslash (\\)."));
+                                         _("Die ausführbare Datei ist nicht gültig. Leerstellen im Pfad müssen mit Rückstrich (\\) ausgeschlossen werden."));
     }
 
     return ret;
@@ -416,12 +416,12 @@ nolphin_mime_application_chooser_apply_labels (NolphinMimeApplicationChooser *ch
 			extension = get_extension_from_file (NOLPHIN_FILE (chooser->details->files->data));
 
 			/* the %s here is a file extension */
-			description = g_strdup_printf (_("%s document"), extension);
+			description = g_strdup_printf (_("%s Dokument"), extension);
 		} else {
 			description = g_content_type_get_description (chooser->details->content_type);
 		}
 
-		label = g_strdup_printf (_("Open all files of type \"%s\" with"),
+		label = g_strdup_printf (_("Alle Dateien des Typs »%s« öffnen mit"),
 					 description);
 	} else {
 		GFile *file;
@@ -434,14 +434,14 @@ nolphin_mime_application_chooser_apply_labels (NolphinMimeApplicationChooser *ch
 			extension = get_extension (basename);
 
 			/* the %s here is a file extension */
-			description = g_strdup_printf (_("%s document"), extension);
+			description = g_strdup_printf (_("%s Dokument"), extension);
 		} else {
 			description = g_content_type_get_description (chooser->details->content_type);
 		}
 
 		/* first %s is filename, second %s is mime-type description */
 		emname = g_markup_printf_escaped("<i>%s</i>", basename);
-		label = g_strdup_printf (_("Select an application in the list to open %s and other files of type \"%s\""),
+		label = g_strdup_printf (_("Anwendung aus der Liste wählen, mit dem %s und andere Dateien desselben Dateityps wie »%s«  geöffnet werden sollen."),
 					 emname, description);
 
 		g_free (emname);
@@ -475,12 +475,12 @@ on_file_chooser_button_clicked (GtkButton                  *button,
     GtkFileFilter *filter;
     gint res;
 
-    dialog = gtk_file_chooser_dialog_new (_("Custom application"),
+    dialog = gtk_file_chooser_dialog_new (_("Benutzerdefinierte Anwendung"),
                                           NULL,
                                           GTK_FILE_CHOOSER_ACTION_OPEN,
-                                          _("_Cancel"),
+                                          _("_Abbrechen"),
                                           GTK_RESPONSE_CANCEL,
-                                          _("_Open"),
+                                          _("_Öffnen"),
                                           GTK_RESPONSE_ACCEPT,
                                           NULL);
 
@@ -495,7 +495,7 @@ on_file_chooser_button_clicked (GtkButton                  *button,
                                 NULL,
                                 NULL);
 
-    gtk_file_filter_set_name (filter, _("Executables"));
+    gtk_file_filter_set_name (filter, _("Ausführbare Dateien"));
     gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
     res = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -541,8 +541,7 @@ nolphin_mime_application_chooser_build_ui (NolphinMimeApplicationChooser *choose
     gtk_app_chooser_widget_set_show_recommended (GTK_APP_CHOOSER_WIDGET (chooser->details->open_with_widget),
                           TRUE);
 
-    GtkWidget *custom_label = gtk_label_new (_("You can also type or select a custom executable file to use to open this file type.  "
-                                               "You can use this command just once, or set it as default for all files of this type."));
+    GtkWidget *custom_label = gtk_label_new (_("Sie können auch einen eigenen Befehl angeben oder auswählen, um diesen Dateityp zu öffnen. Dieser Befehl kann einmalig oder als Vorgabe für alle Dateien dieses Dateityps verwendet werden."));
     gtk_misc_set_alignment (GTK_MISC (custom_label), 0.0, 0.5);
     gtk_label_set_line_wrap (GTK_LABEL (custom_label), TRUE);
     gtk_label_set_line_wrap_mode (GTK_LABEL (custom_label),
@@ -555,7 +554,7 @@ nolphin_mime_application_chooser_build_ui (NolphinMimeApplicationChooser *choose
 
     GtkWidget *entry = gtk_entry_new ();
     gtk_box_pack_start (GTK_BOX (custom_box), entry, TRUE, TRUE, 0);
-    gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Enter a custom command..."));
+    gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Benutzerdefinierten Befehl eingeben …"));
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
 
     g_signal_connect (entry, "changed",
@@ -581,7 +580,7 @@ nolphin_mime_application_chooser_build_ui (NolphinMimeApplicationChooser *choose
 	gtk_box_pack_start (GTK_BOX (chooser), box, FALSE, FALSE, 6);
 	gtk_widget_show (box);
 
- 	button = gtk_button_new_with_label (_("Add to list"));
+ 	button = gtk_button_new_with_label (_("Zur Liste hinzufügen"));
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (add_clicked_cb),
 			  chooser);
@@ -589,7 +588,7 @@ nolphin_mime_application_chooser_build_ui (NolphinMimeApplicationChooser *choose
 	gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
 	chooser->details->add_button = button;
 
-	button = gtk_button_new_with_label (_("Set as default"));
+	button = gtk_button_new_with_label (_("Als Vorgabe festlegen"));
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (set_as_default_clicked_cb),
 			  chooser);
@@ -598,7 +597,7 @@ nolphin_mime_application_chooser_build_ui (NolphinMimeApplicationChooser *choose
 
 	chooser->details->set_as_default_button = button;
 
-    button = gtk_button_new_with_label (_("Reset to system defaults"));
+    button = gtk_button_new_with_label (_("Auf Systemvorgabe zurücksetzen"));
     g_signal_connect (button, "clicked",
               G_CALLBACK (reset_clicked_cb),
               chooser);

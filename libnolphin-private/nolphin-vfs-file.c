@@ -415,7 +415,7 @@ vfs_file_mount (NolphinFile                   *file,
 		if (callback) {
 			error = NULL;
 			g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-                                             _("This file cannot be mounted"));
+                                             _("Diese Datei kann nicht eingehängt werden"));
 			callback (file, NULL, error, callback_data);
 			g_error_free (error);
 		}
@@ -593,7 +593,7 @@ vfs_file_start (NolphinFile                   *file,
 		if (callback) {
 			error = NULL;
 			g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
-                                             _("This file cannot be started"));
+                                             _("Diese Datei kann nicht gestartet werden"));
 			callback (file, NULL, error, callback_data);
 			g_error_free (error);
 		}

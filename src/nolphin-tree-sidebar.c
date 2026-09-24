@@ -972,12 +972,10 @@ copy_or_cut_files (FMTreeView *view,
 
 	name = nolphin_file_get_display_name (view->details->popup_file);
 	if (cut) {
-		status_string = g_strdup_printf (_("\"%s\" will be moved "
-						   "if you select the Paste command"),
+		status_string = g_strdup_printf (_("»%s« wird verschoben, sobald Sie »Einfügen« auswählen"),
 						 name);
 	} else {
-		status_string = g_strdup_printf (_("\"%s\" will be copied "
-						   "if you select the Paste command"),
+		status_string = g_strdup_printf (_("»%s« wird kopiert, sobald Sie »Einfügen« auswählen"),
 						 name);
 	}
 	g_free (name);
@@ -1015,7 +1013,7 @@ paste_clipboard_data (FMTreeView *view,
 
 	if (item_uris == NULL|| destination_uri == NULL) {
 		nolphin_window_push_status (view->details->window,
-						  _("There is nothing on the clipboard to paste."));
+						  _("In der Zwischenablage ist nichts zum Einfügen."));
 	} else {
 		nolphin_file_operations_copy_move
 			(item_uris, NULL, destination_uri,
@@ -1348,20 +1346,20 @@ clear_ui (FMTreeView *view)
 }
 
 static const GtkActionEntry tree_sidebar_menu_entries[] = {
-    { NOLPHIN_ACTION_OPEN,                    "xsi-folder-open-symbolic",        N_("_Open"),                NULL, NULL, G_CALLBACK (fm_tree_view_open_cb)               },
-    { NOLPHIN_ACTION_OPEN_IN_NEW_TAB,         NULL,                          N_("Open in New _Tab"),     NULL, NULL, G_CALLBACK (fm_tree_view_open_in_new_tab_cb)    },
-    { NOLPHIN_ACTION_OPEN_ALTERNATE,          NULL,                          N_("Open in New _Window"),  NULL, NULL, G_CALLBACK (fm_tree_view_open_in_new_window_cb) },
-    { NOLPHIN_ACTION_NEW_FOLDER,              NULL,                          N_("Create New _Folder"),   NULL, NULL, G_CALLBACK (fm_tree_view_create_folder_cb)      },
-    { NOLPHIN_ACTION_CUT,                     "xsi-edit-cut-symbolic",           N_("Cu_t"),                 NULL, NULL, G_CALLBACK (fm_tree_view_cut_cb)                },
-    { NOLPHIN_ACTION_COPY,                    "xsi-edit-copy-symbolic",          N_("_Copy"),                NULL, NULL, G_CALLBACK (fm_tree_view_copy_cb)               },
-    { NOLPHIN_ACTION_PASTE,                   "xsi-edit-paste-symbolic",         N_("_Paste Into Folder"),   NULL, NULL, G_CALLBACK (fm_tree_view_paste_cb)              },
-    { NOLPHIN_ACTION_PIN_FILE,                "xsi-pin-symbolic",           N_("P_in"),                 NULL, NULL, G_CALLBACK (fm_tree_view_pin_unpin_cb)          },
-    { NOLPHIN_ACTION_UNPIN_FILE,              "xsi-unpin-symbolic",         N_("Unp_in"),               NULL, NULL, G_CALLBACK (fm_tree_view_pin_unpin_cb)          },
-    { NOLPHIN_ACTION_TRASH,                   "xsi-user-trash-full-symbolic",    N_("Mo_ve to Trash"),       NULL, NULL, G_CALLBACK (fm_tree_view_trash_cb)              },
-    { NOLPHIN_ACTION_DELETE,                  "xsi-edit-delete-symbolic",        N_("_Delete"),              NULL, NULL, G_CALLBACK (fm_tree_view_delete_cb)             },
-    { NOLPHIN_ACTION_UNMOUNT_VOLUME,          NULL,                          N_("_Unmount"),             NULL, NULL, G_CALLBACK (fm_tree_view_unmount_cb)            },
-    { NOLPHIN_ACTION_EJECT_VOLUME,            NULL,                          N_("_Eject"),               NULL, NULL, G_CALLBACK (fm_tree_view_eject_cb)              },
-    { NOLPHIN_ACTION_PROPERTIES,             "xsi-document-properties-symbolic", N_("_Properties"),          NULL, NULL, G_CALLBACK (fm_tree_view_properties_cb)         },
+    { NOLPHIN_ACTION_OPEN,                    "xsi-folder-open-symbolic",        N_("_Öffnen"),                NULL, NULL, G_CALLBACK (fm_tree_view_open_cb)               },
+    { NOLPHIN_ACTION_OPEN_IN_NEW_TAB,         NULL,                          N_("In neuem _Reiter öffnen"),     NULL, NULL, G_CALLBACK (fm_tree_view_open_in_new_tab_cb)    },
+    { NOLPHIN_ACTION_OPEN_ALTERNATE,          NULL,                          N_("In neuem _Fenster öffnen"),  NULL, NULL, G_CALLBACK (fm_tree_view_open_in_new_window_cb) },
+    { NOLPHIN_ACTION_NEW_FOLDER,              NULL,                          N_("Neuen _Ordner anlegen"),   NULL, NULL, G_CALLBACK (fm_tree_view_create_folder_cb)      },
+    { NOLPHIN_ACTION_CUT,                     "xsi-edit-cut-symbolic",           N_("_Ausschneiden"),                 NULL, NULL, G_CALLBACK (fm_tree_view_cut_cb)                },
+    { NOLPHIN_ACTION_COPY,                    "xsi-edit-copy-symbolic",          N_("_Kopieren"),                NULL, NULL, G_CALLBACK (fm_tree_view_copy_cb)               },
+    { NOLPHIN_ACTION_PASTE,                   "xsi-edit-paste-symbolic",         N_("In Ordner e_infügen"),   NULL, NULL, G_CALLBACK (fm_tree_view_paste_cb)              },
+    { NOLPHIN_ACTION_PIN_FILE,                "xsi-pin-symbolic",           N_("_Anheften"),                 NULL, NULL, G_CALLBACK (fm_tree_view_pin_unpin_cb)          },
+    { NOLPHIN_ACTION_UNPIN_FILE,              "xsi-unpin-symbolic",         N_("_Lösen"),               NULL, NULL, G_CALLBACK (fm_tree_view_pin_unpin_cb)          },
+    { NOLPHIN_ACTION_TRASH,                   "xsi-user-trash-full-symbolic",    N_("In den _Papierkorb verschieben"),       NULL, NULL, G_CALLBACK (fm_tree_view_trash_cb)              },
+    { NOLPHIN_ACTION_DELETE,                  "xsi-edit-delete-symbolic",        N_("_Löschen"),              NULL, NULL, G_CALLBACK (fm_tree_view_delete_cb)             },
+    { NOLPHIN_ACTION_UNMOUNT_VOLUME,          NULL,                          N_("_Aushängen"),             NULL, NULL, G_CALLBACK (fm_tree_view_unmount_cb)            },
+    { NOLPHIN_ACTION_EJECT_VOLUME,            NULL,                          N_("_Auswerfen"),               NULL, NULL, G_CALLBACK (fm_tree_view_eject_cb)              },
+    { NOLPHIN_ACTION_PROPERTIES,             "xsi-document-properties-symbolic", N_("_Eigenschaften"),          NULL, NULL, G_CALLBACK (fm_tree_view_properties_cb)         },
 };
 
 static void
@@ -1487,25 +1485,25 @@ create_tree (FMTreeView *view)
 
 #ifdef NOT_YET_USABLE /* Do we really want this? */
 	icon = g_themed_icon_new (NOLPHIN_ICON_COMPUTER);
-	fm_tree_model_add_root_uri (view->details->child_model, "computer:///", _("Computer"), icon, NULL);
+	fm_tree_model_add_root_uri (view->details->child_model, "computer:///", _("Rechner"), icon, NULL);
 	g_object_unref (icon);
 #endif
  	home_uri = nolphin_get_home_directory_uri ();
 	icon = g_themed_icon_new (NOLPHIN_ICON_HOME);
-	fm_tree_model_add_root_uri (view->details->child_model, home_uri, _("Home"), icon, NULL);
+	fm_tree_model_add_root_uri (view->details->child_model, home_uri, _("Persönlicher Ordner"), icon, NULL);
 	g_object_unref (icon);
 	g_free (home_uri);
 
     icon = g_themed_icon_new (NOLPHIN_ICON_FAVORITES);
-    fm_tree_model_add_root_uri (view->details->child_model, "favorites:///", _("Favorites"), icon, NULL);
+    fm_tree_model_add_root_uri (view->details->child_model, "favorites:///", _("Favoriten"), icon, NULL);
     g_object_unref (icon);
 
 	icon = g_themed_icon_new (NOLPHIN_ICON_FILESYSTEM);
-	fm_tree_model_add_root_uri (view->details->child_model, "file:///", _("File System"), icon, NULL);
+	fm_tree_model_add_root_uri (view->details->child_model, "file:///", _("Dateisystem"), icon, NULL);
 	g_object_unref (icon);
 #ifdef NOT_YET_USABLE /* Do we really want this? */
 	icon = g_themed_icon_new (NOLPHIN_ICON_NETWORK);
-	fm_tree_model_add_root_uri (view->details->child_model, "network:///", _("Network"), icon, NULL);
+	fm_tree_model_add_root_uri (view->details->child_model, "network:///", _("Netzwerk"), icon, NULL);
 	g_object_unref (icon);
 #endif
 	

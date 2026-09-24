@@ -52,7 +52,7 @@ const gchar *
 nolphin_archive_format_get_label (NolphinArchiveFormat format)
 {
     if (format < 0 || format >= G_N_ELEMENTS (format_info)) {
-        return _("Unknown");
+        return _("Unbekannt");
     }
     return format_info[format].label;
 }
@@ -162,7 +162,7 @@ subprocess_wait_cb (GObject *source, GAsyncResult *result, gpointer user_data)
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_TOOL_FAILED,
                                  "%s",
                                  (stderr_buf != NULL && stderr_buf[0] != '\0') ?
-                                 stderr_buf : _("The archive tool exited with an error."));
+                                 stderr_buf : _("Das Archivierungswerkzeug wurde mit einem Fehler beendet."));
         g_free (stderr_buf);
     }
 
@@ -210,7 +210,7 @@ check_tool_available (NolphinArchiveFormat format, const gchar *tool, GTask *tas
     }
 
     g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_TOOL_NOT_FOUND,
-                             _("The '%s' tool required for %s archives isn't installed."),
+                             _("Das für %s-Archive benötigte Werkzeug »%s« ist nicht installiert."),
                              tool, format_info[format].label);
     g_object_unref (task);
     return FALSE;
@@ -237,14 +237,14 @@ nolphin_archive_compress_async (GList                *sources,
 
     if (sources == NULL) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Nothing to compress."));
+                                 _("Nichts zu komprimieren."));
         g_object_unref (task);
         return;
     }
 
     if (format < 0 || format >= G_N_ELEMENTS (format_info)) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Unknown archive format."));
+                                 _("Unbekanntes Archivformat."));
         g_object_unref (task);
         return;
     }
@@ -260,7 +260,7 @@ nolphin_archive_compress_async (GList                *sources,
     parent = g_file_get_parent (G_FILE (sources->data));
     if (parent == NULL) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Cannot compress an item with no parent folder."));
+                                 _("Ein Objekt ohne übergeordneten Ordner kann nicht komprimiert werden."));
         g_object_unref (task);
         return;
     }
@@ -271,7 +271,7 @@ nolphin_archive_compress_async (GList                *sources,
         if (!same) {
             g_clear_object (&parent);
             g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                     _("All selected items must be in the same folder to be compressed together."));
+                                     _("Alle ausgewählten Objekte müssen sich im selben Ordner befinden, um gemeinsam komprimiert zu werden."));
             g_object_unref (task);
             return;
         }
@@ -285,7 +285,7 @@ nolphin_archive_compress_async (GList                *sources,
         g_free (parent_path);
         g_free (dest_path);
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Remote locations aren't supported for archiving yet."));
+                                 _("Entfernte Orte werden für das Archivieren noch nicht unterstützt."));
         g_object_unref (task);
         return;
     }
@@ -362,7 +362,7 @@ nolphin_archive_extract_async (GFile               *archive_file,
     format = nolphin_archive_detect_format (archive_file);
     if (format == NOLPHIN_ARCHIVE_FORMAT_UNKNOWN) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Unrecognized archive type."));
+                                 _("Nicht erkannter Archivtyp."));
         g_object_unref (task);
         return;
     }
@@ -377,7 +377,7 @@ nolphin_archive_extract_async (GFile               *archive_file,
         g_free (archive_path);
         g_free (dest_path);
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Remote locations aren't supported for archiving yet."));
+                                 _("Entfernte Orte werden für das Archivieren noch nicht unterstützt."));
         g_object_unref (task);
         return;
     }
@@ -448,7 +448,7 @@ nolphin_archive_test_async (GFile               *archive_file,
     format = nolphin_archive_detect_format (archive_file);
     if (format == NOLPHIN_ARCHIVE_FORMAT_UNKNOWN) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Unrecognized archive type."));
+                                 _("Nicht erkannter Archivtyp."));
         g_object_unref (task);
         return;
     }
@@ -460,7 +460,7 @@ nolphin_archive_test_async (GFile               *archive_file,
     archive_path = g_file_get_path (archive_file);
     if (archive_path == NULL) {
         g_task_return_new_error (task, NOLPHIN_ARCHIVE_ERROR, NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT,
-                                 _("Remote locations aren't supported for archiving yet."));
+                                 _("Entfernte Orte werden für das Archivieren noch nicht unterstützt."));
         g_object_unref (task);
         return;
     }

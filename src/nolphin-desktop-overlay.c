@@ -75,7 +75,7 @@ show_view_page (NolphinDesktopOverlay *overlay)
     if (plug_name) {
         gchar *title;
 
-        title = g_strdup_printf (_("Current Monitor Layout (%s - %dx%d)"),
+        title = g_strdup_printf (_("Aktuelle Bildschirmanordnung (%s – %dx%d)"),
                                  plug_name,
                                  rect.width,
                                  rect.height);
@@ -87,7 +87,7 @@ show_view_page (NolphinDesktopOverlay *overlay)
     } else {
         gchar *title;
 
-        title = g_strdup_printf (_("Current Monitor Layout (%dx%d)"),
+        title = g_strdup_printf (_("Aktuelle Bildschirmanordnung (%dx%d)"),
                                  rect.width,
                                  rect.height);
 
@@ -365,7 +365,7 @@ on_view_prefs_button_clicked (GtkWidget *button,
     }
 
     gtk_stack_set_visible_child_name (priv->stack, "global");
-    gtk_window_set_title (priv->window, _("Desktop Settings"));
+    gtk_window_set_title (priv->window, _("Schreibtischeinstellungen"));
 }
 
 static gboolean
@@ -469,7 +469,7 @@ nolphin_desktop_overlay_init (NolphinDesktopOverlay *overlay)
         gtk_box_pack_start (GTK_BOX (prefs_box), widget, TRUE, TRUE, 0);
 
         widget = gtk_link_button_new_with_label ("",
-                                               _("Current Monitor Preferences"));
+                                               _("Aktuelle Bildschirmeinstellungen"));
         gtk_widget_set_tooltip_text (widget, "");
 
         g_signal_connect (widget,
@@ -493,7 +493,7 @@ nolphin_desktop_overlay_init (NolphinDesktopOverlay *overlay)
     gtk_stack_add_titled (priv->stack,
                           prefs_box,
                           "global",
-                          _("Show global desktop settings"));
+                          _("Globale Schreibtischeinstellungen anzeigen"));
 
     gtk_container_child_set (GTK_CONTAINER (priv->stack),
                              prefs_box,
@@ -503,10 +503,10 @@ nolphin_desktop_overlay_init (NolphinDesktopOverlay *overlay)
     priv->view_substack = GTK_STACK (gtk_builder_get_object (priv->builder, "view_substack"));
 
     widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "view_prefs_link_button"));
-    gtk_button_set_label (GTK_BUTTON (widget), _("Desktop Settings"));
+    gtk_button_set_label (GTK_BUTTON (widget), _("Schreibtischeinstellungen"));
 
     widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "disabled_view_link_button"));
-    gtk_button_set_label (GTK_BUTTON (widget), _("Desktop Settings"));
+    gtk_button_set_label (GTK_BUTTON (widget), _("Schreibtischeinstellungen"));
 
     priv->icon_size_combo = GTK_WIDGET (gtk_builder_get_object (priv->builder, "icon_size_combo"));
     priv->direction_combo = GTK_WIDGET (gtk_builder_get_object (priv->builder, "direction_combo"));

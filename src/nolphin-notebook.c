@@ -367,7 +367,7 @@ build_tab_label (NolphinNotebook *nb, NolphinWindowSlot *slot)
 	gtk_widget_set_name (close_button, "nolphin-tab-close-button");
 
 	image = gtk_image_new_from_icon_name ("xsi-window-close-symbolic", GTK_ICON_SIZE_MENU);
-	gtk_widget_set_tooltip_text (close_button, _("Close tab"));
+	gtk_widget_set_tooltip_text (close_button, _("Reiter schließen"));
 	g_signal_connect_object (close_button, "clicked",
 				 G_CALLBACK (close_button_clicked_cb), slot, 0);
 

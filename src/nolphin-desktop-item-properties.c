@@ -404,24 +404,24 @@ create_page (GKeyFile *key_file, GtkWidget *box)
 	
 	if (g_strcmp0 (type, "Link") == 0) {
 		entries = g_list_prepend (entries,
-					  item_entry_new ("Comment",
+					  item_entry_new ("Bemerkung",
 							  _("Comment"), TRUE, FALSE));
 		entries = g_list_prepend (entries,
-					  item_entry_new ("URL",
+					  item_entry_new ("Adresse",
 							  _("URL"), FALSE, TRUE));
 		entries = g_list_prepend (entries,
 					  item_entry_new ("GenericName",
-							  _("Description"), TRUE, FALSE));
+							  _("Beschreibung"), TRUE, FALSE));
 	} else if (g_strcmp0 (type, "Application") == 0) {
 		entries = g_list_prepend (entries,
-					  item_entry_new ("Comment",
+					  item_entry_new ("Bemerkung",
 							  _("Comment"), TRUE, FALSE));
 		entries = g_list_prepend (entries,
 					  item_entry_new ("Exec", 
-							  _("Command"), FALSE, FALSE));
+							  _("Befehl"), FALSE, FALSE));
 		entries = g_list_prepend (entries,
 					  item_entry_new ("GenericName",
-							  _("Description"), TRUE, FALSE));
+							  _("Beschreibung"), TRUE, FALSE));
 	} else {
 		/* we only handle launchers and links */
 

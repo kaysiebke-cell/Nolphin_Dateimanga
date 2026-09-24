@@ -134,50 +134,50 @@ static const SortCriterion sort_criteria[] = {
 		NOLPHIN_FILE_SORT_BY_DISPLAY_NAME,
 		"name",
 		"Sort by Name",
-		N_("by _Name"),
-		N_("Keep icons sorted by name in rows")
+		N_("nach _Name"),
+		N_("Symbole nach Name in Zeilen sortieren")
 	},
 	{
 		NOLPHIN_FILE_SORT_BY_SIZE,
 		"size",
 		"Sort by Size",
-		N_("by _Size"),
-		N_("Keep icons sorted by size in rows")
+		N_("nach _Größe"),
+		N_("Symbole nach Größe in Zeilen sortieren")
 	},
 	{
 		NOLPHIN_FILE_SORT_BY_TYPE,
 		"type",
 		"Sort by Type",
-		N_("by _Type"),
-		N_("Keep icons sorted by type in rows")
+		N_("nach _Typ"),
+		N_("Symbole nach Typ in Zeilen sortieren")
 	},
     {
         NOLPHIN_FILE_SORT_BY_DETAILED_TYPE,
         "detailed_type",
         "Sort by Detailed Type",
-        N_("by _Detailed Type"),
-        N_("Keep icons sorted by detailed type in rows")
+        N_("nach _datailliertem Dateityp"),
+        N_("Symbole nach detailliertem Dateityp in Reihen sortieren")
     },
 	{
 		NOLPHIN_FILE_SORT_BY_MTIME,
 		"modification date",
 		"Sort by Modification Date",
-		N_("by Modification _Date"),
-		N_("Keep icons sorted by modification date in rows")
+		N_("nach Änderungs_datum"),
+		N_("Symbole nach Änderungsdatum in Zeilen sortieren")
 	},
   {
     	NOLPHIN_FILE_SORT_BY_TRASHED_TIME,
     	"trashed",
     	"Sort by Trash Time",
-    	N_("by T_rash Time"),
-    	N_("Keep icons sorted by trash time in rows")
+    	N_("nach Löschdatum"),
+    	N_("Symbole nach Löschdatum in Zeilen sortieren")
   },
   {
     	NOLPHIN_FILE_SORT_BY_EXTENSION,
     	"extension",
     	"Sort by Extension",
-    	N_("by _Extension"),
-    	N_("Keep icons sorted by extension in rows")
+    	N_("nach _Erweiterung"),
+    	N_("Symbole zeilenweise nach Erweiterung sortiert halten")
   }
 };
 
@@ -611,7 +611,7 @@ update_layout_menus (NolphinIconView *view)
 	gtk_action_set_sensitive (action, !is_auto_layout);
 
 	if (nolphin_icon_view_is_desktop (view)) {
-		gtk_action_set_label (action, _("_Organize Desktop by Name"));
+		gtk_action_set_label (action, _("_Schreibtisch alphabetisch sortieren"));
 	}
 
 	action = gtk_action_group_get_action (view->details->icon_action_group,
@@ -1405,59 +1405,59 @@ nolphin_icon_view_start_renaming_file (NolphinView *view,
 }
 
 static const GtkActionEntry icon_view_entries[] = {
-  /* name, stock id, label */  { "Arrange Items", NULL, N_("Arran_ge Items") },
+  /* name, stock id, label */  { "Arrange Items", NULL, N_("Objekte _anordnen") },
   /* name, stock id */         { "Clean Up", NULL,
-  /* label, accelerator */       N_("_Organize by Name"), NULL,
-  /* tooltip */                  N_("Reposition icons to better fit in the window and avoid overlapping"),
+  /* label, accelerator */       N_("Nach Namen _sortieren"), NULL,
+  /* tooltip */                  N_("Die Symbole neu anordnen, damit sie besser ins Fenster passen und sich nicht überlagern"),
                                  G_CALLBACK (action_clean_up_callback) },
 };
 
 static const GtkToggleActionEntry icon_view_toggle_entries[] = {
 
   /* name, stock id */      { "Reversed Order", NULL,
-  /* label, accelerator */    N_("Re_versed Order"), NULL,
-  /* tooltip */               N_("Display icons in the opposite order"),
+  /* label, accelerator */    N_("Umge_kehrte Reihenfolge"), NULL,
+  /* tooltip */               N_("Symbole in umgekehrter Reihenfolge anzeigen"),
                               G_CALLBACK (action_reversed_order_callback),
                               0 },
   /* name, stock id */      { "Keep Aligned", NULL,
-  /* label, accelerator */    N_("_Keep Aligned"), NULL,
-  /* tooltip */               N_("Keep icons lined up on a grid"),
+  /* label, accelerator */    N_("Anordnung _feststellen"), NULL,
+  /* tooltip */               N_("Symbole an einem Raster ausrichten"),
                               G_CALLBACK (action_keep_aligned_callback),
                               0 },
 };
 
 static const GtkRadioActionEntry arrange_radio_entries[] = {
   { "Manual Layout", NULL,
-    N_("_Manually"), NULL,
-    N_("Leave icons wherever they are dropped"),
+    N_("_Manuell"), NULL,
+    N_("Symbole dort lassen, wo sie abgelegt werden"),
     NOLPHIN_FILE_SORT_NONE },
   { "Sort by Name", NULL,
-    N_("By _Name"), NULL,
-    N_("Keep icons sorted by name in rows"),
+    N_("Nach _Name"), NULL,
+    N_("Symbole nach Name in Zeilen sortieren"),
     NOLPHIN_FILE_SORT_BY_DISPLAY_NAME },
   { "Sort by Size", NULL,
-    N_("By _Size"), NULL,
-    N_("Keep icons sorted by size in rows"),
+    N_("Nach _Größe"), NULL,
+    N_("Symbole nach Größe in Zeilen sortieren"),
     NOLPHIN_FILE_SORT_BY_SIZE },
   { "Sort by Type", NULL,
-    N_("By _Type"), NULL,
-    N_("Keep icons sorted by type in rows"),
+    N_("Nach _Typ"), NULL,
+    N_("Symbole nach Typ in Zeilen sortieren"),
     NOLPHIN_FILE_SORT_BY_TYPE },
   { "Sort by Detailed Type", NULL,
-    N_("By _Detailed Type"), NULL,
-    N_("Keep icons sorted by detailed type in rows"),
+    N_("Nach _detailliertem Dateityp"), NULL,
+    N_("Symbole nach detailliertem Dateityp in Reihen sortieren"),
     NOLPHIN_FILE_SORT_BY_DETAILED_TYPE },
   { "Sort by Modification Date", NULL,
-    N_("By Modification _Date"), NULL,
-    N_("Keep icons sorted by modification date in rows"),
+    N_("Nach Änderungs_datum"), NULL,
+    N_("Symbole nach Änderungsdatum in Zeilen sortieren"),
     NOLPHIN_FILE_SORT_BY_MTIME },
   { "Sort by Trash Time", NULL,
-    N_("By T_rash Time"), NULL,
-    N_("Keep icons sorted by trash time in rows"),
+    N_("Nach L_öschdatum"), NULL,
+    N_("Symbole nach Löschdatum in Zeilen sortieren"),
     NOLPHIN_FILE_SORT_BY_TRASHED_TIME },
   { "Sort by Extension", NULL,
-    N_("By _Extension"), NULL,
-    N_("Keep icons sorted by extension in rows"),
+    N_("Nach _Erweiterung"), NULL,
+    N_("Symbole zeilenweise nach Erweiterung sortiert halten"),
     NOLPHIN_FILE_SORT_BY_EXTENSION },
 };
 
@@ -2913,12 +2913,12 @@ static NolphinViewInfo nolphin_icon_view = {
 	(char *)NOLPHIN_ICON_VIEW_ID,
 	/* translators: this is used in the view selection dropdown
 	 * of navigation windows and in the preferences dialog */
-	(char *)N_("Icon View"),
+	(char *)N_("Symbolansicht"),
 	/* translators: this is used in the view menu */
-	(char *)N_("_Icons"),
-	(char *)N_("The icon view encountered an error."),
-	(char *)N_("The icon view encountered an error while starting up."),
-	(char *)N_("Display this location with the icon view."),
+	(char *)N_("_Symbole"),
+	(char *)N_("Fehler in der Symbolansicht."),
+	(char *)N_("Fehler in der Symbolansicht beim Starten."),
+	(char *)N_("Diesen Ort mit der Symbolansicht anzeigen"),
 	nolphin_icon_view_create,
 	nolphin_icon_view_supports_uri
 };
@@ -2927,12 +2927,12 @@ static NolphinViewInfo nolphin_compact_view = {
 	(char *)FM_COMPACT_VIEW_ID,
 	/* translators: this is used in the view selection dropdown
 	 * of navigation windows and in the preferences dialog */
-	(char *)N_("Compact View"),
+	(char *)N_("Kompaktansicht"),
 	/* translators: this is used in the view menu */
-	(char *)N_("_Compact"),
-	(char *)N_("The compact view encountered an error."),
-	(char *)N_("The compact view encountered an error while starting up."),
-	(char *)N_("Display this location with the compact view."),
+	(char *)N_("_Kompakt"),
+	(char *)N_("Die Kompaktansicht stieß auf einen Fehler."),
+	(char *)N_("Die Kompaktansicht stieß beim Starten auf einen Fehler."),
+	(char *)N_("Diesen Ort mit der Kompaktansicht anzeigen"),
 	nolphin_compact_view_create,
 	nolphin_icon_view_supports_uri
 };

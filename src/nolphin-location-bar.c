@@ -161,12 +161,12 @@ drag_data_received_callback (GtkWidget *widget,
 	 */
 	name_count = g_strv_length (names);
 	if (name_count > 1) {
-		prompt = g_strdup_printf (ngettext("Do you want to view %d location?",
-						   "Do you want to view %d locations?",
+		prompt = g_strdup_printf (ngettext("Wollen Sie %d Ort anzeigen?",
+						   "Wollen Sie %d Orte anzeigen?",
 						   name_count),
 					  name_count);
-		detail = g_strdup_printf (ngettext("This will open %d separate window.",
-						   "This will open %d separate windows.",
+		detail = g_strdup_printf (ngettext("Dies würde %d Einzelfenster öffnen.",
+						   "Dies würde %d Einzelfenster öffnen.",
 						   name_count),
 					  name_count);
 		/* eel_run_simple_dialog should really take in pairs

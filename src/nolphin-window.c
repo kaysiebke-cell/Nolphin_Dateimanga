@@ -1617,7 +1617,7 @@ nolphin_window_sync_title (NolphinWindow *window,
 		 * to recognize browser windows. Otherwise, we default to the directory name.
 		 */
 		if (!g_settings_get_boolean (nolphin_preferences, NOLPHIN_PREFERENCES_ALWAYS_USE_BROWSER)) {
-			full_title = g_strdup_printf (_("%s - File Browser"), slot->title);
+			full_title = g_strdup_printf (_("%s - Dateiverwaltung"), slot->title);
 			window_title = eel_str_middle_truncate (full_title, MAX_TITLE_LENGTH);
 			g_free (full_title);
 		} else {

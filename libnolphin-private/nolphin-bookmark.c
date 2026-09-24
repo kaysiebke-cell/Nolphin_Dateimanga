@@ -127,7 +127,7 @@ bookmark_set_name_from_ready_file (NolphinBookmark *self,
 	display_name = nolphin_file_get_display_name (self->details->file);
 
 	if (nolphin_file_is_home (self->details->file)) {
-		nolphin_bookmark_set_custom_name (self, _("Home"));
+		nolphin_bookmark_set_custom_name (self, _("Persönlicher Ordner"));
 	} else if (g_strcmp0 (self->details->name, display_name) != 0) {
 		nolphin_bookmark_set_custom_name (self, display_name);
 		DEBUG ("%s: name changed to %s", nolphin_bookmark_get_name (self), display_name);

@@ -1436,7 +1436,7 @@ static const char *
 get_dir_name (ButtonData *button_data)
 {
     if (button_data->type == DESKTOP_BUTTON) {
-        return _("Desktop");
+        return _("Schreibtisch");
     /*
     }
      * originally this would look like /home/Home/Desktop in the pathbar.
