@@ -53,6 +53,7 @@ struct _NemoProgressUIHandlerPriv {
 	guint active_infos;
     guint active_percent;
 	GList *infos;
+    gboolean had_error;
 
 	XAppStatusIcon *status_icon;
     gboolean should_show_status_icon;
@@ -265,8 +266,13 @@ progress_ui_handler_show_complete_notification (NemoProgressUIHandler *self)
 	GNotification *complete_notification;
 
 	complete_notification = g_notification_new (_("File Operations"));
-	g_notification_set_body (complete_notification, _("All file operations have been successfully completed"));
-	
+
+	if (self->priv->had_error) {
+		g_notification_set_body (complete_notification, _("Not all file operations completed successfully. See details in the affected operation's dialog."));
+	} else {
+		g_notification_set_body (complete_notification, _("All file operations have been successfully completed"));
+	}
+
 	g_application_send_notification (G_APPLICATION (nemo_application_get_singleton ()), NULL, complete_notification);
 	g_object_unref (complete_notification);
 }
@@ -284,6 +290,10 @@ static void
 progress_info_finished_cb (NemoProgressInfo *info,
 			   NemoProgressUIHandler *self)
 {
+	if (nemo_progress_info_get_had_error (info)) {
+		self->priv->had_error = TRUE;
+	}
+
 	self->priv->active_infos--;
 	self->priv->infos = g_list_remove (self->priv->infos, info);
 
@@ -358,6 +368,11 @@ handle_new_progress_info (NemoProgressUIHandler *self,
 			  
 	g_signal_connect (info, "progress-changed",
 			  G_CALLBACK (progress_info_changed_cb), self);
+
+	if (self->priv->active_infos == 0) {
+		/* starting a fresh batch of operations */
+		self->priv->had_error = FALSE;
+	}
 
 	self->priv->active_infos++;
 

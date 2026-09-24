@@ -1353,6 +1353,10 @@ run_simple_dialog_va (CommonJob *job,
 	const char *button_title;
 	GPtrArray *ptr_array;
 
+	if (message_type == GTK_MESSAGE_ERROR || message_type == GTK_MESSAGE_WARNING) {
+		nemo_progress_info_set_had_error (job->progress);
+	}
+
     nemo_progress_info_pause (job->progress);
 
 	data = g_new0 (RunSimpleDialogData, 1);

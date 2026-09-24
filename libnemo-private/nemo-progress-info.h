@@ -63,6 +63,8 @@ void          nemo_progress_info_cancel          (NemoProgressInfo *info);
 gboolean      nemo_progress_info_get_is_started  (NemoProgressInfo *info);
 gboolean      nemo_progress_info_get_is_finished (NemoProgressInfo *info);
 gboolean      nemo_progress_info_get_is_paused   (NemoProgressInfo *info);
+gboolean      nemo_progress_info_get_had_error   (NemoProgressInfo *info);
+void          nemo_progress_info_set_had_error   (NemoProgressInfo *info);
 
 void          nemo_progress_info_queue           (NemoProgressInfo *info);
 void          nemo_progress_info_start           (NemoProgressInfo *info);

@@ -1279,6 +1279,58 @@ insert_quote (NemoAction *action, GString *str)
     return str;
 }
 
+/* Escapes the delimiter used by insert_quote() (and the backslash itself)
+ * so an embedded quote/backtick character in a filename, uri, etc. cannot
+ * close the quoting early and corrupt the argument boundaries that
+ * g_shell_parse_argv()/g_spawn_command_line_*() later split on. */
+static gchar *
+escape_value_for_quote_type (NemoAction *action, const gchar *value)
+{
+    NemoActionPrivate *priv = nemo_action_get_instance_private (action);
+    GString *escaped;
+    const gchar *p;
+
+    if (value == NULL) {
+        return NULL;
+    }
+
+    switch (priv->quote_type) {
+        case QUOTE_TYPE_SINGLE:
+            /* Nothing is escapable inside single quotes: close the quote,
+             * append a literally-quoted single quote, and reopen it. */
+            escaped = g_string_new ("");
+            for (p = value; *p != '\0'; p++) {
+                if (*p == '\'') {
+                    escaped = g_string_append (escaped, "'\\''");
+                } else {
+                    escaped = g_string_append_c (escaped, *p);
+                }
+            }
+            return g_string_free (escaped, FALSE);
+        case QUOTE_TYPE_DOUBLE:
+            escaped = g_string_new ("");
+            for (p = value; *p != '\0'; p++) {
+                if (*p == '\\' || *p == '"') {
+                    escaped = g_string_append_c (escaped, '\\');
+                }
+                escaped = g_string_append_c (escaped, *p);
+            }
+            return g_string_free (escaped, FALSE);
+        case QUOTE_TYPE_BACKTICK:
+            escaped = g_string_new ("");
+            for (p = value; *p != '\0'; p++) {
+                if (*p == '\\' || *p == '`') {
+                    escaped = g_string_append_c (escaped, '\\');
+                }
+                escaped = g_string_append_c (escaped, *p);
+            }
+            return g_string_free (escaped, FALSE);
+        case QUOTE_TYPE_NONE:
+        default:
+            return g_strdup (value);
+    }
+}
+
 static gchar *
 get_device_path (NemoAction *action, NemoFile *file)
 {
@@ -1335,8 +1387,11 @@ get_insertion_string (NemoAction *action,
                         str = insert_separator (action, str);
                     str = insert_quote (action, str);
                     gchar *path = get_path (action, NEMO_FILE (l->data));
-                    if (path)
-                        str = score_append (action, str, path);
+                    if (path) {
+                        gchar *escaped_path = escape_value_for_quote_type (action, path);
+                        str = score_append (action, str, escaped_path);
+                        g_free (escaped_path);
+                    }
                     g_free (path);
                     str = insert_quote (action, str);
                     first = FALSE;
@@ -1359,7 +1414,9 @@ get_insertion_string (NemoAction *action,
                         uri = nemo_file_get_uri (NEMO_FILE (l->data));
                     }
 
-                    str = score_append (action, str, uri);
+                    gchar *escaped_uri = escape_value_for_quote_type (action, uri);
+                    str = score_append (action, str, escaped_uri);
+                    g_free (escaped_uri);
                     g_free (uri);
                     str = insert_quote (action, str);
                     first = FALSE;
@@ -1384,7 +1441,9 @@ default_parent_path:
                 }
 
                 str = insert_quote (action, str);
-                str = score_append (action, str, path);
+                gchar *escaped_path = escape_value_for_quote_type (action, path);
+                str = score_append (action, str, escaped_path);
+                g_free (escaped_path);
                 str = insert_quote (action, str);
                 g_free (path);
             } else {
@@ -1416,7 +1475,9 @@ default_parent_uri:
                 }
 
                 str = insert_quote (action, str);
-                str = score_append (action, str, uri);
+                gchar *escaped_uri = escape_value_for_quote_type (action, uri);
+                str = score_append (action, str, escaped_uri);
+                g_free (escaped_uri);
                 str = insert_quote (action, str);
                 g_free (name);
                 g_free (uri);
@@ -1444,7 +1505,9 @@ default_parent_display_name:
                     parent_display_name = nemo_file_get_display_name (parent);
                 g_free (real_display_name);
                 str = insert_quote (action, str);
-                str = score_append (action, str, parent_display_name);
+                gchar *escaped_parent_display_name = escape_value_for_quote_type (action, parent_display_name);
+                str = score_append (action, str, escaped_parent_display_name);
+                g_free (escaped_parent_display_name);
                 str = insert_quote (action, str);
                 g_free (parent_display_name);
             }
@@ -1456,8 +1519,11 @@ default_parent_display_name:
                         str = insert_separator (action, str);
                     str = insert_quote (action, str);
                     gchar *dev = get_device_path (action, NEMO_FILE (l->data));
-                    if (dev)
-                        str = score_append (action, str, dev);
+                    if (dev) {
+                        gchar *escaped_dev = escape_value_for_quote_type (action, dev);
+                        str = score_append (action, str, escaped_dev);
+                        g_free (escaped_dev);
+                    }
                     g_free (dev);
                     str = insert_quote (action, str);
                     first = FALSE;

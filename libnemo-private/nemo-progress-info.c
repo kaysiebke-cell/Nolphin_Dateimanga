@@ -61,6 +61,7 @@ struct _NemoProgressInfo
 	gboolean finished;
 	gboolean paused;
     gboolean queued;
+    gboolean had_error;
 	
 	GSource *idle_source;
 	gboolean source_is_now;
@@ -314,14 +315,38 @@ gboolean
 nemo_progress_info_get_is_finished (NemoProgressInfo *info)
 {
 	gboolean res;
-	
+
 	g_mutex_lock (&info->info_lock);
-	
+
 	res = info->finished;
-	
+
 	g_mutex_unlock (&info->info_lock);
-	
+
 	return res;
+}
+
+gboolean
+nemo_progress_info_get_had_error (NemoProgressInfo *info)
+{
+	gboolean res;
+
+	g_mutex_lock (&info->info_lock);
+
+	res = info->had_error;
+
+	g_mutex_unlock (&info->info_lock);
+
+	return res;
+}
+
+void
+nemo_progress_info_set_had_error (NemoProgressInfo *info)
+{
+	g_mutex_lock (&info->info_lock);
+
+	info->had_error = TRUE;
+
+	g_mutex_unlock (&info->info_lock);
 }
 
 gboolean
