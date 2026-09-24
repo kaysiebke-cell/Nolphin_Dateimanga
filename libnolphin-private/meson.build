@@ -12,6 +12,7 @@ nolphin_private_sources = [
   'nolphin-action.c',
   'nolphin-archive.c',
   'nolphin-bookmark.c',
+  'nolphin-cad.c',
   'nolphin-cell-renderer-disk.c',
   'nolphin-centered-placement-grid.c',
   'nolphin-clipboard-monitor.c',
@@ -86,8 +87,10 @@ nolphin_private_sources = [
   'nolphin-widget-menu-item.c',
 ]
 
+libgsf = dependency('libgsf-1', required: true)
+
 nolphin_private_deps = [
-  cinnamon, eel, gail, gio_unix, glib, gmodule, gtk, json, math, nolphin_extension, x11, xapp
+  cinnamon, eel, gail, gio_unix, glib, gmodule, gtk, json, libgsf, math, nolphin_extension, x11, xapp
 ]
 
 if libexif_enabled

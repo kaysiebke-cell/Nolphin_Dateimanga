@@ -35,3 +35,12 @@ test('Archive test',
   ),
   args: []
 )
+
+test('CAD test',
+  executable('test-nolphin-cad',
+    [ 'test-nolphin-cad.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)
