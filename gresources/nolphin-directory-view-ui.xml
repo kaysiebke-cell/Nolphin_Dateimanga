@@ -1,6 +1,6 @@
 <ui>
 <accelerator action="OpenAccel"/>
-<accelerator action="PropertiesAccel"/>
+<accelerator action="ActivateFilter"/>
 <accelerator action="RenameSelectAll"/>
 <menubar name="MenuBar">
 	<menu action="File">

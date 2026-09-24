@@ -7300,6 +7300,22 @@ action_open_as_root_callback (GtkAction *action,
 
 }
 
+/* Ctrl+I ("§13: zeigt eine Such-/Filterleiste"). There is no separate
+ * bar widget to show here - the type-ahead filter (see
+ * nolphin_view_activate_filter() below) already turns itself on the
+ * moment a character arrives, as long as the view has focus. So
+ * "activating" it via a shortcut, rather than by just typing, mainly
+ * means: guarantee that focus, for discoverability and for the case
+ * where focus is currently elsewhere (address bar, sidebar, ...). */
+static void
+action_activate_filter_callback (GtkAction *action,
+                                 gpointer callback_data)
+{
+    NolphinView *view = NOLPHIN_VIEW (callback_data);
+
+    nolphin_view_grab_focus (view);
+}
+
 static void
 action_follow_symlink_callback (GtkAction *action,
                                 gpointer callback_data)
@@ -8535,10 +8551,10 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("_Properties"), "<alt>Return",
   /* tooltip */                  N_("View or modify the properties of each selected item"),
 				 G_CALLBACK (action_properties_callback) },
-  /* name, stock id */         { "PropertiesAccel", NULL,
-  /* label, accelerator */       "PropertiesAccel", "<control>I",
+  /* name, stock id */         { "ActivateFilter", NULL,
+  /* label, accelerator */       "ActivateFilter", "<control>I",
   /* tooltip */                  NULL,
-				 G_CALLBACK (action_properties_callback) },
+				 G_CALLBACK (action_activate_filter_callback) },
   /* name, stock id */         { "New Folder", "xsi-folder-new-symbolic",
   /* label, accelerator */       N_("Create New _Folder"), "<control><shift>N",
   /* tooltip */                  N_("Create a new empty folder inside this folder"),
