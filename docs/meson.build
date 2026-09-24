@@ -1,8 +1,8 @@
 
 install_man(
-  'nemo.1',
-  'nemo-desktop.1',
-  'nemo-connect-server.1',
+  'nolphin.1',
+  'nolphin-desktop.1',
+  'nolphin-connect-server.1',
 )
 
 if gtkdoc_enabled
@@ -14,6 +14,6 @@ extraMans = [
   'dnd.txt',
   'key_mouse_navigation.txt',
   'load-states.dia',
-  'nemo-io.txt',
+  'nolphin-io.txt',
   'style-guide.html',
 ]

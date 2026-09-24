@@ -1,0 +1,71 @@
+/* Desktop text stuff */
+
+.nolphin-window.nolphin-desktop-window notebook,
+.nolphin-window.nolphin-desktop-window paned {
+	background-color: transparent;
+}
+
+.nolphin-desktop-window,
+.nolphin-desktop-window:backdrop
+{
+    box-shadow: none;
+}
+
+NolphinDesktopWindow GtkPaned {
+    background-color: transparent;
+}
+
+.nolphin-canvas-item {
+    border-radius: 3px;
+}
+
+.nolphin-desktop {
+    -NolphinIconContainer-activate-prelight-icon-label: true;
+}
+
+.nolphin-desktop.nolphin-canvas-item {
+    color: #eeeeee;
+    text-shadow: 1px 1px alpha(black, 0.8);
+}
+
+.nolphin-desktop.nolphin-canvas-item:hover {
+    background-color: alpha(black, 0.5);
+    background-image: none;
+    text-shadow: none;
+}
+
+.nolphin-desktop.nolphin-canvas-item:selected {
+    background-color: alpha(@theme_selected_bg_color, 0.8);
+    background-image: none;
+    text-shadow: none;
+    color: #f5f5f5;
+}
+
+/* EelEditableLabel (icon labels) */
+.nolphin-desktop.view .entry,
+.nolphin-desktop.view .entry:active,
+.nolphin-desktop.view .entry:focus,
+.nolphin-desktop.view .entry:backdrop {
+    border-image: none;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000000;
+    border-radius: 3px;
+    color: #000000;
+    caret-color: #000000;
+    text-shadow: none;
+    background-image: -gtk-gradient(linear,
+                                    left top, left bottom,
+                                    from       (shade(rgba(255,255,255,1), 0.86)),
+                                    color-stop (0.15, shade(rgba(255,255,255,1), 0.96)),
+                                    color-stop (0.50, shade(rgba(255,255,255,1), 0.98)),
+                                    to         (shade(rgba(255,255,255,1), 1.00)));
+}
+
+.nolphin-desktop.view .entry:selected,
+.nolphin-desktop.view .entry:focus:selected,
+.nolphin-desktop.view .entry:backdrop:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+    text-shadow: none;
+}

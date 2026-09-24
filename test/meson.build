@@ -1,28 +1,28 @@
 
 test('Search Engine test',
-  executable('test-nemo-search-engine',
-    [ 'test-nemo-search-engine.c' ],
+  executable('test-nolphin-search-engine',
+    [ 'test-nolphin-search-engine.c' ],
     include_directories: [ rootInclude, ],
-    dependencies: [ gtk, nemo_private ],
+    dependencies: [ gtk, nolphin_private ],
   ),
   args: []
 )
 
 test('Directory Async test',
-  executable('test-nemo-directory-async',
-    [ 'test-nemo-directory-async.c' ],
+  executable('test-nolphin-directory-async',
+    [ 'test-nolphin-directory-async.c' ],
     include_directories: [ rootInclude, ],
-    dependencies: [ gtk, nemo_private ],
+    dependencies: [ gtk, nolphin_private ],
   ),
   args: []
 )
 
 test('Copy test',
-  executable('test-nemo-copy',
+  executable('test-nolphin-copy',
     [ 'test-copy.c', 'test.c' ],
     include_directories: [ rootInclude, ],
-    dependencies: [ gtk, nemo_private ],
-    c_args: nemo_definitions,
+    dependencies: [ gtk, nolphin_private ],
+    c_args: nolphin_definitions,
   ),
   args: []
 )

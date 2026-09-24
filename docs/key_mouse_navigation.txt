@@ -1,7 +1,7 @@
 This document describes the keyboard and mouse navigation model used
-in the default Nemo views in detail. This is useful as a a guide
-for people implementing a Nemo view or something else that wants
-to have a feel that is compatible with Nemo.
+in the default Nolphin views in detail. This is useful as a a guide
+for people implementing a Nolphin view or something else that wants
+to have a feel that is compatible with Nolphin.
 
 *********** Icon view ********************
 

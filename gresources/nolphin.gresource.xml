@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/nolphin">
+    <file>nolphin-bookmarks-window.glade</file>
+    <file>nolphin-desktop-overlay.glade</file>
+    <file>nolphin-desktop-preferences.glade</file>
+    <file>nolphin-file-management-properties.glade</file>
+    <file>nolphin-search-bar.glade</file>
+
+    <file>nolphin-shortcuts.ui</file>
+
+    <file>nolphin-blank-desktop-window-ui.xml</file>
+    <file>nolphin-desktop-icon-grid-view-ui.xml</file>
+    <file>nolphin-desktop-icon-view-ui.xml</file>
+    <file>nolphin-directory-view-ui.xml</file>
+    <file>nolphin-icon-view-ui.xml</file>
+    <file>nolphin-list-view-ui.xml</file>
+    <file>nolphin-places-sidebar-ui.xml</file>
+    <file>nolphin-shell-ui.xml</file>
+    <file>nolphin-statusbar-ui.xml</file>
+    <file>nolphin-tree-sidebar-ui.xml</file>
+
+    <file alias="icons/knob.png">knob.png</file>
+    <file alias="icons/thumbnail_frame.png">thumbnail_frame.png</file>
+
+    <file>nolphin-style-fallback.css</file>
+    <file>nolphin-style-fallback-mandatory.css</file>
+    <file>nolphin-style-application.css</file>
+  </gresource>
+</gresources>

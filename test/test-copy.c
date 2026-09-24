@@ -1,8 +1,8 @@
 #include "test.h"
 
-#include <libnemo-private/nemo-file-operations.h>
-#include <libnemo-private/nemo-progress-info.h>
-#include <libnemo-private/nemo-progress-info-manager.h>
+#include <libnolphin-private/nolphin-file-operations.h>
+#include <libnolphin-private/nolphin-progress-info.h>
+#include <libnolphin-private/nolphin-progress-info-manager.h>
 
 static void
 copy_done (GHashTable *debuting_uris, 
@@ -13,24 +13,24 @@ copy_done (GHashTable *debuting_uris,
 }
 
 static void
-changed_cb (NemoProgressInfo *info,
+changed_cb (NolphinProgressInfo *info,
 	    gpointer data)
 {
 	g_print ("Changed: %s -- %s\n",
-		 nemo_progress_info_get_status (info),
-		 nemo_progress_info_get_details (info));
+		 nolphin_progress_info_get_status (info),
+		 nolphin_progress_info_get_details (info));
 }
 
 static void
-progress_changed_cb (NemoProgressInfo *info,
+progress_changed_cb (NolphinProgressInfo *info,
 		     gpointer data)
 {
 	g_print ("Progress changed: %f\n",
-		 nemo_progress_info_get_progress (info));
+		 nolphin_progress_info_get_progress (info));
 }
 
 static void
-finished_cb (NemoProgressInfo *info,
+finished_cb (NolphinProgressInfo *info,
 	     gpointer data)
 {
 	g_print ("Finished\n");
@@ -46,8 +46,8 @@ main (int argc, char* argv[])
 	GFile *source;
 	int i;
 	GList *infos;
-        NemoProgressInfoManager *manager;
-	NemoProgressInfo *progress_info;
+        NolphinProgressInfoManager *manager;
+	NolphinProgressInfo *progress_info;
 	
 	test_init (&argc, &argv);
 
@@ -69,22 +69,22 @@ main (int argc, char* argv[])
 	
 	gtk_widget_show (window);
 
-        manager = nemo_progress_info_manager_new ();
+        manager = nolphin_progress_info_manager_new ();
 
-	nemo_file_operations_copy (sources,
+	nolphin_file_operations_copy (sources,
 				       NULL /* GArray *relative_item_points */,
 				       dest,
 				       GTK_WINDOW (window),
 				       copy_done, NULL);
         
-	infos = nemo_progress_info_manager_get_all_infos (manager);
+	infos = nolphin_progress_info_manager_get_all_infos (manager);
 
 	if (infos == NULL) {
 		g_object_unref (manager);
 		return 0;
 	}
 
-	progress_info = NEMO_PROGRESS_INFO (infos->data);
+	progress_info = NOLPHIN_PROGRESS_INFO (infos->data);
 
 	g_signal_connect (progress_info, "changed", (GCallback)changed_cb, NULL);
 	g_signal_connect (progress_info, "progress-changed", (GCallback)progress_changed_cb, NULL);

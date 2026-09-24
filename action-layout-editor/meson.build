@@ -16,8 +16,8 @@ bin_conf = configuration_data()
 bin_conf.set('PKG_DATADIR', nemoDataPath)
 
 bin = configure_file(
-  input: 'nemo-action-layout-editor.in',
-  output: 'nemo-action-layout-editor',
+  input: 'nolphin-action-layout-editor.in',
+  output: 'nolphin-action-layout-editor',
   configuration: bin_conf,
   install: true,
   install_dir: get_option('bindir'),
@@ -25,7 +25,7 @@ bin = configure_file(
 )
 
 install_data(
-    'nemo_action_layout_editor.py',
+    'nolphin_action_layout_editor.py',
     install_dir: nemoDataPath / 'layout-editor',
     install_mode: 'rwxr-xr-x'
 )

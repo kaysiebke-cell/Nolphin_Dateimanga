@@ -1,175 +1,175 @@
 dbusBuiltSources = gnome.gdbus_codegen(
-  'nemo-freedesktop-generated',
+  'nolphin-freedesktop-generated',
   join_paths(meson.project_source_root(), 'data', 'freedesktop-dbus-interfaces.xml'),
   interface_prefix: 'org.freedesktop.',
-  namespace: 'NemoFreedesktop',
+  namespace: 'NolphinFreedesktop',
   object_manager: true
 )
 
 nemoBuiltSources = gnome.gdbus_codegen(
-  'nemo-cinnamon-dbus',
+  'nolphin-cinnamon-dbus',
   join_paths(meson.project_source_root(), 'data', 'org.Cinnamon.xml'),
   interface_prefix: 'org.',
-  namespace: 'Nemo',
+  namespace: 'Nolphin',
   object_manager: true
 )
 
 nemoCommon_sources = [
   dbusBuiltSources,
   nemoBuiltSources,
-  'nemo-action-config-widget.c',
-  'nemo-application.c',
-  'nemo-blank-desktop-window.c',
-  'nemo-bookmark-list.c',
-  'nemo-bookmarks-window.c',
-  'nemo-config-base-widget.c',
-  'nemo-connect-server-dialog-nonmain.c',
-  'nemo-connect-server-dialog.c',
-  'nemo-connect-server-operation.c',
-  'nemo-desktop-icon-grid-view.c',
-  'nemo-desktop-item-properties.c',
-  'nemo-desktop-manager.c',
-  'nemo-desktop-overlay.c',
-  'nemo-desktop-window.c',
-  'nemo-error-reporting.c',
-  'nemo-extension-config-widget.c',
-  'nemo-file-management-properties.c',
-  'nemo-filter-bar.c',
-  'nemo-floating-bar.c',
-  'nemo-freedesktop-dbus.c',
-  'nemo-icon-view-container.c',
-  'nemo-icon-view-grid-container.c',
-  'nemo-icon-view.c',
-  'nemo-image-properties-page.c',
-  'nemo-interesting-folder-bar.c',
-  'nemo-list-model.c',
-  'nemo-list-view.c',
-  'nemo-location-bar.c',
-  'nemo-location-entry.c',
-  'nemo-mime-actions.c',
-  'nemo-navigation-action.c',
-  'nemo-navigation-state.c',
-  'nemo-notebook.c',
-  'nemo-pathbar.c',
-  'nemo-places-sidebar.c',
-  'nemo-plugin-manager.c',
-  'nemo-previewer.c',
-  'nemo-progress-info-widget.c',
-  'nemo-progress-ui-handler.c',
-  'nemo-properties-window.c',
-  'nemo-query-editor.c',
-  'nemo-template-config-widget.c',
-  'nemo-self-check-functions.c',
-  'nemo-statusbar.c',
-  'nemo-thumbnail-problem-bar.c',
-  'nemo-toolbar.c',
-  'nemo-trash-bar.c',
-  'nemo-tree-sidebar-model.c',
-  'nemo-tree-sidebar.c',
-  'nemo-view-dnd.c',
-  'nemo-view-factory.c',
-  'nemo-view.c',
-  'nemo-window-bookmarks.c',
-  'nemo-window-manage-views.c',
-  'nemo-window-menus.c',
-  'nemo-window-pane.c',
-  'nemo-window-slot-dnd.c',
-  'nemo-window-slot.c',
-  'nemo-window.c',
-  'nemo-x-content-bar.c',
+  'nolphin-action-config-widget.c',
+  'nolphin-application.c',
+  'nolphin-blank-desktop-window.c',
+  'nolphin-bookmark-list.c',
+  'nolphin-bookmarks-window.c',
+  'nolphin-config-base-widget.c',
+  'nolphin-connect-server-dialog-nonmain.c',
+  'nolphin-connect-server-dialog.c',
+  'nolphin-connect-server-operation.c',
+  'nolphin-desktop-icon-grid-view.c',
+  'nolphin-desktop-item-properties.c',
+  'nolphin-desktop-manager.c',
+  'nolphin-desktop-overlay.c',
+  'nolphin-desktop-window.c',
+  'nolphin-error-reporting.c',
+  'nolphin-extension-config-widget.c',
+  'nolphin-file-management-properties.c',
+  'nolphin-filter-bar.c',
+  'nolphin-floating-bar.c',
+  'nolphin-freedesktop-dbus.c',
+  'nolphin-icon-view-container.c',
+  'nolphin-icon-view-grid-container.c',
+  'nolphin-icon-view.c',
+  'nolphin-image-properties-page.c',
+  'nolphin-interesting-folder-bar.c',
+  'nolphin-list-model.c',
+  'nolphin-list-view.c',
+  'nolphin-location-bar.c',
+  'nolphin-location-entry.c',
+  'nolphin-mime-actions.c',
+  'nolphin-navigation-action.c',
+  'nolphin-navigation-state.c',
+  'nolphin-notebook.c',
+  'nolphin-pathbar.c',
+  'nolphin-places-sidebar.c',
+  'nolphin-plugin-manager.c',
+  'nolphin-previewer.c',
+  'nolphin-progress-info-widget.c',
+  'nolphin-progress-ui-handler.c',
+  'nolphin-properties-window.c',
+  'nolphin-query-editor.c',
+  'nolphin-template-config-widget.c',
+  'nolphin-self-check-functions.c',
+  'nolphin-statusbar.c',
+  'nolphin-thumbnail-problem-bar.c',
+  'nolphin-toolbar.c',
+  'nolphin-trash-bar.c',
+  'nolphin-tree-sidebar-model.c',
+  'nolphin-tree-sidebar.c',
+  'nolphin-view-dnd.c',
+  'nolphin-view-factory.c',
+  'nolphin-view.c',
+  'nolphin-window-bookmarks.c',
+  'nolphin-window-manage-views.c',
+  'nolphin-window-menus.c',
+  'nolphin-window-pane.c',
+  'nolphin-window-slot-dnd.c',
+  'nolphin-window-slot.c',
+  'nolphin-window.c',
+  'nolphin-x-content-bar.c',
 ]
 
 nemoWindow_sources = [
-  'nemo-main-application.c',
-  'nemo-main.c',
+  'nolphin-main-application.c',
+  'nolphin-main.c',
 ]
 nemoWindow_headers = [
-  'nemo-main-application.h',
+  'nolphin-main-application.h',
 ]
 
 nemoDesktop_sources = [
-  'nemo-desktop-application.c',
-  'nemo-desktop-icon-view.c',
-  'nemo-desktop-main.c',
+  'nolphin-desktop-application.c',
+  'nolphin-desktop-icon-view.c',
+  'nolphin-desktop-main.c',
 ]
 nemoDesktop_headers = [
-  'nemo-desktop-application.h',
-  'nemo-desktop-overlay.h',
-  'nemo-desktop-icon-view.h',
+  'nolphin-desktop-application.h',
+  'nolphin-desktop-overlay.h',
+  'nolphin-desktop-icon-view.h',
 ]
 
 
 if enableEmptyView
-  nemoCommon_sources += 'nemo-empty-view.c'
+  nemoCommon_sources += 'nolphin-empty-view.c'
 endif
 
-nemo_deps = [ cinnamon, gail, glib, gtk, math,
-  egg, nemo_extension, nemo_private, xapp ]
+nolphin_deps = [ cinnamon, gail, glib, gtk, math,
+  egg, nolphin_extension, nolphin_private, xapp ]
 
 if exempi_enabled
-  nemo_deps += exempi
+  nolphin_deps += exempi
 endif
 
 if libexif_enabled
-  nemo_deps += libexif
+  nolphin_deps += libexif
 endif
 
 if gtk_layer_shell_enabled
-  nemo_deps += gtk_layer_shell
-  nemo_deps += wayland_client
+  nolphin_deps += gtk_layer_shell
+  nolphin_deps += wayland_client
 endif
 
-nemo = executable('nemo',
+nolphin = executable('nolphin',
   nemoCommon_sources + nemoWindow_sources,
   include_directories: [ rootInclude ],
-  c_args: nemo_definitions,
-  dependencies: nemo_deps,
+  c_args: nolphin_definitions,
+  dependencies: nolphin_deps,
   install: true
 )
 
-nemoDesktop = executable('nemo-desktop',
+nemoDesktop = executable('nolphin-desktop',
   nemoCommon_sources + nemoDesktop_sources,
   include_directories: [ rootInclude],
-  c_args: nemo_definitions,
-  dependencies: nemo_deps,
+  c_args: nolphin_definitions,
+  dependencies: nolphin_deps,
   install: true
 )
 
-nemo_autorun_software = executable('nemo-autorun-software',
-  [ 'nemo-autorun-software.c' ],
+nolphin_autorun_software = executable('nolphin-autorun-software',
+  [ 'nolphin-autorun-software.c' ],
   include_directories: [ rootInclude, ],
-  c_args: nemo_definitions,
-  dependencies: nemo_deps,
+  c_args: nolphin_definitions,
+  dependencies: nolphin_deps,
   install: true
 )
 
-nemo_connect_server = executable('nemo-connect-server',
+nolphin_connect_server = executable('nolphin-connect-server',
   [
-    'nemo-bookmark-list.c',
-    'nemo-connect-server-dialog.c',
-    'nemo-connect-server-dialog-main.c',
-    'nemo-connect-server-operation.c'
+    'nolphin-bookmark-list.c',
+    'nolphin-connect-server-dialog.c',
+    'nolphin-connect-server-dialog-main.c',
+    'nolphin-connect-server-operation.c'
   ],
   include_directories: [ rootInclude, ],
-  c_args: nemo_definitions,
-  dependencies: nemo_deps,
+  c_args: nolphin_definitions,
+  dependencies: nolphin_deps,
   install: true
 )
 
-nemo_open_with = executable('nemo-open-with',
-  [ 'nemo-open-with-main.c' ],
+nolphin_open_with = executable('nolphin-open-with',
+  [ 'nolphin-open-with-main.c' ],
   include_directories: [ rootInclude, ],
-  c_args: nemo_definitions,
-  dependencies: nemo_deps,
+  c_args: nolphin_definitions,
+  dependencies: nolphin_deps,
   install: true
 )
 
 # LibExecs
-nemo_extensions_list = executable('nemo-extensions-list',
-  [ 'nemo-extensions-list.c' ],
+nolphin_extensions_list = executable('nolphin-extensions-list',
+  [ 'nolphin-extensions-list.c' ],
   include_directories: [ rootInclude, ],
-  c_args: nemo_definitions,
-  dependencies: [ nemo_deps ],
+  c_args: nolphin_definitions,
+  dependencies: [ nolphin_deps ],
   install: true,
   install_dir: libExecPath,
 )

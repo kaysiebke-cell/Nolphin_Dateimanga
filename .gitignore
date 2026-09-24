@@ -1,5 +1,5 @@
 ###########################
-# Default .gitignore file for Nemo. 
+# Default .gitignore file for Nolphin. 
 # By default this ignores the lint from the Eclipse IDE.
 
 ##################
@@ -33,10 +33,10 @@ local.properties
 .buildpath
 
 debian/tmp/*
-debian/nemo/*
-debian/nemo-dbg/*
-debian/nemo-data/*
-debian/libnemo-extension*/*
+debian/nolphin/*
+debian/nolphin-dbg/*
+debian/nolphin-data/*
+debian/libnolphin-extension*/*
 debian/gir1.2*/*
 debian/*.log
 debian/.debhelper

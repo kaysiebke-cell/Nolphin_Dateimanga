@@ -1,1 +1,1 @@
-subdir('libnemo-extension')
+subdir('libnolphin-extension')
