@@ -1,0 +1,5547 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the nolphin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nolphin 6.7.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-24 21:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: eel/eel-canvas.c:1255 eel/eel-canvas.c:1256
+msgid "X"
+msgstr ""
+
+#: eel/eel-canvas.c:1262 eel/eel-canvas.c:1263
+msgid "Y"
+msgstr ""
+
+#: eel/eel-editable-label.c:319 libnolphin-private/nolphin-file.c:7452
+#: libnolphin-private/nolphin-file.c:7453
+msgid "Text"
+msgstr ""
+
+#: eel/eel-editable-label.c:320
+msgid "The text of the label."
+msgstr ""
+
+#: eel/eel-editable-label.c:326
+msgid "Justification"
+msgstr ""
+
+#: eel/eel-editable-label.c:327
+msgid ""
+"The alignment of the lines in the text of the label relative to each other. "
+"This does NOT affect the alignment of the label within its allocation. See "
+"GtkMisc::xalign for that."
+msgstr ""
+
+#: eel/eel-editable-label.c:335
+msgid "Line wrap"
+msgstr ""
+
+#: eel/eel-editable-label.c:336
+msgid "If set, wrap lines if the text becomes too wide."
+msgstr ""
+
+#: eel/eel-editable-label.c:343
+msgid "Cursor Position"
+msgstr ""
+
+#: eel/eel-editable-label.c:344
+msgid "The current position of the insertion cursor in chars."
+msgstr ""
+
+#: eel/eel-editable-label.c:353
+msgid "Selection Bound"
+msgstr ""
+
+#: eel/eel-editable-label.c:354
+msgid ""
+"The position of the opposite end of the selection from the cursor in chars."
+msgstr ""
+
+#: eel/eel-editable-label.c:3104
+msgid "Select All"
+msgstr ""
+
+#: eel/eel-editable-label.c:3115
+msgid "Input Methods"
+msgstr ""
+
+#: eel/eel-gtk-extensions.c:378
+msgid "Show more _details"
+msgstr ""
+
+#: eel/eel-stock-dialogs.c:205
+msgid "You can stop this operation by clicking cancel."
+msgstr ""
+
+#: eel/eel-vfs-extensions.c:134
+msgid " (invalid Unicode)"
+msgstr ""
+
+#: libnolphin-private/nolphin-action.c:1503
+#: src/nolphin-blank-desktop-window.c:327 src/nolphin-desktop-window.c:130
+#: src/nolphin-desktop-window.c:294 src/nolphin-pathbar.c:1439
+#: src/nolphin-places-sidebar.c:811
+msgid "Desktop"
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:55 libnolphin-private/nolphin-cad.c:110
+#: libnolphin-private/nolphin-file.c:7380
+#: libnolphin-private/nolphin-mount-operation.c:122
+msgid "Unknown"
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:165
+msgid "The archive tool exited with an error."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:213
+#, c-format
+msgid "The '%s' tool required for %s archives isn't installed."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:240
+msgid "Nothing to compress."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:247
+msgid "Unknown archive format."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:263
+msgid "Cannot compress an item with no parent folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:274
+msgid ""
+"All selected items must be in the same folder to be compressed together."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:288
+#: libnolphin-private/nolphin-archive.c:380
+#: libnolphin-private/nolphin-archive.c:463
+msgid "Remote locations aren't supported for archiving yet."
+msgstr ""
+
+#: libnolphin-private/nolphin-archive.c:365
+#: libnolphin-private/nolphin-archive.c:451
+msgid "Unrecognized archive type."
+msgstr ""
+
+#: libnolphin-private/nolphin-bookmark.c:130
+#: libnolphin-private/nolphin-desktop-link.c:118
+#: libnolphin-private/nolphin-file-utilities.c:67
+#: libnolphin-private/nolphin-file-utilities.c:115
+#: src/nolphin-places-sidebar.c:794 src/nolphin-tree-sidebar.c:1495
+msgid "Home"
+msgstr ""
+
+#: libnolphin-private/nolphin-cad.c:314
+msgid "File does not start with the expected ISO-10303-21 STEP signature."
+msgstr ""
+
+#: libnolphin-private/nolphin-cad.c:439
+#, c-format
+msgid "Not a valid ZIP container (FCStd files are ZIP archives): %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-cad.c:449
+msgid "No Document.xml found inside - this doesn't look like a FreeCAD file."
+msgstr ""
+
+#: libnolphin-private/nolphin-cad.c:520
+#, c-format
+msgid "No backend is available for %s files on this system yet."
+msgstr ""
+
+#: libnolphin-private/nolphin-cad.c:528
+msgid "Remote locations are not supported for CAD file analysis yet."
+msgstr ""
+
+#: libnolphin-private/nolphin-clipboard.c:433
+msgid "Cut the selected text to the clipboard"
+msgstr ""
+
+#: libnolphin-private/nolphin-clipboard.c:437
+msgid "Copy the selected text to the clipboard"
+msgstr ""
+
+#: libnolphin-private/nolphin-clipboard.c:441
+msgid "Paste the text stored on the clipboard"
+msgstr ""
+
+#: libnolphin-private/nolphin-clipboard.c:444 src/nolphin-view.c:8755
+msgid "Select _All"
+msgstr ""
+
+#: libnolphin-private/nolphin-clipboard.c:445
+msgid "Select all the text in a text field"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-chooser.c:371
+msgid "Move _Up"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-chooser.c:381
+msgid "Move Dow_n"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-chooser.c:394
+msgid "Use De_fault"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:44
+#: src/nolphin-desktop-icon-grid-view.c:1079 src/nolphin-list-view.c:2735
+msgid "Name"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:45
+msgid "The name and icon of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:51
+#: src/nolphin-desktop-icon-grid-view.c:1083
+msgid "Size"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:52
+msgid "The size of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:59
+#: src/nolphin-desktop-icon-grid-view.c:1087
+msgid "Type"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:60
+msgid "The general type of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:66
+msgid "Detailed Type"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:67
+msgid "The specific type of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:73
+#: src/nolphin-image-properties-page.c:388
+msgid "Date Modified"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:74
+#: libnolphin-private/nolphin-column-utilities.c:81
+msgid "The date the file was modified."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:80
+msgid "Modified - Time"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:89
+msgid "Date Created"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:90
+#: libnolphin-private/nolphin-column-utilities.c:97
+msgid "The date the file was created."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:96
+msgid "Created - Time"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:104
+msgid "Date Accessed"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:105
+msgid "The date the file was accessed."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:112
+msgid "Owner"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:113
+msgid "The owner of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:120
+msgid "Group"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:121
+msgid "The group of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:128
+#: src/nolphin-properties-window.c:4573
+msgid "Permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:129
+msgid "The permissions of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:136
+msgid "Octal Permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:137
+msgid "The permissions of the file, in octal notation."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:144
+msgid "MIME Type"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:145
+msgid "The mime type of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:151
+#: src/nolphin-desktop-icon-grid-view.c:1095
+msgid "Extension"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:152
+msgid "The extension of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:159
+msgid "SELinux Context"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:160
+msgid "The SELinux security context of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:201
+msgid "Trashed On"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:202
+msgid "Date when file was moved to the Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:208
+msgid "Original Location"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:209
+msgid "Original location of file before moved to the Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:228
+msgid "Hits"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:229
+msgid "How many times the search string appeared in the file"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:248
+#: src/nolphin-image-properties-page.c:413 src/nolphin-window-menus.c:1840
+msgid "Location"
+msgstr ""
+
+#: libnolphin-private/nolphin-column-utilities.c:249
+msgid "The location of the file."
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-directory-file.c:459
+#: libnolphin-private/nolphin-desktop-icon-file.c:154
+msgid "on the desktop"
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link.c:126
+#: src/nolphin-tree-sidebar.c:1490
+msgid "Computer"
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link.c:135
+#: src/nolphin-places-sidebar.c:920 src/nolphin-trash-bar.c:211
+msgid "Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link.c:146
+#: src/nolphin-places-sidebar.c:1240 src/nolphin-places-sidebar.c:1295
+#: src/nolphin-tree-sidebar.c:1508
+msgid "Network"
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link-monitor.c:89
+#, c-format
+msgid "You cannot move the volume \"%s\" to the trash."
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link-monitor.c:99
+msgid ""
+"If you want to eject the volume, please use \"Eject\" in the popup menu of "
+"the volume."
+msgstr ""
+
+#: libnolphin-private/nolphin-desktop-link-monitor.c:108
+msgid ""
+"If you want to unmount the volume, please use \"Unmount Volume\" in the "
+"popup menu of the volume."
+msgstr ""
+
+#: libnolphin-private/nolphin-dnd.c:898
+msgid "_Move Here"
+msgstr ""
+
+#: libnolphin-private/nolphin-dnd.c:903
+msgid "_Copy Here"
+msgstr ""
+
+#: libnolphin-private/nolphin-dnd.c:908
+msgid "_Link Here"
+msgstr ""
+
+#: libnolphin-private/nolphin-dnd.c:915
+#: src/nolphin-template-config-widget.c:428
+msgid "Cancel"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1247
+#: libnolphin-private/nolphin-vfs-file.c:418
+msgid "This file cannot be mounted"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1292
+msgid "This file cannot be unmounted"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1326
+msgid "This file cannot be ejected"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1359
+#: libnolphin-private/nolphin-vfs-file.c:596
+msgid "This file cannot be started"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1411
+#: libnolphin-private/nolphin-file.c:1442
+msgid "This file cannot be stopped"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1923
+msgid "Slashes are not allowed in filenames"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1941
+msgid "File not found"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1969
+msgid "Toplevel files cannot be renamed"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:1992
+msgid "Unable to rename desktop icon"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:2021
+msgid "Unable to rename desktop file"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3717
+#: libnolphin-private/nolphin-file.c:3731
+#: libnolphin-private/nolphin-file.c:3903
+msgid "Folders"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3738
+msgid "Unknown size"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3742
+msgid "Tiny (under 100 KB)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3746
+msgid "Small (under 10 MB)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3750
+msgid "Medium (under 1 GB)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3753
+msgid "Large (1 GB or more)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3799
+msgid "Unknown date"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3813
+msgid "Today"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3817
+#: libnolphin-private/nolphin-file.c:5615
+#: src/nolphin-file-management-properties.c:512
+#, no-c-format
+msgid "Yesterday"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3821
+msgid "This week"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3830
+msgid "This month"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3834
+msgid "This year"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3838
+msgid "Older"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3905
+msgid "Images"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3907
+msgid "Videos"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3909
+#: libnolphin-private/nolphin-file.c:7447
+msgid "Audio"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3911
+msgid "Text files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3913
+msgid "Archives"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:3916
+msgid "Other"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5605
+msgid "%H:%M"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5608
+msgid "%-l:%M %p"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5621
+#, no-c-format
+msgid "Yesterday %H:%M"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5626
+#, no-c-format
+msgid "Yesterday %-l:%M %p"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5634
+#, no-c-format
+msgid "%A"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5640
+#, no-c-format
+msgid "%A %H:%M"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5645
+#, no-c-format
+msgid "%A %-l:%M %p"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5653
+#, no-c-format
+msgid "%-e %B"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5660
+#, no-c-format
+msgid "%-e %B %H:%M"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5666
+#, no-c-format
+msgid "%-e %B %-l:%M %p"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5674
+#, no-c-format
+msgid "%-e %b %Y"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5681
+#, no-c-format
+msgid "%-e %b %Y %H:%M"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5687
+#, no-c-format
+msgid "%-e %b %Y %-l:%M %p"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:5697
+#, no-c-format
+msgid "%c"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6145
+msgid "Not allowed to set permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6442
+msgid "Not allowed to set owner"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6460
+#, c-format
+msgid "Specified owner '%s' doesn't exist"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6725
+msgid "Not allowed to set group"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6743
+#, c-format
+msgid "Specified group '%s' doesn't exist"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:6901 src/nolphin-view.c:3328
+#, c-format
+msgid "%'u item"
+msgid_plural "%'u items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file.c:6902
+#, c-format
+msgid "%'u folder"
+msgid_plural "%'u folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file.c:6903
+#, c-format
+msgid "%'u file"
+msgid_plural "%'u files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file.c:7357
+#: libnolphin-private/nolphin-file.c:7373
+msgid "? items"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7363
+msgid "? bytes"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7394 src/nolphin-properties-window.c:1135
+msgid "unknown"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7446
+#: libnolphin-private/nolphin-file.c:7454
+#: libnolphin-private/nolphin-file.c:7502
+msgid "Program"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7448
+msgid "Font"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7449
+#: src/nolphin-image-properties-page.c:767
+msgid "Image"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7450
+msgid "Archive"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7451
+msgid "Markup"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7455
+msgid "Video"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7456
+msgid "Contacts"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7457
+msgid "Calendar"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7458
+msgid "Document"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7459
+msgid "Presentation"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7460
+msgid "Spreadsheet"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7504 src/nolphin-preview.c:200
+msgid "Binary"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7508
+msgid "Folder"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7543
+msgid "link"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7549
+#: libnolphin-private/nolphin-file-operations.c:421 src/nolphin-view-dnd.c:125
+#, c-format
+msgid "Link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:7565
+#: libnolphin-private/nolphin-file.c:7579
+msgid "link (broken)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8553
+#, c-format
+msgid "Name: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8560
+#, c-format
+msgid "Type: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8570
+#, c-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file.c:8572
+#, c-format
+msgid "Contains: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8582
+#, c-format
+msgid "Size: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8590
+#, c-format
+msgid "Accessed: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8598
+#, c-format
+msgid "Modified: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8606
+#, c-format
+msgid "Created: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8616
+#, c-format
+msgid "Location: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file.c:8624 src/nolphin-preview.c:287
+#: src/nolphin-properties-window.c:3151
+msgid "Link target:"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:147
+#, c-format
+msgid "Merge folder \"%s\"?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:151
+msgid ""
+"Merging will ask for confirmation before replacing any files in the folder "
+"that conflict with the files being copied."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:156
+#, c-format
+msgid "An older folder with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:160
+#, c-format
+msgid "A newer folder with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:164
+#, c-format
+msgid "Another folder with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:169
+msgid "Replacing it will remove all files in the folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:171
+#, c-format
+msgid "Replace folder \"%s\"?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:173
+#, c-format
+msgid "A folder with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:178
+#, c-format
+msgid "Replace file \"%s\"?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:180
+msgid "Replacing it will overwrite its content."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:184
+#, c-format
+msgid "An older file with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:188
+#, c-format
+msgid "A newer file with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:192
+#, c-format
+msgid "Another file with the same name already exists in \"%s\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:270
+msgid "Original file"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:271
+#: libnolphin-private/nolphin-file-conflict-dialog.c:303
+#: src/nolphin-preview.c:258 src/nolphin-properties-window.c:2323
+msgid "Size:"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:274
+#: libnolphin-private/nolphin-file-conflict-dialog.c:306
+#: src/nolphin-preview.c:246 src/nolphin-properties-window.c:3142
+msgid "Type:"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:277
+#: libnolphin-private/nolphin-file-conflict-dialog.c:309
+msgid "Last modified:"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:302
+msgid "Replace with"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:331
+msgid "Merge"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:548
+msgid "_Select a new name for the destination"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:562
+msgid "Reset"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:574
+msgid "Apply this action to all files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:583
+#: libnolphin-private/nolphin-mime-application-chooser.c:481
+#: src/nolphin-template-config-widget.c:329
+msgid "_Cancel"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:584
+#: libnolphin-private/nolphin-file-operations.c:223
+msgid "_Skip"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:588
+#: src/nolphin-view.c:8771
+msgid "D_uplicate"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:593
+msgid "Re_name"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:600
+msgid "Replace"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-conflict-dialog.c:685
+msgid "File conflict"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:224
+msgid "S_kip All"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:225
+msgid "_Retry"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:226
+msgid "Delete _All"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:227
+msgid "_Replace"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:228
+msgid "Replace _All"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:229
+msgid "_Merge"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:230
+msgid "Merge _All"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:231
+msgid "Copy _Anyway"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:322
+#, c-format
+msgid "%'d second"
+msgid_plural "%'d seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:327
+#: libnolphin-private/nolphin-file-operations.c:338
+#, c-format
+msgid "%'d minute"
+msgid_plural "%'d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:337
+#, c-format
+msgid "%'d hour"
+msgid_plural "%'d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:345
+#, c-format
+msgid "approximately %'d hour"
+msgid_plural "approximately %'d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:425
+#, c-format
+msgid "Another link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:441
+#, c-format
+msgid "%'dst link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:445
+#, c-format
+msgid "%'dnd link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:449
+#, c-format
+msgid "%'drd link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:453
+#, c-format
+msgid "%'dth link to %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:492
+msgid " (copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:494
+msgid " (another copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:497
+#: libnolphin-private/nolphin-file-operations.c:499
+#: libnolphin-private/nolphin-file-operations.c:501
+#: libnolphin-private/nolphin-file-operations.c:511
+msgid "th copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:504
+msgid "st copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:506
+msgid "nd copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:508
+msgid "rd copy)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:525
+#, c-format
+msgid "%s (copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:527
+#, c-format
+msgid "%s (another copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:530
+#: libnolphin-private/nolphin-file-operations.c:532
+#: libnolphin-private/nolphin-file-operations.c:534
+#: libnolphin-private/nolphin-file-operations.c:548
+#, c-format
+msgid "%s (%'dth copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:542
+#, c-format
+msgid "%s (%'dst copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:544
+#, c-format
+msgid "%s (%'dnd copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:546
+#, c-format
+msgid "%s (%'drd copy)%s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:647
+msgid " ("
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:655
+#, c-format
+msgid " (%'d"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1036
+#, c-format
+msgid "Error removing file: %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1091
+#, c-format
+msgid "Waiting to copy a file from '%1$s' to '%2$s'"
+msgid_plural "Waiting to copy files from '%1$s' to '%2$s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1100
+#, c-format
+msgid "Waiting to move a file from '%1$s' to '%2$s'"
+msgid_plural "Waiting to move files from '%1$s' to '%2$s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1108
+#, c-format
+msgid "Waiting to permanently delete a file from '%s'"
+msgid_plural "Waiting to permanently delete files from '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1116
+#, c-format
+msgid "Waiting to trash a file in '%s'"
+msgid_plural "Waiting to trash files in '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1122
+msgid "Waiting to empty the trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1128
+#, c-format
+msgid "Waiting to duplicate a file in '%s'"
+msgid_plural "Waiting to duplicate files in '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1136
+#, c-format
+msgid "Waiting to change permissions of files in '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1142
+#, c-format
+msgid "Waiting to link a file from '%1$s' to '%2$s'"
+msgid_plural "Waiting to link files from '%1$s' to '%2$s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1337
+#: libnolphin-private/nolphin-file-operations.c:1656
+#: libnolphin-private/nolphin-file-operations.c:2598
+#: src/nolphin-trash-bar.c:224
+msgid "Empty _Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1567
+msgid "Are you sure you want to move \"%B\" to the trash?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1571
+#, c-format
+msgid "unused %'d"
+msgid_plural ""
+"Are you sure you want to move the %'d selected items to the trash?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1580
+msgid "You can restore an item from the trash, if you later change your mind."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1583
+msgid "Move to _Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1616
+msgid "Are you sure you want to permanently delete \"%B\" from the trash?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1619
+#, c-format
+msgid ""
+"Are you sure you want to permanently delete the %'d selected item from the "
+"trash?"
+msgid_plural ""
+"Are you sure you want to permanently delete the %'d selected items from the "
+"trash?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1629
+#: libnolphin-private/nolphin-file-operations.c:1695
+msgid "If you delete an item, it will be permanently lost."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1649
+msgid "Empty all items from Trash?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1653
+msgid "All items in the Trash will be permanently deleted."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1683
+msgid "Are you sure you want to permanently delete \"%B\"?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1686
+#, c-format
+msgid "Are you sure you want to permanently delete the %'d selected item?"
+msgid_plural ""
+"Are you sure you want to permanently delete the %'d selected items?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1729
+#, c-format
+msgid "%'d file left to delete"
+msgid_plural "%'d files left to delete"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1735
+msgid "Deleting files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1740
+#: libnolphin-private/nolphin-file-operations.c:1748
+#: libnolphin-private/nolphin-file-operations.c:2835
+#: libnolphin-private/nolphin-file-operations.c:3382
+#: libnolphin-private/nolphin-file-operations.c:3391
+#: libnolphin-private/nolphin-file-operations.c:5145
+msgid "Paused"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1756
+msgid "%T left"
+msgid_plural "%T left"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:1823
+#: libnolphin-private/nolphin-file-operations.c:1857
+#: libnolphin-private/nolphin-file-operations.c:1896
+#: libnolphin-private/nolphin-file-operations.c:1990
+#: libnolphin-private/nolphin-file-operations.c:2874
+msgid "Error while deleting."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1827
+msgid ""
+"Files in the folder \"%B\" cannot be deleted because you do not have "
+"permissions to see them."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1830
+#: libnolphin-private/nolphin-file-operations.c:2934
+#: libnolphin-private/nolphin-file-operations.c:3953
+msgid ""
+"There was an error getting information about the files in the folder \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1839
+#: libnolphin-private/nolphin-file-operations.c:3962
+msgid "_Skip files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1860
+msgid ""
+"The folder \"%B\" cannot be deleted because you do not have permissions to "
+"read it."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1863
+#: libnolphin-private/nolphin-file-operations.c:2973
+#: libnolphin-private/nolphin-file-operations.c:3998
+msgid "There was an error reading the folder \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1897
+msgid "Could not remove the folder %B."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:1991
+msgid "There was an error deleting %B."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2071
+msgid "Moving files to trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2073
+#, c-format
+msgid "%'d file left to trash"
+msgid_plural "%'d files left to trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:2124
+msgid "Cannot move file to trash, do you want to delete immediately?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2125
+msgid "The file \"%B\" cannot be moved to the trash."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2344
+msgid "Trashing Files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2346
+msgid "Deleting Files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2429
+msgid "Unable to eject %V"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2431
+msgid "Unable to unmount %V"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2588
+msgid "Do you want to empty the trash before you unmount?"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2590
+msgid ""
+"In order to regain the free space on this volume the trash must be emptied. "
+"All trashed items on the volume will be permanently lost."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2596
+msgid "Do _not Empty Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2726
+#, c-format
+msgid "Unable to mount %s"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2808
+#, c-format
+msgid "Preparing to copy %'d file (%S)"
+msgid_plural "Preparing to copy %'d files (%S)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:2814
+#, c-format
+msgid "Preparing to move %'d file (%S)"
+msgid_plural "Preparing to move %'d files (%S)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:2820
+#, c-format
+msgid "Preparing to delete %'d file (%S)"
+msgid_plural "Preparing to delete %'d files (%S)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:2827
+#, c-format
+msgid "Preparing to trash %'d file"
+msgid_plural "Preparing to trash %'d files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:2870
+#: libnolphin-private/nolphin-file-operations.c:3813
+#: libnolphin-private/nolphin-file-operations.c:3945
+#: libnolphin-private/nolphin-file-operations.c:3990
+msgid "Error while copying."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2872
+#: libnolphin-private/nolphin-file-operations.c:3943
+#: libnolphin-private/nolphin-file-operations.c:3988
+msgid "Error while moving."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2877
+msgid "Error while moving files to trash."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2931
+msgid ""
+"Files in the folder \"%B\" cannot be handled because you do not have "
+"permissions to see them."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:2970
+msgid ""
+"The folder \"%B\" cannot be handled because you do not have permissions to "
+"read it."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3050
+msgid ""
+"The file \"%B\" cannot be handled because you do not have permissions to "
+"read it."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3053
+msgid "There was an error getting information about \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3154
+#: libnolphin-private/nolphin-file-operations.c:3196
+#: libnolphin-private/nolphin-file-operations.c:3230
+#: libnolphin-private/nolphin-file-operations.c:3260
+msgid "Error while copying to \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3158
+msgid "You do not have permissions to access the destination folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3160
+msgid "There was an error getting information about the destination."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3197
+msgid "The destination is not a folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3231
+msgid ""
+"There is not enough space on the destination. Try to remove files to make "
+"space."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3233
+#, c-format
+msgid "%S more space is required to copy to the destination."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3261
+msgid "The destination is read-only."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3320
+msgid "Moving \"%B\" to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3321
+msgid "Copying \"%B\" to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3328
+msgid "Duplicating \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3336
+msgid "Moving file %'d of %'d (in \"%B\") to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3338
+msgid "Copying file %'d of %'d (in \"%B\") to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3345
+msgid "Duplicating file %'d of %'d (in \"%B\")"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3354
+msgid "Moving file %'d of %'d to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3356
+msgid "Copying file %'d of %'d to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3362
+#, c-format
+msgid "Duplicating file %'d of %'d"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3385
+#, c-format
+msgid "%S of %S"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3401
+msgid "%S of %S — %T left (%S/sec)"
+msgid_plural "%S of %S — %T left (%S/sec)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:3817
+msgid ""
+"The folder \"%B\" cannot be copied because you do not have permissions to "
+"create it in the destination."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3820
+msgid "There was an error creating the folder \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3950
+msgid ""
+"Files in the folder \"%B\" cannot be copied because you do not have "
+"permissions to see them."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:3995
+msgid ""
+"The folder \"%B\" cannot be copied because you do not have permissions to "
+"read it."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4045
+#: libnolphin-private/nolphin-file-operations.c:4776
+#: libnolphin-private/nolphin-file-operations.c:5449
+msgid "Error while moving \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4046
+msgid "Could not remove the source folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4131
+#: libnolphin-private/nolphin-file-operations.c:4172
+#: libnolphin-private/nolphin-file-operations.c:4778
+#: libnolphin-private/nolphin-file-operations.c:4849
+msgid "Error while copying \"%B\"."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4132
+#, c-format
+msgid "Could not remove files from the already existing folder %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4173
+#, c-format
+msgid "Could not remove the already existing file %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4514
+#: libnolphin-private/nolphin-file-operations.c:5270
+msgid "You cannot move a folder into itself."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4515
+#: libnolphin-private/nolphin-file-operations.c:5271
+msgid "You cannot copy a folder into itself."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4516
+#: libnolphin-private/nolphin-file-operations.c:5272
+msgid "The destination folder is inside the source folder."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4547
+msgid "You cannot move a file over itself."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4548
+msgid "You cannot copy a file over itself."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4549
+msgid "The source file would be overwritten by the destination."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4780
+#, c-format
+msgid "Could not remove the already existing file with the same name in %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:4850
+#, c-format
+msgid "There was an error copying the file into %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5083
+#: libnolphin-private/nolphin-file-operations.c:5115
+msgid "Copying Files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5141
+msgid "Preparing to Move to \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5148
+#, c-format
+msgid "Preparing to move %'d file"
+msgid_plural "Preparing to move %'d files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:5450
+#, c-format
+msgid "There was an error moving the file into %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5715
+msgid "Moving Files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5748
+msgid "Creating links in \"%B\""
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5752
+#, c-format
+msgid "Making link to %'d file"
+msgid_plural "Making links to %'d files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-operations.c:5890
+msgid "Error while creating link to %B."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5892
+msgid "Symbolic links only supported for local files"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5895
+msgid "The target doesn't support symbolic links."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:5898
+#, c-format
+msgid "There was an error creating the symlink in %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6216
+msgid "Setting permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6361
+msgid "Setting owner"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6361
+msgid "Setting group"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6618
+msgid "Untitled Folder"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6630
+msgid "Untitled Document"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6806
+msgid "Error while creating directory %B."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6808
+msgid "Error while creating file %B."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:6810
+#, c-format
+msgid "There was an error creating the directory in %F."
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:7052
+#: libnolphin-private/nolphin-file-operations.c:7053
+#: libnolphin-private/nolphin-file-operations.c:7086
+msgid "Emptying Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-operations.c:7132
+#: libnolphin-private/nolphin-file-operations.c:7173
+#: libnolphin-private/nolphin-file-operations.c:7208
+#: libnolphin-private/nolphin-file-operations.c:7243
+msgid "Unable to mark launcher trusted (executable)"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:147
+#: src/nolphin-view.c:2742
+msgid "Undo"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:150
+#: src/nolphin-view.c:2743
+msgid "Undo last action"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:154
+#: src/nolphin-view.c:2761
+msgid "Redo"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:157
+#: src/nolphin-view.c:2762
+msgid "Redo last undone action"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:378
+#, c-format
+msgid "Move %d item back to '%s'"
+msgid_plural "Move %d items back to '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:381
+#, c-format
+msgid "Move %d item to '%s'"
+msgid_plural "Move %d items to '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:385
+#, c-format
+msgid "_Undo Move %d item"
+msgid_plural "_Undo Move %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:388
+#, c-format
+msgid "_Redo Move %d item"
+msgid_plural "_Redo Move %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:392
+#, c-format
+msgid "Move '%s' back to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:393
+#, c-format
+msgid "Move '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:395
+msgid "_Undo Move"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:396
+msgid "_Redo Move"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:399
+msgid "_Undo Restore from Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:400
+msgid "_Redo Restore from Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:403
+#, c-format
+msgid "Move %d item back to trash"
+msgid_plural "Move %d items back to trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:406
+#: libnolphin-private/nolphin-file-undo-operations.c:999
+#, c-format
+msgid "Restore %d item from trash"
+msgid_plural "Restore %d items from trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:410
+#, c-format
+msgid "Move '%s' back to trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:411
+#, c-format
+msgid "Restore '%s' from trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:415
+#, c-format
+msgid "Delete %d copied item"
+msgid_plural "Delete %d copied items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:418
+#, c-format
+msgid "Copy %d item to '%s'"
+msgid_plural "Copy %d items to '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:422
+#, c-format
+msgid "_Undo Copy %d item"
+msgid_plural "_Undo Copy %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:425
+#, c-format
+msgid "_Redo Copy %d item"
+msgid_plural "_Redo Copy %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:429
+#: libnolphin-private/nolphin-file-undo-operations.c:451
+#: libnolphin-private/nolphin-file-undo-operations.c:684
+#, c-format
+msgid "Delete '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:430
+#, c-format
+msgid "Copy '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:432
+msgid "_Undo Copy"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:433
+msgid "_Redo Copy"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:437
+#, c-format
+msgid "Delete %d duplicated item"
+msgid_plural "Delete %d duplicated items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:440
+#, c-format
+msgid "Duplicate %d item in '%s'"
+msgid_plural "Duplicate %d items in '%s'"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:444
+#, c-format
+msgid "_Undo Duplicate %d item"
+msgid_plural "_Undo Duplicate %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:447
+#, c-format
+msgid "_Redo Duplicate %d item"
+msgid_plural "_Redo Duplicate %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:452
+#, c-format
+msgid "Duplicate '%s' in '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:455
+msgid "_Undo Duplicate"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:456
+msgid "_Redo Duplicate"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:460
+#, c-format
+msgid "Delete links to %d item"
+msgid_plural "Delete links to %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:463
+#, c-format
+msgid "Create links to %d item"
+msgid_plural "Create links to %d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:467
+#, c-format
+msgid "Delete link to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:468
+#, c-format
+msgid "Create link to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:470
+msgid "_Undo Create Link"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:471
+msgid "_Redo Create Link"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:687
+#, c-format
+msgid "Create an empty file '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:689
+msgid "_Undo Create Empty File"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:690
+msgid "_Redo Create Empty File"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:692
+#, c-format
+msgid "Create a new folder '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:694
+msgid "_Undo Create Folder"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:695
+msgid "_Redo Create Folder"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:697
+#, c-format
+msgid "Create new file '%s' from template "
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:699
+msgid "_Undo Create from Template"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:700
+msgid "_Redo Create from Template"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:882
+#: libnolphin-private/nolphin-file-undo-operations.c:883
+#, c-format
+msgid "Rename '%s' as '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:885
+msgid "_Undo Rename"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:886
+msgid "_Redo Rename"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1002
+#, c-format
+msgid "Move %d item to trash"
+msgid_plural "Move %d items to trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1014
+#, c-format
+msgid "Restore '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1021
+#, c-format
+msgid "Move '%s' to trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1025
+msgid "_Undo Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1026
+msgid "_Redo Trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1318
+#, c-format
+msgid "Restore original permissions of items enclosed in '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1319
+#, c-format
+msgid "Set permissions of items enclosed in '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1321
+#: libnolphin-private/nolphin-file-undo-operations.c:1476
+msgid "_Undo Change Permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1322
+#: libnolphin-private/nolphin-file-undo-operations.c:1477
+msgid "_Redo Change Permissions"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1473
+#, c-format
+msgid "Restore original permissions of '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1474
+#, c-format
+msgid "Set permissions of '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1584
+#, c-format
+msgid "Restore group of '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1586
+#, c-format
+msgid "Set group of '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1589
+msgid "_Undo Change Group"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1590
+msgid "_Redo Change Group"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1592
+#, c-format
+msgid "Restore owner of '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1594
+#, c-format
+msgid "Set owner of '%s' to '%s'"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1597
+msgid "_Undo Change Owner"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-undo-operations.c:1598
+msgid "_Redo Change Owner"
+msgstr ""
+
+#: libnolphin-private/nolphin-file-utilities.c:1405
+#, c-format
+msgid "Could not determine original location of \"%s\" "
+msgstr ""
+
+#: libnolphin-private/nolphin-file-utilities.c:1409
+msgid "The item cannot be restored from trash"
+msgstr ""
+
+#: libnolphin-private/nolphin-icon-container.c:1416
+msgid "The selection rectangle"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:113
+msgid "Could not forget association"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:137
+msgid "Forget association"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:277
+msgid "Valid executable."
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:284
+msgid ""
+"Not a valid executable.  Spaces in the file path must be escaped with "
+"backslash (\\)."
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:419
+#: libnolphin-private/nolphin-mime-application-chooser.c:437
+#, c-format
+msgid "%s document"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:424
+#, c-format
+msgid "Open all files of type \"%s\" with"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:444
+#, c-format
+msgid ""
+"Select an application in the list to open %s and other files of type \"%s\""
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:478
+msgid "Custom application"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:483
+#: src/nolphin-places-sidebar.c:3515 src/nolphin-tree-sidebar.c:1351
+#: src/nolphin-view.c:8678 src/nolphin-view.c:10218
+msgid "_Open"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:498
+msgid "Executables"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:544
+msgid ""
+"You can also type or select a custom executable file to use to open this "
+"file type.  You can use this command just once, or set it as default for all "
+"files of this type."
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:558
+msgid "Enter a custom command..."
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:584
+msgid "Add to list"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:592
+msgid "Set as default"
+msgstr ""
+
+#: libnolphin-private/nolphin-mime-application-chooser.c:601
+msgid "Reset to system defaults"
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:323
+msgid "Sorry, but you cannot execute commands from a remote site."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:325
+msgid "This is disabled due to security considerations."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:336
+#: libnolphin-private/nolphin-program-choosing.c:397
+msgid "There was an error launching the application."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:361
+#: libnolphin-private/nolphin-program-choosing.c:372
+msgid "This drop target only supports local files."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:362
+msgid ""
+"To open non-local files copy them to a local folder and then drop them again."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:373
+msgid ""
+"To open non-local files copy them to a local folder and then drop them "
+"again. The local files you dropped have already been opened."
+msgstr ""
+
+#: libnolphin-private/nolphin-program-choosing.c:395
+msgid "Details: "
+msgstr ""
+
+#: libnolphin-private/nolphin-progress-info.c:211
+#: libnolphin-private/nolphin-progress-info.c:229
+#: libnolphin-private/nolphin-progress-info.c:247
+msgid "Preparing"
+msgstr ""
+
+#: libnolphin-private/nolphin-query.c:198
+#: libnolphin-private/nolphin-search-directory-file.c:164
+#: libnolphin-private/nolphin-search-directory-file.c:198
+#: libnolphin-private/nolphin-search-directory-file.c:232
+#: src/nolphin-window-menus.c:1909
+msgid "Search"
+msgstr ""
+
+#: libnolphin-private/nolphin-query.c:206
+#, c-format
+msgid "Search in \"%s\""
+msgstr ""
+
+#: libnolphin-private/nolphin-undo-signal-handlers.c:173
+msgid "Edit"
+msgstr ""
+
+#: libnolphin-private/nolphin-undo-signal-handlers.c:174
+msgid "Undo Edit"
+msgstr ""
+
+#: libnolphin-private/nolphin-undo-signal-handlers.c:175
+msgid "Undo the edit"
+msgstr ""
+
+#: libnolphin-private/nolphin-undo-signal-handlers.c:176
+msgid "Redo Edit"
+msgstr ""
+
+#: libnolphin-private/nolphin-undo-signal-handlers.c:177
+msgid "Redo the edit"
+msgstr ""
+
+#: src/nolphin-action-config-widget.c:248
+msgid "No actions found"
+msgstr ""
+
+#: src/nolphin-action-config-widget.c:470
+msgid "Actions"
+msgstr ""
+
+#: src/nolphin-action-config-widget.c:487
+msgid "Edit layout"
+msgstr ""
+
+#: src/nolphin-application.c:425
+#, c-format
+msgid "Nolphin could not create the required folder \"%s\"."
+msgstr ""
+
+#: src/nolphin-application.c:427
+msgid ""
+"Before running Nolphin, please create the following folder, or set "
+"permissions such that Nolphin can create it."
+msgstr ""
+
+#: src/nolphin-autorun-software.c:143 src/nolphin-autorun-software.c:146
+#, c-format
+msgid "Error starting autorun program: %s"
+msgstr ""
+
+#: src/nolphin-autorun-software.c:149
+msgid "Cannot find the autorun program"
+msgstr ""
+
+#: src/nolphin-autorun-software.c:171
+msgid "<big><b>Error autorunning software</b></big>"
+msgstr ""
+
+#: src/nolphin-autorun-software.c:197
+msgid ""
+"<big><b>This medium contains software intended to be automatically started. "
+"Would you like to run it?</b></big>"
+msgstr ""
+
+#: src/nolphin-autorun-software.c:199
+#, c-format
+msgid ""
+"The software will run directly from the medium \"%s\". You should never run "
+"software that you don't trust.\n"
+"\n"
+"If in doubt, press Cancel."
+msgstr ""
+
+#: src/nolphin-autorun-software.c:234 src/nolphin-mime-actions.c:737
+msgid "_Run"
+msgstr ""
+
+#: src/nolphin-blank-desktop-window.c:91
+#: src/nolphin-desktop-icon-grid-view.c:1112
+msgid "_Customize"
+msgstr ""
+
+#: src/nolphin-blank-desktop-window.c:91
+#: src/nolphin-desktop-icon-grid-view.c:1113
+msgid "Adjust the desktop layout for this monitor"
+msgstr ""
+
+#: src/nolphin-bookmarks-window.c:172
+msgid "No bookmarks defined"
+msgstr ""
+
+#: src/nolphin-config-base-widget.c:74
+msgid "Disable all"
+msgstr ""
+
+#: src/nolphin-config-base-widget.c:83
+msgid "Enable all"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:125
+msgid "SSH"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:128
+msgid "Public FTP"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:130
+msgid "FTP (with login)"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:133
+msgid "Windows share"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:135
+msgid "WebDAV (HTTP)"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:137
+msgid "Secure WebDAV (HTTPS)"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:184
+msgid "Connecting..."
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:208
+msgid ""
+"Can't load the supported server method list.\n"
+"Please check your gvfs installation."
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:286
+#, c-format
+msgid "The folder \"%s\" cannot be opened on \"%s\"."
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:296
+#, c-format
+msgid "The server at \"%s\" cannot be found."
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:331
+msgid "Try Again"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:396
+msgid "Please verify your user details."
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:426
+msgid "Continue"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:700
+#: src/nolphin-connect-server-dialog.c:1094
+msgid "C_onnect"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:829
+msgid "Connect to Server"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:847
+msgid "Server Details"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:872
+msgid "_Server:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:892
+msgid "_Port:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:910 src/nolphin-view.c:1890
+msgid "_Type:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:980
+msgid "Sh_are:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:995
+msgid "_Folder:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1013
+msgid "User Details"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1037
+msgid "_Domain name:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1052
+msgid "_User name:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1067
+msgid "Pass_word:"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1083
+msgid "_Remember this password"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog.c:1180
+msgid "Operation cancelled"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog-main.c:120
+msgid "Print but do not open the URI"
+msgstr ""
+
+#: src/nolphin-connect-server-dialog-main.c:131
+msgid ""
+"\n"
+"\n"
+"Add connect to server mount"
+msgstr ""
+
+#: src/nolphin-desktop-application.c:258 src/nolphin-main-application.c:884
+msgid "Show the version of the program."
+msgstr ""
+
+#: src/nolphin-desktop-application.c:262
+msgid "Quit Nolphin Desktop."
+msgstr ""
+
+#: src/nolphin-desktop-application.c:273
+msgid ""
+"\n"
+"\n"
+"Manage the desktop with the file manager"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:922 src/nolphin-desktop-icon-view.c:682
+#: src/nolphin-view.c:8731 src/nolphin-view.c:10359
+msgid "E_mpty Trash"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1032
+msgid "Auto-arrange"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1037
+msgid "Reverse sort"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1045
+msgid "Smaller"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1049
+msgid "Small"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1053
+msgid "Normal"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1057
+msgid "Large"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1061
+msgid "Larger"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1068
+msgid "_Vertical"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1072
+msgid "_Horizontal"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1091
+msgid "Date"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1101
+msgid "_Sort"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1102
+msgid "_Icon Size"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1106
+#: src/nolphin-desktop-icon-view.c:723
+msgid "Empty Trash"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1108
+#: src/nolphin-desktop-icon-view.c:724 src/nolphin-trash-bar.c:227
+#: src/nolphin-view.c:8732
+msgid "Delete all items in the Trash"
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1204
+#: src/nolphin-desktop-icon-view.c:787
+msgid "The desktop view encountered an error."
+msgstr ""
+
+#: src/nolphin-desktop-icon-grid-view.c:1205
+#: src/nolphin-desktop-icon-view.c:788
+msgid "The desktop view encountered an error while starting up."
+msgstr ""
+
+#: src/nolphin-desktop-icon-view.c:704 src/nolphin-desktop-icon-view.c:719
+msgid "Restore Icons' Original Si_zes"
+msgstr ""
+
+#: src/nolphin-desktop-icon-view.c:705
+msgid "Restore Icon's Original Si_ze"
+msgstr ""
+
+#: src/nolphin-desktop-icon-view.c:715
+msgid "Resize Icon..."
+msgstr ""
+
+#: src/nolphin-desktop-icon-view.c:716
+msgid "Make the selected icon resizable"
+msgstr ""
+
+#: src/nolphin-desktop-icon-view.c:720
+msgid "Restore each selected icon to its original size"
+msgstr ""
+
+#: src/nolphin-desktop-item-properties.c:408
+#: src/nolphin-desktop-item-properties.c:418
+#: src/nolphin-image-properties-page.c:368
+msgid "Comment"
+msgstr ""
+
+#: src/nolphin-desktop-item-properties.c:411
+msgid "URL"
+msgstr ""
+
+#: src/nolphin-desktop-item-properties.c:414
+#: src/nolphin-desktop-item-properties.c:424
+#: src/nolphin-image-properties-page.c:361
+#: src/nolphin-image-properties-page.c:414
+msgid "Description"
+msgstr ""
+
+#: src/nolphin-desktop-item-properties.c:421
+msgid "Command"
+msgstr ""
+
+#: src/nolphin-desktop-overlay.c:78
+#, c-format
+msgid "Current Monitor Layout (%s - %dx%d)"
+msgstr ""
+
+#: src/nolphin-desktop-overlay.c:90
+#, c-format
+msgid "Current Monitor Layout (%dx%d)"
+msgstr ""
+
+#: src/nolphin-desktop-overlay.c:368 src/nolphin-desktop-overlay.c:506
+#: src/nolphin-desktop-overlay.c:509
+msgid "Desktop Settings"
+msgstr ""
+
+#: src/nolphin-desktop-overlay.c:472
+msgid "Current Monitor Preferences"
+msgstr ""
+
+#: src/nolphin-desktop-overlay.c:496
+msgid "Show global desktop settings"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:68
+#, c-format
+msgid ""
+"You do not have the permissions necessary to view the contents of \"%s\"."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:72
+#, c-format
+msgid "\"%s\" could not be found. Perhaps it has recently been deleted."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:76
+#, c-format
+msgid "Sorry, could not display all the contents of \"%s\": %s"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:83
+msgid "The folder contents could not be displayed."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:107
+#, c-format
+msgid ""
+"You do not have the permissions necessary to change the group of \"%s\"."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:120
+#, c-format
+msgid "Sorry, could not change the group of \"%s\": %s"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:125
+msgid "The group could not be changed."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:145
+#, c-format
+msgid "Sorry, could not change the owner of \"%s\": %s"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:147
+msgid "The owner could not be changed."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:167
+#, c-format
+msgid "Sorry, could not change the permissions of \"%s\": %s"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:169
+msgid "The permissions could not be changed."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:204
+#, c-format
+msgid ""
+"The name \"%s\" is already used in this folder. Please use a different name."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:209
+#, c-format
+msgid ""
+"There is no \"%s\" in this folder. Perhaps it was just moved or deleted?"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:214
+#, c-format
+msgid "You do not have the permissions necessary to rename \"%s\"."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:219
+#, c-format
+msgid ""
+"The name \"%s\" is not valid because it contains the character \"/\". Please "
+"use a different name."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:223
+#, c-format
+msgid "The name \"%s\" is not valid. Please use a different name."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:229
+#, c-format
+msgid "The name \"%s\" is too long. Please use a different name."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:243
+#, c-format
+msgid "Sorry, could not rename \"%s\" to \"%s\": %s"
+msgstr ""
+
+#: src/nolphin-error-reporting.c:251
+msgid "The item could not be renamed."
+msgstr ""
+
+#: src/nolphin-error-reporting.c:348
+#, c-format
+msgid "Renaming \"%s\" to \"%s\"."
+msgstr ""
+
+#: src/nolphin-extension-config-widget.c:213
+msgid "No extensions found"
+msgstr ""
+
+#: src/nolphin-extension-config-widget.c:278
+msgid "no information available"
+msgstr ""
+
+#: src/nolphin-extension-config-widget.c:288
+msgid "Configure"
+msgstr ""
+
+#: src/nolphin-extension-config-widget.c:401
+msgid "Extensions"
+msgstr ""
+
+#: src/nolphin-extension-config-widget.c:409
+msgid "Extensions changed.  Restart required."
+msgstr ""
+
+#: src/nolphin-file-management-properties.c:307
+#: src/nolphin-properties-window.c:4025 src/nolphin-properties-window.c:4036
+msgid "None"
+msgstr ""
+
+#: src/nolphin-icon-view.c:137
+msgid "by _Name"
+msgstr ""
+
+#: src/nolphin-icon-view.c:138 src/nolphin-icon-view.c:1436
+msgid "Keep icons sorted by name in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:144
+msgid "by _Size"
+msgstr ""
+
+#: src/nolphin-icon-view.c:145 src/nolphin-icon-view.c:1440
+msgid "Keep icons sorted by size in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:151
+msgid "by _Type"
+msgstr ""
+
+#: src/nolphin-icon-view.c:152 src/nolphin-icon-view.c:1444
+msgid "Keep icons sorted by type in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:158
+msgid "by _Detailed Type"
+msgstr ""
+
+#: src/nolphin-icon-view.c:159 src/nolphin-icon-view.c:1448
+msgid "Keep icons sorted by detailed type in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:165
+msgid "by Modification _Date"
+msgstr ""
+
+#: src/nolphin-icon-view.c:166 src/nolphin-icon-view.c:1452
+msgid "Keep icons sorted by modification date in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:172
+msgid "by T_rash Time"
+msgstr ""
+
+#: src/nolphin-icon-view.c:173 src/nolphin-icon-view.c:1456
+msgid "Keep icons sorted by trash time in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:179
+msgid "by _Extension"
+msgstr ""
+
+#: src/nolphin-icon-view.c:180 src/nolphin-icon-view.c:1460
+msgid "Keep icons sorted by extension in rows"
+msgstr ""
+
+#: src/nolphin-icon-view.c:614
+msgid "_Organize Desktop by Name"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1408
+msgid "Arran_ge Items"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1410
+msgid "_Organize by Name"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1411
+msgid "Reposition icons to better fit in the window and avoid overlapping"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1418
+msgid "Re_versed Order"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1419
+msgid "Display icons in the opposite order"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1423
+msgid "_Keep Aligned"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1424
+msgid "Keep icons lined up on a grid"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1431
+msgid "_Manually"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1432
+msgid "Leave icons wherever they are dropped"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1435
+msgid "By _Name"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1439
+msgid "By _Size"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1443
+msgid "By _Type"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1447
+msgid "By _Detailed Type"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1451
+msgid "By Modification _Date"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1455
+msgid "By T_rash Time"
+msgstr ""
+
+#: src/nolphin-icon-view.c:1459
+msgid "By _Extension"
+msgstr ""
+
+#: src/nolphin-icon-view.c:2916 src/nolphin-icon-view-container.c:2157
+#: src/nolphin-icon-view-grid-container.c:1593 src/nolphin-window-menus.c:1716
+#: src/nolphin-window-menus.c:1875
+msgid "Icon View"
+msgstr ""
+
+#: src/nolphin-icon-view.c:2918
+msgid "_Icons"
+msgstr ""
+
+#: src/nolphin-icon-view.c:2919
+msgid "The icon view encountered an error."
+msgstr ""
+
+#: src/nolphin-icon-view.c:2920
+msgid "The icon view encountered an error while starting up."
+msgstr ""
+
+#: src/nolphin-icon-view.c:2921
+msgid "Display this location with the icon view."
+msgstr ""
+
+#: src/nolphin-icon-view.c:2930 src/nolphin-window-menus.c:1722
+#: src/nolphin-window-menus.c:1898
+msgid "Compact View"
+msgstr ""
+
+#: src/nolphin-icon-view.c:2932
+msgid "_Compact"
+msgstr ""
+
+#: src/nolphin-icon-view.c:2933
+msgid "The compact view encountered an error."
+msgstr ""
+
+#: src/nolphin-icon-view.c:2934
+msgid "The compact view encountered an error while starting up."
+msgstr ""
+
+#: src/nolphin-icon-view.c:2935
+msgid "Display this location with the compact view."
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:331
+msgid "Image Type"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:333
+#: src/nolphin-image-properties-page.c:339
+#, c-format
+msgid "%d pixel"
+msgid_plural "%d pixels"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-image-properties-page.c:337
+msgid "Width"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:343
+msgid "Height"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:356
+#: src/nolphin-image-properties-page.c:357
+msgid "Title"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:358
+#: src/nolphin-image-properties-page.c:359
+msgid "Author"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:362
+#: src/nolphin-image-properties-page.c:417
+msgid "Copyright"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:363
+msgid "Created On"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:364
+msgid "Created By"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:365
+msgid "Disclaimer"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:366
+msgid "Warning"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:367
+msgid "Source"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:382
+msgid "Camera Brand"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:383
+msgid "Camera Model"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:386
+msgid "Date Taken"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:387
+msgid "Date Digitized"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:392
+msgid "Exposure Time"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:393
+msgid "Aperture Value"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:394
+msgid "ISO Speed Rating"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:395
+msgid "Flash Fired"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:396
+msgid "Metering Mode"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:397
+msgid "Exposure Program"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:398
+msgid "Focal Length"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:399
+msgid "Software"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:415
+msgid "Keywords"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:416
+msgid "Creator"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:418
+msgid "Rating"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:441
+msgid "Failed to load image information"
+msgstr ""
+
+#: src/nolphin-image-properties-page.c:706 src/nolphin-list-model.c:476
+#: src/nolphin-tree-sidebar-model.c:1261 src/nolphin-window-manage-views.c:1263
+#: src/nolphin-window-slot.c:427
+msgid "Loading..."
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:127
+msgid ""
+"Actions: Action files can be added to this folder and will appear in the "
+"menu."
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:129
+#: src/nolphin-interesting-folder-bar.c:137
+msgid "More info"
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:131
+msgid "View a sample action file with documentation"
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:134
+msgid ""
+"Scripts: All executable files in this folder will appear in the Scripts menu."
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:139
+msgid "View additional information about creating scripts"
+msgstr ""
+
+#: src/nolphin-interesting-folder-bar.c:142
+msgid ""
+"The files in this folder are used as templates in the 'Create New Document' "
+"section of your context menu."
+msgstr ""
+
+#: src/nolphin-list-model.c:474 src/nolphin-tree-sidebar-model.c:1261
+msgid "(Empty)"
+msgstr ""
+
+#: src/nolphin-list-view.c:2094
+msgid "Use Default"
+msgstr ""
+
+#: src/nolphin-list-view.c:2105
+msgid "Temporarily disable auto-sort"
+msgstr ""
+
+#: src/nolphin-list-view.c:2837 src/nolphin-list-view.c:4563
+#: src/nolphin-window-menus.c:1719 src/nolphin-window-menus.c:1886
+msgid "List View"
+msgstr ""
+
+#: src/nolphin-list-view.c:4565
+msgid "_List"
+msgstr ""
+
+#: src/nolphin-list-view.c:4566
+msgid "The list view encountered an error."
+msgstr ""
+
+#: src/nolphin-list-view.c:4567
+msgid "The list view encountered an error while starting up."
+msgstr ""
+
+#: src/nolphin-list-view.c:4568
+msgid "Display this location with the list view."
+msgstr ""
+
+#: src/nolphin-location-bar.c:164
+#, c-format
+msgid "Do you want to view %d location?"
+msgid_plural "Do you want to view %d locations?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-location-bar.c:168 src/nolphin-mime-actions.c:1069
+#, c-format
+msgid "This will open %d separate window."
+msgid_plural "This will open %d separate windows."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-main-application.c:813
+msgid "--check cannot be used with other options."
+msgstr ""
+
+#: src/nolphin-main-application.c:819
+msgid "--quit cannot be used with URIs."
+msgstr ""
+
+#: src/nolphin-main-application.c:827
+msgid "--geometry cannot be used with more than one URI."
+msgstr ""
+
+#: src/nolphin-main-application.c:878
+msgid "Perform a quick set of self-check tests."
+msgstr ""
+
+#: src/nolphin-main-application.c:886
+msgid ""
+"Create the initial window with the given geometry. Examples: nolphin --"
+"geometry=+100+100, nolphin --geometry=600x400, nolphin --"
+"geometry=600x400+100+100."
+msgstr ""
+
+#: src/nolphin-main-application.c:887
+msgid "GEOMETRY"
+msgstr ""
+
+#: src/nolphin-main-application.c:889
+msgid "Only create windows for explicitly specified URIs."
+msgstr ""
+
+#: src/nolphin-main-application.c:891
+msgid "Ignored argument - left for compatibility only."
+msgstr ""
+
+#: src/nolphin-main-application.c:893
+msgid "Open URIs in tabs."
+msgstr ""
+
+#: src/nolphin-main-application.c:895
+msgid "Open URIs in an existing window."
+msgstr ""
+
+#: src/nolphin-main-application.c:897
+msgid "Show URI's parent and select the URI."
+msgstr ""
+
+#: src/nolphin-main-application.c:899
+msgid ""
+"Repair the user thumbnail cache - this can be useful if you're having "
+"trouble with file thumbnails.  Must be run as root"
+msgstr ""
+
+#: src/nolphin-main-application.c:903
+msgid "Quit Nolphin."
+msgstr ""
+
+#: src/nolphin-main-application.c:904
+msgid "[URI...]"
+msgstr ""
+
+#: src/nolphin-main-application.c:915
+msgid ""
+"\n"
+"\n"
+"Browse the file system with the file manager"
+msgstr ""
+
+#: src/nolphin-main-application.c:1039
+msgid "--select must be used with at least one URI."
+msgstr ""
+
+#: src/nolphin-main-application.c:1112
+msgid "Nolphin's main menu is now hidden"
+msgstr ""
+
+#: src/nolphin-main-application.c:1115
+msgid ""
+"You have chosen to hide the main menu.  You can get it back temporarily by:\n"
+"\n"
+"- Tapping the <Alt> key\n"
+"- Right-clicking an empty region of the main toolbar\n"
+"- Right-clicking an empty region of the status bar.\n"
+"\n"
+"You can restore it permanently by selecting this option again from the View "
+"menu."
+msgstr ""
+
+#: src/nolphin-main-application.c:1126
+msgid "Don't show this message again."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:645
+#, c-format
+msgid "The Link \"%s\" is Broken."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:647
+#, c-format
+msgid "The Link \"%s\" is Broken. Move it to Trash?"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:653
+msgid "This link cannot be used, because it has no target."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:655
+#, c-format
+msgid "This link cannot be used, because its target \"%s\" doesn't exist."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:665 src/nolphin-tree-sidebar.c:1360
+#: src/nolphin-view.c:8787 src/nolphin-view.c:8892 src/nolphin-view.c:9949
+#: src/nolphin-view.c:10286
+msgid "Mo_ve to Trash"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:725
+#, c-format
+msgid "Do you want to run \"%s\", or display its contents?"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:727
+#, c-format
+msgid "\"%s\" is an executable text file."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:733
+msgid "Run in _Terminal"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:734 src/nolphin-mime-actions.c:1382
+msgid "_Display"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1064 src/nolphin-mime-actions.c:1763
+#: src/nolphin-view.c:1133
+msgid "Are you sure you want to open all files?"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1066
+#, c-format
+msgid "This will open %d separate tab."
+msgid_plural "This will open %d separate tabs."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-mime-actions.c:1169 src/nolphin-open-with-main.c:152
+#: src/nolphin-view.c:1405
+msgid "Open with"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1249
+msgid "Unknown file type"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1257
+#, c-format
+msgid ""
+"The file \"%s\" has no known programs associated with it.  If you trust the "
+"source of this file, and have sufficient permissions, you can mark it "
+"executable and launch it.  Or, you can use the Open With dialog to pick a "
+"program to associate it with."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1264
+msgid "Make executable and run"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1266
+#, c-format
+msgid ""
+"The file \"%s\" has no known programs associated with it.  Use the Open With "
+"dialog to pick a program to open it with."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1279
+msgid "Choose a program"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1363
+msgid "Untrusted application launcher"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1366
+#, c-format
+msgid ""
+"The application launcher \"%s\" has not been marked as trusted (executable). "
+"If you do not know the source of this file, launching it may be unsafe."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1385
+msgid "Mark as _Trusted"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:1764
+#, c-format
+msgid "This will open %d separate application."
+msgid_plural "This will open %d separate applications."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-mime-actions.c:1842 src/nolphin-mime-actions.c:2116
+#: src/nolphin-view.c:7889
+msgid "Unable to mount location"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:2195 src/nolphin-view.c:8036
+msgid "Unable to start location"
+msgstr ""
+
+#: src/nolphin-mime-actions.c:2283
+#, c-format
+msgid "Opening \"%s\"."
+msgstr ""
+
+#: src/nolphin-mime-actions.c:2286
+#, c-format
+msgid "Opening %d item."
+msgid_plural "Opening %d items."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-notebook.c:370
+msgid "Close tab"
+msgstr ""
+
+#: src/nolphin-open-with-main.c:105
+msgid ""
+"\n"
+"\n"
+"Show an open-with dialog given a uri, to allow the user to change the "
+"default mimetype handler."
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:348
+msgid "Devices"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:656 src/nolphin-view.c:3320
+#, c-format
+msgid "Free space: %s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:779
+msgid "My Computer"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:790
+#, c-format
+msgid ""
+"Open your personal folder\n"
+"%s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:813
+msgid "Open the contents of your desktop in a folder"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:866 src/nolphin-tree-sidebar.c:1500
+msgid "Favorites"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:868
+msgid "Favorite files"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:883
+msgid "Recent"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:885
+msgid "Recent files"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:900
+#, c-format
+msgid ""
+"Open the contents of the File System\n"
+"%s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:904 src/nolphin-tree-sidebar.c:1504
+msgid "File System"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:922
+msgid "Open the trash"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:928
+msgid "Bookmarks"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:1062
+#, c-format
+msgid ""
+"%s (%s)\n"
+"%s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:1095
+#, c-format
+msgid "Mount and open %s (%s)"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:1123 src/nolphin-places-sidebar.c:1253
+#, c-format
+msgid "Mount and open %s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:1178
+#, c-format
+msgid ""
+"%s\n"
+"%s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:1297
+msgid "Browse the contents of the network"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2378 src/nolphin-places-sidebar.c:3525
+#: src/nolphin-view.c:8833 src/nolphin-view.c:8857 src/nolphin-view.c:8916
+#: src/nolphin-view.c:9570 src/nolphin-view.c:9574 src/nolphin-view.c:9657
+#: src/nolphin-view.c:9661 src/nolphin-view.c:9761 src/nolphin-view.c:9765
+msgid "_Start"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2379 src/nolphin-places-sidebar.c:3526
+#: src/nolphin-view.c:8837 src/nolphin-view.c:8861 src/nolphin-view.c:8920
+#: src/nolphin-view.c:9599 src/nolphin-view.c:9686 src/nolphin-view.c:9790
+#: src/nolphin-window-menus.c:1520
+msgid "_Stop"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2384
+msgid "_Power On"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2385 src/nolphin-view.c:9603
+#: src/nolphin-view.c:9690 src/nolphin-view.c:9794
+msgid "_Safely Remove Drive"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2388
+msgid "_Connect Drive"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2389
+msgid "_Disconnect Drive"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2392
+msgid "_Start Multi-disk Device"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2393
+msgid "_Stop Multi-disk Device"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2397 src/nolphin-view.c:9673
+#: src/nolphin-view.c:9777
+msgid "_Unlock Drive"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2398 src/nolphin-view.c:9615
+#: src/nolphin-view.c:9702 src/nolphin-view.c:9806
+msgid "_Lock Drive"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2476 src/nolphin-places-sidebar.c:3091
+#, c-format
+msgid "Unable to start %s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:2857 src/nolphin-places-sidebar.c:2883
+#: src/nolphin-places-sidebar.c:2909
+#, c-format
+msgid "Unable to eject %s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3047
+#, c-format
+msgid "Unable to poll %s for media changes"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3145
+#, c-format
+msgid "Unable to stop %s"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3516 src/nolphin-tree-sidebar.c:1352
+#: src/nolphin-view.c:8690 src/nolphin-view.c:8874 src/nolphin-view.c:9896
+#: src/nolphin-view.c:10264
+msgid "Open in New _Tab"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3517 src/nolphin-tree-sidebar.c:1353
+#: src/nolphin-view.c:9887 src/nolphin-view.c:10244
+msgid "Open in New _Window"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3518 src/nolphin-window-menus.c:1630
+msgid "_Add Bookmark"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3519 src/nolphin-template-config-widget.c:625
+msgid "Remove"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3520 src/nolphin-view.c:8779
+msgid "_Rename..."
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3521 src/nolphin-view.c:8821
+#: src/nolphin-view.c:8845 src/nolphin-view.c:8904
+msgid "_Mount"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3522 src/nolphin-tree-sidebar.c:1362
+#: src/nolphin-view.c:8825 src/nolphin-view.c:8849 src/nolphin-view.c:8908
+msgid "_Unmount"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3523 src/nolphin-tree-sidebar.c:1363
+#: src/nolphin-view.c:8829 src/nolphin-view.c:8853 src/nolphin-view.c:8912
+msgid "_Eject"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3524 src/nolphin-view.c:8841
+#: src/nolphin-view.c:8865 src/nolphin-view.c:8924
+msgid "_Detect Media"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3527
+msgid "_Empty _Trash"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3528 src/nolphin-tree-sidebar.c:1364
+#: src/nolphin-view.c:8660 src/nolphin-view.c:8929
+msgid "_Properties"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3830
+msgid "Unmount"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3834
+msgid "Eject"
+msgstr ""
+
+#: src/nolphin-places-sidebar.c:3838
+msgid "Stop"
+msgstr ""
+
+#: src/nolphin-preview.c:178
+msgid "Unknown error"
+msgstr ""
+
+#: src/nolphin-preview.c:199
+msgid "STL type:"
+msgstr ""
+
+#: src/nolphin-preview.c:200
+msgid "ASCII"
+msgstr ""
+
+#: src/nolphin-preview.c:203 src/nolphin-preview.c:206
+msgid "Triangles:"
+msgstr ""
+
+#: src/nolphin-preview.c:206
+msgid "not counted (file too large)"
+msgstr ""
+
+#: src/nolphin-preview.c:210
+msgid "STEP description:"
+msgstr ""
+
+#: src/nolphin-preview.c:211
+msgid "STEP file name:"
+msgstr ""
+
+#: src/nolphin-preview.c:212
+msgid "STEP timestamp:"
+msgstr ""
+
+#: src/nolphin-preview.c:213
+msgid "STEP author:"
+msgstr ""
+
+#: src/nolphin-preview.c:214
+msgid "STEP schema:"
+msgstr ""
+
+#: src/nolphin-preview.c:217
+msgid "FreeCAD comment:"
+msgstr ""
+
+#: src/nolphin-preview.c:218
+msgid "FreeCAD author:"
+msgstr ""
+
+#: src/nolphin-preview.c:219
+msgid "FreeCAD company:"
+msgstr ""
+
+#: src/nolphin-preview.c:220
+msgid "FreeCAD created:"
+msgstr ""
+
+#: src/nolphin-preview.c:221
+msgid "FreeCAD modified:"
+msgstr ""
+
+#: src/nolphin-preview.c:262 src/nolphin-properties-window.c:3208
+msgid "Modified:"
+msgstr ""
+
+#: src/nolphin-preview.c:266 src/nolphin-properties-window.c:3196
+msgid "Accessed:"
+msgstr ""
+
+#: src/nolphin-preview.c:270
+msgid "Permissions:"
+msgstr ""
+
+#: src/nolphin-preview.c:274 src/nolphin-properties-window.c:4192
+#: src/nolphin-properties-window.c:4281 src/nolphin-properties-window.c:4386
+msgid "Owner:"
+msgstr ""
+
+#: src/nolphin-preview.c:278 src/nolphin-properties-window.c:4222
+#: src/nolphin-properties-window.c:4282 src/nolphin-properties-window.c:4406
+msgid "Group:"
+msgstr ""
+
+#: src/nolphin-preview.c:282 src/nolphin-properties-window.c:3176
+msgid "Location:"
+msgstr ""
+
+#: src/nolphin-preview.c:302 src/nolphin-preview.c:309
+#: src/nolphin-preview.c:319
+msgid "3D/CAD format:"
+msgstr ""
+
+#: src/nolphin-preview.c:303 src/nolphin-preview.c:313
+#: src/nolphin-preview.c:320
+msgid "3D/CAD preview:"
+msgstr ""
+
+#: src/nolphin-preview.c:304
+msgid "No backend available for this format on this system"
+msgstr ""
+
+#: src/nolphin-preview.c:320
+msgid "Analyzing…"
+msgstr ""
+
+#: src/nolphin-preview.c:396
+#, c-format
+msgid "%u item selected"
+msgid_plural "%u items selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-preview.c:403
+msgid "Combined size:"
+msgstr ""
+
+#: src/nolphin-preview.c:405
+msgid "Note:"
+msgstr ""
+
+#: src/nolphin-preview.c:405
+msgid "folder sizes not included"
+msgstr ""
+
+#: src/nolphin-preview.c:514
+msgid "No file selected"
+msgstr ""
+
+#: src/nolphin-progress-ui-handler.c:119
+#, c-format
+msgid "%1$s file operation active.  %2$d%% complete."
+msgid_plural "%1$s file operations active.  %2$d%% complete."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-progress-ui-handler.c:211 src/nolphin-progress-ui-handler.c:268
+msgid "File Operations"
+msgstr ""
+
+#: src/nolphin-progress-ui-handler.c:271
+msgid ""
+"Not all file operations completed successfully. See details in the affected "
+"operation's dialog."
+msgstr ""
+
+#: src/nolphin-progress-ui-handler.c:273
+msgid "All file operations have been successfully completed"
+msgstr ""
+
+#: src/nolphin-progress-ui-handler.c:334
+#, c-format
+msgid "%d%% %s"
+msgstr ""
+
+#: src/nolphin-properties-window.c:505
+msgid "You cannot assign more than one custom icon at a time!"
+msgstr ""
+
+#: src/nolphin-properties-window.c:506
+msgid "Please drag just one image to set a custom icon."
+msgstr ""
+
+#: src/nolphin-properties-window.c:517
+msgid "The file that you dropped is not local."
+msgstr ""
+
+#: src/nolphin-properties-window.c:518 src/nolphin-properties-window.c:524
+msgid "You can only use local images as custom icons."
+msgstr ""
+
+#: src/nolphin-properties-window.c:523
+msgid "The file that you dropped is not an image."
+msgstr ""
+
+#: src/nolphin-properties-window.c:653
+msgid "_Name:"
+msgid_plural "_Names:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-properties-window.c:848
+msgid "Properties"
+msgstr ""
+
+#: src/nolphin-properties-window.c:856
+#, c-format
+msgid "%s Properties"
+msgstr ""
+
+#: src/nolphin-properties-window.c:1176
+#, c-format
+msgctxt "MIME type description (MIME type)"
+msgid "%s (%s)"
+msgstr ""
+
+#: src/nolphin-properties-window.c:1367
+msgid "Cancel Group Change?"
+msgstr ""
+
+#: src/nolphin-properties-window.c:1782
+msgid "Cancel Owner Change?"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2116
+msgid "nothing"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2118
+msgid "unreadable"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2129
+#, c-format
+msgid "%1$s item (and %2$s hidden)"
+msgid_plural "%1$s items (and %2$s hidden)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-properties-window.c:2133
+#, c-format
+msgid "%1$s item"
+msgid_plural "%1$s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-properties-window.c:2140
+msgid "(some contents unreadable)"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2157
+msgid "Contents:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2981
+msgid "used"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2988
+msgid "free"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2990
+msgid "Total capacity:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:2999
+msgid "Filesystem type:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3085
+msgid "Basic"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3183
+msgid "Volume:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3201
+msgid "Created:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3217
+msgid "Free space:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3661
+msgid "_Read"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3663
+msgid "_Write"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3665
+msgid "E_xecute"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3933 src/nolphin-properties-window.c:3944
+#: src/nolphin-properties-window.c:3956
+msgid "no "
+msgstr ""
+
+#: src/nolphin-properties-window.c:3936
+msgid "list"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3938
+msgid "read"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3947
+msgid "create/delete"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3949
+msgid "write"
+msgstr ""
+
+#: src/nolphin-properties-window.c:3958
+msgid "access"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4006
+msgid "Access:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4008
+msgid "Folder access:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4010
+msgid "File access:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4028
+msgid "List files only"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4030
+msgid "Access files"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4032
+msgid "Create and delete files"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4039
+msgid "Read-only"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4041
+msgid "Read and write"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4106
+msgid "Special flags:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4108
+msgid "Set _user ID"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4109
+msgid "Set gro_up ID"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4110
+msgid "_Sticky"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4184 src/nolphin-properties-window.c:4376
+msgid "_Owner:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4214 src/nolphin-properties-window.c:4398
+msgid "_Group:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4261
+msgid "Execute:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4264
+msgid "Allow _executing file as program"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4283
+msgid "Others:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4422
+msgid "Folder Permissions:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4430
+msgid "File Permissions:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4439
+msgid "Text view:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4587
+msgid "You are not the owner, so you cannot change these permissions."
+msgstr ""
+
+#: src/nolphin-properties-window.c:4607
+msgid "SELinux context:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4612
+msgid "Last changed:"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4624
+msgid "Apply Permissions to Enclosed Files"
+msgstr ""
+
+#: src/nolphin-properties-window.c:4634
+#, c-format
+msgid "The permissions of \"%s\" could not be determined."
+msgstr ""
+
+#: src/nolphin-properties-window.c:4637
+msgid "The permissions of the selected file could not be determined."
+msgstr ""
+
+#: src/nolphin-properties-window.c:4873
+msgid "Open With"
+msgstr ""
+
+#: src/nolphin-properties-window.c:5011
+msgid "Help"
+msgstr ""
+
+#: src/nolphin-properties-window.c:5012
+msgid "Close"
+msgstr ""
+
+#: src/nolphin-properties-window.c:5230
+msgid "Creating Properties window."
+msgstr ""
+
+#: src/nolphin-properties-window.c:5261 src/nolphin-view.c:1742
+msgid "There was an error displaying help."
+msgstr ""
+
+#: src/nolphin-properties-window.c:5491
+msgid "Revert"
+msgstr ""
+
+#: src/nolphin-query-editor.c:625
+msgid "Not supported in this location"
+msgstr ""
+
+#: src/nolphin-statusbar.c:176
+msgid "Show Places"
+msgstr ""
+
+#: src/nolphin-statusbar.c:185
+msgid "Show Treeview"
+msgstr ""
+
+#: src/nolphin-statusbar.c:199
+msgid "Hide the Sidebar (F9)"
+msgstr ""
+
+#: src/nolphin-statusbar.c:208
+msgid "Show the Sidebar (F9)"
+msgstr ""
+
+#: src/nolphin-statusbar.c:222
+msgid "Adjust zoom level"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:161
+msgid "Unknown template"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:234
+msgid "No templates found. Click New or drag a file here to create one."
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:331
+msgid "_Rename"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:425
+msgid "Select a document to use as a template"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:430
+msgid "Select"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:596
+msgid "Templates"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:616
+msgid "New"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:617
+msgid "Create a new template"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:626
+msgid "Delete the selected template"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:635
+msgid "Rename"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:636
+msgid "Rename the selected template"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:645
+msgid "Edit content"
+msgstr ""
+
+#: src/nolphin-template-config-widget.c:646
+msgid "Modify the selected template's contents"
+msgstr ""
+
+#: src/nolphin-terminal.c:59
+#, c-format
+msgid "Failed to start terminal: %s\r\n"
+msgstr ""
+
+#: src/nolphin-thumbnail-problem-bar.c:114
+msgid ""
+"A problem has been detected with your thumbnail cache.  Fixing it will "
+"require administrative privileges."
+msgstr ""
+
+#: src/nolphin-thumbnail-problem-bar.c:118
+msgid "Fix now"
+msgstr ""
+
+#: src/nolphin-thumbnail-problem-bar.c:121
+msgid "Dismiss"
+msgstr ""
+
+#: src/nolphin-toolbar.c:215
+msgid "Elevated Privileges"
+msgstr ""
+
+#: src/nolphin-trash-bar.c:218
+msgid "Restore Selected Items"
+msgstr ""
+
+#: src/nolphin-trash-bar.c:221
+msgid "Restore selected items to their original position"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:975 src/nolphin-view.c:6945
+#, c-format
+msgid "\"%s\" will be moved if you select the Paste command"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:979 src/nolphin-view.c:6949
+#, c-format
+msgid "\"%s\" will be copied if you select the Paste command"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1018 src/nolphin-view.c:7201
+msgid "There is nothing on the clipboard to paste."
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1354 src/nolphin-view.c:8668
+msgid "Create New _Folder"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1355 src/nolphin-view.c:8735
+#: src/nolphin-view.c:8879
+msgid "Cu_t"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1356 src/nolphin-view.c:8739
+#: src/nolphin-view.c:8883
+msgid "_Copy"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1357 src/nolphin-view.c:8749
+#: src/nolphin-view.c:8887
+msgid "_Paste Into Folder"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1358 src/nolphin-view.c:8964
+msgid "P_in"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1359 src/nolphin-view.c:8968
+msgid "Unp_in"
+msgstr ""
+
+#: src/nolphin-tree-sidebar.c:1361 src/nolphin-view.c:8791
+#: src/nolphin-view.c:8896 src/nolphin-view.c:10310
+msgid "_Delete"
+msgstr ""
+
+#: src/nolphin-view.c:1135
+#, c-format
+msgid "This will open %'d separate tab."
+msgid_plural "This will open %'d separate tabs."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:1138
+#, c-format
+msgid "This will open %'d separate window."
+msgid_plural "This will open %'d separate windows."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:1762
+msgid "Select Items Matching"
+msgstr ""
+
+#: src/nolphin-view.c:1777
+msgid "_Pattern:"
+msgstr ""
+
+#: src/nolphin-view.c:1783
+msgid "Examples: "
+msgstr ""
+
+#: src/nolphin-view.c:1878
+msgid "Select Items By Type"
+msgstr ""
+
+#: src/nolphin-view.c:2959
+msgid "Content View"
+msgstr ""
+
+#: src/nolphin-view.c:2960
+msgid "View of the current folder"
+msgstr ""
+
+#: src/nolphin-view.c:3238 src/nolphin-view.c:3279
+#, c-format
+msgid "\"%s\" selected"
+msgstr ""
+
+#: src/nolphin-view.c:3240
+#, c-format
+msgid "%'d folder selected"
+msgid_plural "%'d folders selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:3250
+#, c-format
+msgid " (containing %'d item)"
+msgid_plural " (containing %'d items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:3261
+#, c-format
+msgid " (containing a total of %'d item)"
+msgid_plural " (containing a total of %'d items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:3282
+#, c-format
+msgid "%'d item selected"
+msgid_plural "%'d items selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:3289
+#, c-format
+msgid "%'d other item selected"
+msgid_plural "%'d other items selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:3331
+#, c-format
+msgid "%s, Free space: %s"
+msgstr ""
+
+#: src/nolphin-view.c:4940
+#, c-format
+msgid "Open With %s"
+msgstr ""
+
+#: src/nolphin-view.c:4942
+#, c-format
+msgid "Use \"%s\" to open the selected item"
+msgid_plural "Use \"%s\" to open the selected items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:6304
+#, c-format
+msgid "Run \"%s\" on any selected items"
+msgstr ""
+
+#: src/nolphin-view.c:6652
+#, c-format
+msgid "Create a new document from template \"%s\""
+msgstr ""
+
+#: src/nolphin-view.c:6957
+#, c-format
+msgid "The %'d selected item will be moved if you select the Paste command"
+msgid_plural ""
+"The %'d selected items%s will be moved if you select the Paste command"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:6965
+#, c-format
+msgid "The %'d selected item will be copied if you select the Paste command"
+msgid_plural ""
+"The %'d selected items%s will be copied if you select the Paste command"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:7135
+msgid "Select Target Folder For Move"
+msgstr ""
+
+#: src/nolphin-view.c:7158
+msgid "Select Target Folder For Copy"
+msgstr ""
+
+#: src/nolphin-view.c:7509
+msgid "Completed successfully."
+msgstr ""
+
+#: src/nolphin-view.c:7511
+#, c-format
+msgid "Failed: %s"
+msgstr ""
+
+#: src/nolphin-view.c:7526
+msgid "Compress"
+msgstr ""
+
+#: src/nolphin-view.c:7592 src/nolphin-view.c:7638
+msgid "Extract"
+msgstr ""
+
+#: src/nolphin-view.c:7639
+msgid "Could not create a destination folder."
+msgstr ""
+
+#: src/nolphin-view.c:7660
+msgid "Test Archive"
+msgstr ""
+
+#: src/nolphin-view.c:7909
+msgid "Unable to unmount location"
+msgstr ""
+
+#: src/nolphin-view.c:7929
+msgid "Unable to eject location"
+msgstr ""
+
+#: src/nolphin-view.c:7944
+msgid "Unable to stop drive"
+msgstr ""
+
+#: src/nolphin-view.c:8430
+#, c-format
+msgid "Connect to Server %s"
+msgstr ""
+
+#: src/nolphin-view.c:8435 src/nolphin-view.c:9578 src/nolphin-view.c:9665
+#: src/nolphin-view.c:9769
+msgid "_Connect"
+msgstr ""
+
+#: src/nolphin-view.c:8449
+msgid "Link _name:"
+msgstr ""
+
+#: src/nolphin-view.c:8656
+msgid "Create New _Document"
+msgstr ""
+
+#: src/nolphin-view.c:8657
+msgid "Open Wit_h"
+msgstr ""
+
+#: src/nolphin-view.c:8658
+msgid "Choose a program with which to open the selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8661 src/nolphin-view.c:10351
+msgid "View or modify the properties of each selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8669
+msgid "Create a new empty folder inside this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8671
+msgid "No templates installed"
+msgstr ""
+
+#: src/nolphin-view.c:8674
+msgid "_Empty Document"
+msgstr ""
+
+#: src/nolphin-view.c:8675
+msgid "Create a new empty document inside this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8679
+msgid "Open the selected item in this window"
+msgstr ""
+
+#: src/nolphin-view.c:8686 src/nolphin-view.c:8870
+msgid "Open in Navigation Window"
+msgstr ""
+
+#: src/nolphin-view.c:8687
+msgid "Open each selected item in a navigation window"
+msgstr ""
+
+#: src/nolphin-view.c:8691
+msgid "Open each selected item in a new tab"
+msgstr ""
+
+#: src/nolphin-view.c:8694 src/nolphin-window-menus.c:1863
+msgid "Open in Terminal"
+msgstr ""
+
+#: src/nolphin-view.c:8695
+msgid "Open terminal in the selected folder"
+msgstr ""
+
+#: src/nolphin-view.c:8698
+msgid "Open as Root"
+msgstr ""
+
+#: src/nolphin-view.c:8699
+msgid "Open the folder with administration privileges"
+msgstr ""
+
+#: src/nolphin-view.c:8703
+msgid "Follow link to original file"
+msgstr ""
+
+#: src/nolphin-view.c:8704
+msgid "Navigate to the original file that this symbolic link points to"
+msgstr ""
+
+#: src/nolphin-view.c:8707
+msgid "Open containing folder"
+msgstr ""
+
+#: src/nolphin-view.c:8708
+msgid "Navigate to the folder that the selected item is stored in"
+msgstr ""
+
+#: src/nolphin-view.c:8711
+msgid "Com_press..."
+msgstr ""
+
+#: src/nolphin-view.c:8712
+msgid "Create a ZIP archive of the selected items"
+msgstr ""
+
+#: src/nolphin-view.c:8715
+msgid "_Extract Here"
+msgstr ""
+
+#: src/nolphin-view.c:8716
+msgid "Extract the archive into a new folder next to it"
+msgstr ""
+
+#: src/nolphin-view.c:8719
+msgid "_Test Archive"
+msgstr ""
+
+#: src/nolphin-view.c:8720
+msgid "Check the archive for errors without extracting it"
+msgstr ""
+
+#: src/nolphin-view.c:8723
+msgid "Other _Application..."
+msgstr ""
+
+#: src/nolphin-view.c:8724 src/nolphin-view.c:8728
+msgid "Choose another application with which to open the selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8727
+msgid "Open With Other _Application..."
+msgstr ""
+
+#: src/nolphin-view.c:8736
+msgid "Prepare the selected files to be moved with a Paste command"
+msgstr ""
+
+#: src/nolphin-view.c:8740
+msgid "Prepare the selected files to be copied with a Paste command"
+msgstr ""
+
+#: src/nolphin-view.c:8743
+msgid "_Paste"
+msgstr ""
+
+#: src/nolphin-view.c:8744
+msgid "Move or copy files previously selected by a Cut or Copy command"
+msgstr ""
+
+#: src/nolphin-view.c:8750
+msgid ""
+"Move or copy files previously selected by a Cut or Copy command into the "
+"selected folder"
+msgstr ""
+
+#: src/nolphin-view.c:8752
+msgid "Cop_y to"
+msgstr ""
+
+#: src/nolphin-view.c:8753
+msgid "M_ove to"
+msgstr ""
+
+#: src/nolphin-view.c:8756
+msgid "Select all items in this window"
+msgstr ""
+
+#: src/nolphin-view.c:8759
+msgid "Select I_tems Matching..."
+msgstr ""
+
+#: src/nolphin-view.c:8760
+msgid "Select items in this window matching a given pattern"
+msgstr ""
+
+#: src/nolphin-view.c:8763
+msgid "Select By _Type..."
+msgstr ""
+
+#: src/nolphin-view.c:8764
+msgid "Select items in this window belonging to a given file type category"
+msgstr ""
+
+#: src/nolphin-view.c:8767
+msgid "_Invert Selection"
+msgstr ""
+
+#: src/nolphin-view.c:8768
+msgid "Select all and only the items that are not currently selected"
+msgstr ""
+
+#: src/nolphin-view.c:8772
+msgid "Duplicate each selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8775 src/nolphin-view.c:10336
+msgid "Ma_ke Link"
+msgid_plural "Ma_ke Links"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:8776
+msgid "Create a symbolic link for each selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8780
+msgid "Rename selected item"
+msgstr ""
+
+#: src/nolphin-view.c:8788 src/nolphin-view.c:10287
+msgid "Move each selected item to the Trash"
+msgstr ""
+
+#: src/nolphin-view.c:8792 src/nolphin-view.c:10311
+msgid "Delete each selected item, without moving to the Trash"
+msgstr ""
+
+#: src/nolphin-view.c:8795 src/nolphin-view.c:8900
+msgid "_Restore to original location"
+msgstr ""
+
+#: src/nolphin-view.c:8799 src/nolphin-window-menus.c:1509
+msgid "_Undo"
+msgstr ""
+
+#: src/nolphin-view.c:8800
+msgid "Undo the last action"
+msgstr ""
+
+#: src/nolphin-view.c:8803
+msgid "_Redo"
+msgstr ""
+
+#: src/nolphin-view.c:8804
+msgid "Redo the last undone action"
+msgstr ""
+
+#: src/nolphin-view.c:8813
+msgid "Reset View to _Defaults"
+msgstr ""
+
+#: src/nolphin-view.c:8814
+msgid "Reset sorting order and zoom level to match preferences for this view"
+msgstr ""
+
+#: src/nolphin-view.c:8817
+msgid "Connect To This Server"
+msgstr ""
+
+#: src/nolphin-view.c:8818
+msgid "Make a permanent connection to this server"
+msgstr ""
+
+#: src/nolphin-view.c:8822
+msgid "Mount the selected volume"
+msgstr ""
+
+#: src/nolphin-view.c:8826
+msgid "Unmount the selected volume"
+msgstr ""
+
+#: src/nolphin-view.c:8830
+msgid "Eject the selected volume"
+msgstr ""
+
+#: src/nolphin-view.c:8834
+msgid "Start the selected volume"
+msgstr ""
+
+#: src/nolphin-view.c:8838 src/nolphin-view.c:9791
+msgid "Stop the selected volume"
+msgstr ""
+
+#: src/nolphin-view.c:8842 src/nolphin-view.c:8866 src/nolphin-view.c:8925
+msgid "Detect media in the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:8846
+msgid "Mount the volume associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:8850
+msgid "Unmount the volume associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:8854
+msgid "Eject the volume associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:8858
+msgid "Start the volume associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:8862
+msgid "Stop the volume associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:8871
+msgid "Open this folder in a navigation window"
+msgstr ""
+
+#: src/nolphin-view.c:8875
+msgid "Open this folder in a new tab"
+msgstr ""
+
+#: src/nolphin-view.c:8880
+msgid "Prepare this folder to be moved with a Paste command"
+msgstr ""
+
+#: src/nolphin-view.c:8884
+msgid "Prepare this folder to be copied with a Paste command"
+msgstr ""
+
+#: src/nolphin-view.c:8888
+msgid ""
+"Move or copy files previously selected by a Cut or Copy command into this "
+"folder"
+msgstr ""
+
+#: src/nolphin-view.c:8893
+msgid "Move this folder to the Trash"
+msgstr ""
+
+#: src/nolphin-view.c:8897
+msgid "Delete this folder, without moving to the Trash"
+msgstr ""
+
+#: src/nolphin-view.c:8905
+msgid "Mount the volume associated with this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8909
+msgid "Unmount the volume associated with this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8913
+msgid "Eject the volume associated with this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8917
+msgid "Start the volume associated with this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8921
+msgid "Stop the volume associated with this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8930
+msgid "View or modify the properties of this folder"
+msgstr ""
+
+#: src/nolphin-view.c:8933 src/nolphin-view.c:8936
+msgid "_Other pane"
+msgstr ""
+
+#: src/nolphin-view.c:8934
+msgid "Copy the current selection to the other pane in the window"
+msgstr ""
+
+#: src/nolphin-view.c:8937
+msgid "Move the current selection to the other pane in the window"
+msgstr ""
+
+#: src/nolphin-view.c:8940 src/nolphin-view.c:8944
+#: src/nolphin-window-menus.c:1584 src/nolphin-window-menus.c:1813
+#: src/nolphin-window-menus.c:2079
+msgid "_Home"
+msgstr ""
+
+#: src/nolphin-view.c:8941
+msgid "Copy the current selection to the home folder"
+msgstr ""
+
+#: src/nolphin-view.c:8945
+msgid "Move the current selection to the home folder"
+msgstr ""
+
+#: src/nolphin-view.c:8948 src/nolphin-view.c:8952
+msgid "_Desktop"
+msgstr ""
+
+#: src/nolphin-view.c:8949
+msgid "Copy the current selection to the desktop"
+msgstr ""
+
+#: src/nolphin-view.c:8953
+msgid "Move the current selection to the desktop"
+msgstr ""
+
+#: src/nolphin-view.c:8956 src/nolphin-view.c:8960
+msgid "Browse..."
+msgstr ""
+
+#: src/nolphin-view.c:8957
+msgid "Browse for a folder to move the selection to"
+msgstr ""
+
+#: src/nolphin-view.c:8961
+msgid "Browse for a folder to copy the selection to"
+msgstr ""
+
+#: src/nolphin-view.c:8965
+msgid ""
+"Pin the selected file so it always appears at the top of this location's "
+"file list"
+msgstr ""
+
+#: src/nolphin-view.c:8969
+msgid "Unpin the selected file from the top of this location's file list"
+msgstr ""
+
+#: src/nolphin-view.c:8972
+msgid "Add to favorites"
+msgstr ""
+
+#: src/nolphin-view.c:8973
+msgid "Add the selected file to your favorites"
+msgstr ""
+
+#: src/nolphin-view.c:8976
+msgid "Remove from favorites"
+msgstr ""
+
+#: src/nolphin-view.c:8977
+msgid "Remove the selected file from your favorites"
+msgstr ""
+
+#: src/nolphin-view.c:9052
+msgid "Run scripts"
+msgstr ""
+
+#: src/nolphin-view.c:9054
+msgid "_Scripts"
+msgstr ""
+
+#: src/nolphin-view.c:9427
+#, c-format
+msgid "Move the open folder out of the trash to \"%s\""
+msgstr ""
+
+#: src/nolphin-view.c:9430
+#, c-format
+msgid "Move the selected folder out of the trash to \"%s\""
+msgid_plural "Move the selected folders out of the trash to \"%s\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9434
+msgid "Move the selected folder out of the trash"
+msgid_plural "Move the selected folders out of the trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9440
+#, c-format
+msgid "Move the selected file out of the trash to \"%s\""
+msgid_plural "Move the selected files out of the trash to \"%s\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9444
+msgid "Move the selected file out of the trash"
+msgid_plural "Move the selected files out of the trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9450
+#, c-format
+msgid "Move the selected item out of the trash to \"%s\""
+msgid_plural "Move the selected items out of the trash to \"%s\""
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9454
+msgid "Move the selected item out of the trash"
+msgid_plural "Move the selected items out of the trash"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:9571 src/nolphin-view.c:9575 src/nolphin-view.c:9762
+#: src/nolphin-view.c:9766
+msgid "Start the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9579 src/nolphin-view.c:9770
+msgid "Connect to the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9582 src/nolphin-view.c:9669 src/nolphin-view.c:9773
+msgid "_Start Multi-disk Drive"
+msgstr ""
+
+#: src/nolphin-view.c:9583 src/nolphin-view.c:9774
+msgid "Start the selected multi-disk drive"
+msgstr ""
+
+#: src/nolphin-view.c:9586
+msgid "U_nlock Drive"
+msgstr ""
+
+#: src/nolphin-view.c:9587 src/nolphin-view.c:9778
+msgid "Unlock the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9600
+msgid "Stop the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9604 src/nolphin-view.c:9795
+msgid "Safely remove the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9607 src/nolphin-view.c:9694 src/nolphin-view.c:9798
+msgid "_Disconnect"
+msgstr ""
+
+#: src/nolphin-view.c:9608 src/nolphin-view.c:9799
+msgid "Disconnect the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9611 src/nolphin-view.c:9698 src/nolphin-view.c:9802
+msgid "_Stop Multi-disk Drive"
+msgstr ""
+
+#: src/nolphin-view.c:9612 src/nolphin-view.c:9803
+msgid "Stop the selected multi-disk drive"
+msgstr ""
+
+#: src/nolphin-view.c:9616 src/nolphin-view.c:9807
+msgid "Lock the selected drive"
+msgstr ""
+
+#: src/nolphin-view.c:9658 src/nolphin-view.c:9662
+msgid "Start the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9666
+msgid "Connect to the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9670
+msgid "Start the multi-disk drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9674
+msgid "Unlock the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9687
+msgid "_Stop the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9691
+msgid "Safely remove the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9695
+msgid "Disconnect the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9699
+msgid "Stop the multi-disk drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9703
+msgid "Lock the drive associated with the open folder"
+msgstr ""
+
+#: src/nolphin-view.c:9945 src/nolphin-view.c:10282
+msgid "_Delete Permanently"
+msgstr ""
+
+#: src/nolphin-view.c:9946
+msgid "Delete the open folder permanently"
+msgstr ""
+
+#: src/nolphin-view.c:9950
+msgid "Move the open folder to the Trash"
+msgstr ""
+
+#: src/nolphin-view.c:10197
+#, c-format
+msgid "_Open With %s"
+msgstr ""
+
+#: src/nolphin-view.c:10246
+#, c-format
+msgid "Open in %'d New _Window"
+msgid_plural "Open in %'d New _Windows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:10266
+#, c-format
+msgid "Open in %'d New _Tab"
+msgid_plural "Open in %'d New _Tabs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/nolphin-view.c:10283
+msgid "Delete all selected items permanently"
+msgstr ""
+
+#: src/nolphin-view.c:10307
+msgid "Remo_ve from Recent"
+msgstr ""
+
+#: src/nolphin-view.c:10308
+msgid "Remove each selected item from the recently used list"
+msgstr ""
+
+#: src/nolphin-view.c:10349
+msgid "View or modify the properties of the open folder"
+msgstr ""
+
+#: src/nolphin-view-dnd.c:171 src/nolphin-view-dnd.c:205
+#: src/nolphin-view-dnd.c:298
+msgid "Drag and drop is not supported."
+msgstr ""
+
+#: src/nolphin-view-dnd.c:172
+msgid "Drag and drop is only supported on local file systems."
+msgstr ""
+
+#: src/nolphin-view-dnd.c:206 src/nolphin-view-dnd.c:299
+msgid "An invalid drag type was used."
+msgstr ""
+
+#: src/nolphin-view-dnd.c:376
+msgid "dropped text.txt"
+msgstr ""
+
+#: src/nolphin-view-dnd.c:421
+msgid "dropped data"
+msgstr ""
+
+#: src/nolphin-window-bookmarks.c:83
+msgid ""
+"Do you want to remove any bookmarks with the non-existing location from your "
+"list?"
+msgstr ""
+
+#: src/nolphin-window-bookmarks.c:85
+#, c-format
+msgid "The location \"%s\" does not exist."
+msgstr ""
+
+#: src/nolphin-window-bookmarks.c:88
+msgid "Bookmark for Nonexistent Location"
+msgstr ""
+
+#: src/nolphin-window-bookmarks.c:308
+msgid "Go to the location specified by this bookmark"
+msgstr ""
+
+#: src/nolphin-window.c:1620
+#, c-format
+msgid "%s - File Browser"
+msgstr ""
+
+#: src/nolphin-window.c:2240 src/nolphin-window-menus.c:360
+msgid "Nolphin"
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1263
+msgid "Searching..."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1755
+#: src/nolphin-window-manage-views.c:1761
+#: src/nolphin-window-manage-views.c:1778
+#: src/nolphin-window-manage-views.c:1789
+#: src/nolphin-window-manage-views.c:1795
+#: src/nolphin-window-manage-views.c:1821
+#, c-format
+msgid "Could not display \"%s\"."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1758
+msgid "Nolphin has no installed viewer capable of displaying the folder."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1764
+msgid "The location is not a folder."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1770
+#, c-format
+msgid "Could not find \"%s\"."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1773
+msgid "Please check the spelling and try again."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1781
+#, c-format
+msgid "Nolphin cannot handle \"%s\" locations."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1784
+msgid "Nolphin cannot handle this kind of location."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1791
+msgid "Unable to mount the location."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1797
+msgid "Access was denied."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1806
+#, c-format
+msgid "Could not display \"%s\", because the host could not be found."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1808
+msgid ""
+"Check that the spelling is correct and that your proxy settings are correct."
+msgstr ""
+
+#: src/nolphin-window-manage-views.c:1823
+#, c-format
+msgid ""
+"Error: %s\n"
+"Please select another viewer and try again."
+msgstr ""
+
+#: src/nolphin-window-menus.c:339
+msgid ""
+"Nolphin is free software; you can redistribute it and/or modify it under the "
+"terms of the GNU General Public License as published by the Free Software "
+"Foundation; either version 2 of the License, or (at your option) any later "
+"version."
+msgstr ""
+
+#: src/nolphin-window-menus.c:343
+msgid ""
+"Nolphin is distributed in the hope that it will be useful, but WITHOUT ANY "
+"WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS "
+"FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more "
+"details."
+msgstr ""
+
+#: src/nolphin-window-menus.c:347
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nolphin; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301 USA"
+msgstr ""
+
+#: src/nolphin-window-menus.c:362
+msgid ""
+"Nolphin lets you organize files and folders, both on your computer and "
+"online."
+msgstr ""
+
+#: src/nolphin-window-menus.c:423
+#, c-format
+msgid ""
+"There was an error displaying help: \n"
+"%s"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1480
+msgid "_File"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1481
+msgid "_Edit"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1482
+msgid "_View"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1483
+msgid "_Help"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1485
+msgid "_Close"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1486
+msgid "Close this folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1489
+msgid "Prefere_nces"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1490
+msgid "Edit Nolphin preferences"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1493
+msgid "Split View _Horizontally"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1494
+msgid ""
+"Open an extra folder view stacked below (or re-orient an open extra pane)"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1497
+msgid "Duplicate _Tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1498
+msgid "Open a new tab at the same location as this one"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1501
+msgid "Close _All Tabs"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1502
+msgid "Close every tab in this window"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1505
+msgid "Reopen Closed _Tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1506
+msgid "Reopen the most recently closed tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1510
+msgid "Undo the last text change"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1513
+msgid "Open _Parent"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1514
+msgid "Open the parent folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1521
+msgid "Stop loading the current location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1524 src/nolphin-window-menus.c:1799
+msgid "_Reload"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1525 src/nolphin-window-menus.c:1801
+msgid "Reload the current location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1528
+msgid "_All Topics"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1529
+msgid "Display Nolphin help"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1532
+msgid "_Keyboard Shortcuts"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1533
+msgid "Display keyboard shortcuts"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1552
+msgid "_About"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1553
+msgid "Display credits for the creators of Nolphin"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1556
+msgid "Zoom _In"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1557
+msgid "Increase the view size"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1568
+msgid "Zoom _Out"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1569
+msgid "Decrease the view size"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1576
+msgid "Normal Si_ze"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1577
+msgid "Use the normal view size"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1580
+msgid "Connect to _Server..."
+msgstr ""
+
+#: src/nolphin-window-menus.c:1581
+msgid "Connect to a remote computer or shared disk"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1585
+msgid "Open your personal folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1588 src/nolphin-window-menus.c:1827
+msgid "_Computer"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1589
+msgid ""
+"Browse all local and remote disks and folders accessible from this computer"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1592
+msgid "_Network"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1593
+msgid "Browse bookmarked and local network locations"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1596
+msgid "T_emplates"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1597
+msgid "Open your personal templates folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1600
+msgid "_Trash"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1601
+msgid "Open your personal trash folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1603
+msgid "_Go"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1604
+msgid "_Bookmarks"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1605
+msgid "_Tabs"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1606
+msgid "New _Window"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1607
+msgid "Open another Nolphin window for the displayed location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1609
+msgid "New _Tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1610
+msgid "Open another tab for the displayed location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1612
+msgid "Close _All Windows"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1613
+msgid "Close all Navigation windows"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1615 src/nolphin-window-menus.c:1749
+msgid "_Back"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1616 src/nolphin-window-menus.c:1751
+msgid "Go to the previous visited location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1618 src/nolphin-window-menus.c:1765
+msgid "_Forward"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1619 src/nolphin-window-menus.c:1767
+msgid "Go to the next visited location"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1621
+msgid "Toggle _Location Entry"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1622
+msgid "Switch between location entry and breadcrumbs"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1624
+msgid "S_witch to Other Pane"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1625
+msgid "Move focus to the other pane in a split view window"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1627
+msgid "Sa_me Location as Other Pane"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1628
+msgid "Go to the same location as in the extra pane"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1631
+msgid "Add a bookmark for the current location to this menu"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1633
+msgid "_Edit Bookmarks..."
+msgstr ""
+
+#: src/nolphin-window-menus.c:1634
+msgid "Display a window that allows editing the bookmarks in this menu"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1636
+msgid "_Previous Tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1637
+msgid "Activate previous tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1639
+msgid "_Next Tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1640
+msgid "Activate next tab"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1642 src/nolphin-window-pane.c:537
+msgid "Move Tab _Left"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1643
+msgid "Move current tab to left"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1645 src/nolphin-window-pane.c:545
+msgid "Move Tab _Right"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1646
+msgid "Move current tab to right"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1648
+msgid "Sidebar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1649
+msgid "Toolbar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1654
+msgid "Show _Hidden Files"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1655
+msgid "Toggle the display of hidden files in the current window"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1659
+msgid "_Main Toolbar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1660
+msgid "Change the visibility of this window's main toolbar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1664
+msgid "_Show Sidebar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1665
+msgid "Change the visibility of this window's side pane"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1669
+msgid "St_atusbar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1670
+msgid "Change the visibility of this window's statusbar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1674
+msgid "M_enubar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1675
+msgid "Change the default visibility of the menubar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1679
+msgid "_Search for Files..."
+msgstr ""
+
+#: src/nolphin-window-menus.c:1680 src/nolphin-window-menus.c:1909
+msgid "Search documents and folders"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1684
+msgid "E_xtra Pane"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1685 src/nolphin-window-menus.c:1931
+msgid "Open an extra folder view side-by-side"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1689
+msgid "_Terminal"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1690
+msgid "Open an integrated terminal in the current directory"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1694
+msgid "Info & Pre_view"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1695
+msgid "Show information and a preview for the selected file"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1699
+msgid "Show _Thumbnails"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1700
+msgid "Toggle the display of thumbnails in the current directory"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1707
+msgid "Places"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1707
+msgid "Select Places as the default sidebar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1710
+msgid "Tree"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1710
+msgid "Select Tree as the default sidebar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1728
+msgid "Path Bar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1728
+msgid "Always prefer the path bar"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1731
+msgid "Location Entry"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1731
+msgid "Always prefer the location entry"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1752
+msgid "Back history"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1768 src/nolphin-window-menus.c:1787
+msgid "Forward history"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1784 src/nolphin-window-menus.c:2076
+msgid "_Up"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1786
+msgid "Go to parent folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1815
+msgid "Go to home directory"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1829
+msgid "Go to Computer"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1841
+msgid "Toggle Location Entry"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1853
+msgid "New folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1854
+msgid "Create a new folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1864
+msgid "Open a terminal in the active folder"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1874
+msgid "Icons"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1885
+msgid "List"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1897
+msgid "Compact"
+msgstr ""
+
+#: src/nolphin-window-menus.c:1918 src/nolphin-window-menus.c:1919
+msgid "Show Thumbnails"
+msgstr ""
+
+#: src/nolphin-window-menus.c:2082
+msgid "_Location"
+msgstr ""
+
+#: src/nolphin-window-pane.c:520
+msgid "_New Tab"
+msgstr ""
+
+#: src/nolphin-window-pane.c:556
+msgid "_Close Tab"
+msgstr ""
+
+#: src/nolphin-window-slot.c:346
+msgid "No matching files"
+msgstr ""
+
+#: src/nolphin-window-slot.c:445
+msgid "No files found"
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:97
+msgid "These files are on an Audio CD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:99
+msgid "These files are on an Audio DVD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:101
+msgid "These files are on a Video DVD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:103
+msgid "These files are on a Video CD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:105
+msgid "These files are on a Super Video CD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:107
+msgid "These files are on a Photo CD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:109
+msgid "These files are on a Picture CD."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:111
+msgid "The media contains digital photos."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:113
+msgid "These files are on a digital audio player."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:115
+msgid "The media contains software."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:118
+#, c-format
+msgid "The media has been detected as \"%s\"."
+msgstr ""
+
+#: src/nolphin-x-content-bar.c:143
+#, c-format
+msgid "Open %s"
+msgstr ""
