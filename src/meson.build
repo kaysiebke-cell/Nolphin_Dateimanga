@@ -74,6 +74,7 @@ nolphinCommon_sources = [
   'nolphin-window-menus.c',
   'nolphin-window-pane.c',
   'nolphin-terminal.c',
+  'nolphin-preview.c',
   'nolphin-window-slot-dnd.c',
   'nolphin-window-slot.c',
   'nolphin-window.c',

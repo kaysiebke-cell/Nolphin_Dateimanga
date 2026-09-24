@@ -105,6 +105,8 @@ typedef enum
 #define NOLPHIN_PREFERENCES_SHOW_LIST_VIEW_ICON_TOOLBAR   "show-list-view-icon-toolbar"
 #define NOLPHIN_PREFERENCES_SHOW_COMPACT_VIEW_ICON_TOOLBAR   "show-compact-view-icon-toolbar"
 #define NOLPHIN_PREFERENCES_SHOW_ROOT_WARNING                "show-root-warning"
+#define NOLPHIN_PREFERENCES_PREVIEW_ENABLED                  "preview-enabled"
+#define NOLPHIN_PREFERENCES_PREVIEW_MAX_FILE_SIZE            "preview-max-file-size"
 #define NOLPHIN_PREFERENCES_SHOW_SHOW_THUMBNAILS_TOOLBAR     "show-show-thumbnails-toolbar"
 #define NOLPHIN_PREFERENCES_SHOW_TOGGLE_EXTRA_PANE_TOOLBAR "show-toggle-extra-pane-toolbar"
 
@@ -113,6 +115,8 @@ typedef enum
 #define NOLPHIN_WINDOW_STATE_START_WITH_SIDEBAR		"start-with-sidebar"
 #define NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL		"start-with-terminal"
 #define NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT			"terminal-height"
+#define NOLPHIN_WINDOW_STATE_START_WITH_PREVIEW		"start-with-preview"
+#define NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH			"preview-width"
 #define NOLPHIN_WINDOW_STATE_START_WITH_TOOLBAR		"start-with-toolbar"
 #define NOLPHIN_WINDOW_STATE_START_WITH_MENU_BAR           "start-with-menu-bar"
 #define NOLPHIN_WINDOW_STATE_SIDE_PANE_VIEW                    "side-pane-view"

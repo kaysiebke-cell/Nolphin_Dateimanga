@@ -162,6 +162,11 @@ void     nolphin_window_set_show_terminal    (NolphinWindow *window,
 gboolean nolphin_window_terminal_showing     (NolphinWindow *window);
 void     nolphin_window_sync_terminal_location (NolphinWindow *window);
 
+void     nolphin_window_set_show_preview     (NolphinWindow *window,
+                                               gboolean        show);
+gboolean nolphin_window_preview_showing      (NolphinWindow *window);
+void     nolphin_window_sync_preview_selection (NolphinWindow *window);
+
 gboolean nolphin_window_disable_chrome_mapping (GValue *value,
                                                  GVariant *variant,
                                                  gpointer user_data);

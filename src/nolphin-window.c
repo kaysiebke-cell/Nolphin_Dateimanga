@@ -46,6 +46,7 @@
 #include "nolphin-window-slot.h"
 #include "nolphin-window-menus.h"
 #include "nolphin-terminal.h"
+#include "nolphin-preview.h"
 #include "nolphin-icon-view.h"
 #include "nolphin-list-view.h"
 #include "nolphin-statusbar.h"
@@ -432,6 +433,54 @@ terminal_size_allocate_callback (GtkWidget *widget,
 		g_timeout_add (100, save_terminal_height_cb, window);
 }
 
+static gboolean
+save_preview_width_cb (gpointer user_data)
+{
+	NolphinWindow *window = user_data;
+	gint total, position, width;
+
+	window->details->preview_width_handler_id = 0;
+
+	/* Mirrors save_terminal_height_cb: "position" is pack1's (the
+	 * file-view side's) extent, so the preview panel's own width is
+	 * total - position. */
+	total = gtk_widget_get_allocated_width (window->details->preview_hpaned);
+	position = gtk_paned_get_position (GTK_PANED (window->details->preview_hpaned));
+	width = total - position;
+
+	if (width <= 1 || total <= 1) {
+		return FALSE;
+	}
+
+	DEBUG ("Saving preview panel width: %d", width);
+
+	g_settings_set_int (nolphin_window_state,
+			    NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH,
+			    width);
+
+	return FALSE;
+}
+
+static void
+preview_size_allocate_callback (GtkWidget *widget,
+				GtkAllocation *allocation,
+				gpointer user_data)
+{
+	NolphinWindow *window = user_data;
+
+	if (!gtk_widget_get_visible (widget)) {
+		return;
+	}
+
+	if (window->details->preview_width_handler_id != 0) {
+		g_source_remove (window->details->preview_width_handler_id);
+		window->details->preview_width_handler_id = 0;
+	}
+
+	window->details->preview_width_handler_id =
+		g_timeout_add (100, save_preview_width_cb, window);
+}
+
 /* side pane helpers */
 static void
 side_pane_size_allocate_callback (GtkWidget *widget,
@@ -761,7 +810,21 @@ nolphin_window_constructed (GObject *self)
 	gtk_box_pack_start (GTK_BOX (vbox), window->details->terminal_vpaned, TRUE, TRUE, 0);
 	gtk_widget_show (window->details->terminal_vpaned);
 
-	gtk_paned_pack1 (GTK_PANED (window->details->terminal_vpaned), hpaned, TRUE, FALSE);
+	/* info/preview panel (F11): file view (incl. split view) on the
+	 * left, panel on the right. This whole thing becomes pack1 of
+	 * terminal_vpaned, so the terminal spans beneath both. */
+	window->details->preview_hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+	gtk_widget_show (window->details->preview_hpaned);
+	gtk_paned_pack1 (GTK_PANED (window->details->preview_hpaned), hpaned, TRUE, FALSE);
+
+	window->details->preview = nolphin_preview_new ();
+	gtk_paned_pack2 (GTK_PANED (window->details->preview_hpaned), window->details->preview, FALSE, TRUE);
+	window->details->show_preview = FALSE;
+
+	g_signal_connect (window->details->preview, "size-allocate",
+			  G_CALLBACK (preview_size_allocate_callback), window);
+
+	gtk_paned_pack1 (GTK_PANED (window->details->terminal_vpaned), window->details->preview_hpaned, TRUE, FALSE);
 
 	window->details->terminal = nolphin_terminal_new ();
 	gtk_paned_pack2 (GTK_PANED (window->details->terminal_vpaned), window->details->terminal, FALSE, TRUE);
@@ -823,6 +886,10 @@ nolphin_window_constructed (GObject *self)
 	nolphin_window_set_show_terminal (window,
 					  g_settings_get_boolean (nolphin_window_state,
 								   NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL));
+
+	nolphin_window_set_show_preview (window,
+					 g_settings_get_boolean (nolphin_window_state,
+								  NOLPHIN_WINDOW_STATE_START_WITH_PREVIEW));
 
 	side_pane_id_changed (window);
 
@@ -1660,10 +1727,16 @@ nolphin_window_connect_content_view (NolphinWindow *window,
 			  G_CALLBACK (zoom_level_changed_callback),
 			  window);
 
+	g_signal_connect_swapped (view, "selection-changed",
+				  G_CALLBACK (nolphin_window_sync_preview_selection),
+				  window);
+
     /* Update displayed the selected view type in the toolbar and menu. */
     if (slot->pending_location == NULL) {
         nolphin_window_sync_view_type (window);
     }
+
+	nolphin_window_sync_preview_selection (window);
 
 	nolphin_view_grab_focus (view);
 }
@@ -1684,6 +1757,7 @@ nolphin_window_disconnect_content_view (NolphinWindow *window,
 	}
 
 	g_signal_handlers_disconnect_by_func (view, G_CALLBACK (zoom_level_changed_callback), window);
+	g_signal_handlers_disconnect_by_func (view, G_CALLBACK (nolphin_window_sync_preview_selection), window);
 }
 
 /**
@@ -2703,6 +2777,75 @@ nolphin_window_sync_terminal_location (NolphinWindow *window)
 
 	nolphin_terminal_set_location (NOLPHIN_TERMINAL (window->details->terminal), location);
 	g_object_unref (location);
+}
+
+void
+nolphin_window_set_show_preview (NolphinWindow *window,
+				 gboolean        show)
+{
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (show == window->details->show_preview) {
+		return;
+	}
+
+	window->details->show_preview = show;
+
+	if (show) {
+		gint total, wanted_width;
+
+		total = gtk_widget_get_allocated_width (window->details->preview_hpaned);
+		if (total > 1) {
+			wanted_width = g_settings_get_int (nolphin_window_state,
+							   NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH);
+			gtk_paned_set_position (GTK_PANED (window->details->preview_hpaned),
+						MAX (total - wanted_width, 1));
+		}
+
+		gtk_widget_show (window->details->preview);
+		nolphin_window_sync_preview_selection (window);
+	} else {
+		gtk_widget_hide (window->details->preview);
+		nolphin_preview_clear (NOLPHIN_PREVIEW (window->details->preview));
+	}
+
+	g_settings_set_boolean (nolphin_window_state,
+				NOLPHIN_WINDOW_STATE_START_WITH_PREVIEW,
+				show);
+}
+
+gboolean
+nolphin_window_preview_showing (NolphinWindow *window)
+{
+	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), FALSE);
+
+	return window->details->show_preview;
+}
+
+void
+nolphin_window_sync_preview_selection (NolphinWindow *window)
+{
+	NolphinWindowSlot *slot;
+	NolphinView *view;
+	GList *selection;
+
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (!window->details->show_preview) {
+		return;
+	}
+
+	slot = nolphin_window_get_active_slot (window);
+	if (slot == NULL || slot->content_view == NULL) {
+		nolphin_preview_clear (NOLPHIN_PREVIEW (window->details->preview));
+		return;
+	}
+
+	view = NOLPHIN_VIEW (slot->content_view);
+	selection = nolphin_view_get_selection (view);
+	nolphin_preview_set_selection (NOLPHIN_PREVIEW (window->details->preview),
+				       selection, nolphin_view_get_directory_as_file (view));
+	nolphin_file_list_free (selection);
 }
 
 void

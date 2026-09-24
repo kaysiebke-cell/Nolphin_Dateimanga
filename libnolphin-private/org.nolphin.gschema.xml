@@ -79,6 +79,16 @@
   </schema>
 
   <schema id="org.nolphin.preferences" path="/org/nolphin/preferences/" gettext-domain="nolphin">
+    <key name="preview-enabled" type="b">
+      <default>true</default>
+      <summary>Enable file previews in the info panel</summary>
+      <description>If set to false, the F11 info panel shows metadata only, without attempting to load an image preview.</description>
+    </key>
+    <key name="preview-max-file-size" type="x">
+      <default>104857600</default>
+      <summary>Maximum file size for previews, in bytes</summary>
+      <description>Files larger than this are shown with a generic icon instead of a decoded preview, to avoid a slow synchronous decode. Default is 100 MB.</description>
+    </key>
     <key name="tabs-open-position" enum="org.nolphin.TabPosition">
       <aliases>
 	<alias value='after_current_tab' target='after-current-tab'/>
@@ -678,6 +688,16 @@
       <default>200</default>
       <summary>Height of the terminal panel</summary>
       <description>The default height in pixels of the integrated terminal panel.</description>
+    </key>
+    <key name="start-with-preview" type="b">
+      <default>false</default>
+      <summary>Show the info/preview panel in new windows</summary>
+      <description>If set to true, newly opened windows will have the F11 info/preview panel visible.</description>
+    </key>
+    <key name="preview-width" type="i">
+      <default>250</default>
+      <summary>Width of the info/preview panel</summary>
+      <description>The default width in pixels of the F11 info/preview panel.</description>
     </key>
     <key name="start-with-menu-bar" type="b">
       <default>true</default>

@@ -1543,6 +1543,7 @@ update_for_new_location (NolphinWindowSlot *slot)
         nolphin_window_sync_thumbnail_action(window);
         nolphin_window_sync_create_folder_button (window);
         nolphin_window_sync_terminal_location (window);
+        nolphin_window_sync_preview_selection (window);
 
 		/* Load menus from nolphin extensions for this location */
 		nolphin_window_load_extension_menus (window);

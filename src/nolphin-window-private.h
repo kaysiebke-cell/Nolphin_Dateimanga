@@ -101,6 +101,12 @@ struct NolphinWindowDetails
         gboolean show_terminal;
         guint terminal_height_handler_id;
 
+        /* info/preview panel (F11) */
+        GtkWidget *preview_hpaned;
+        GtkWidget *preview;
+        gboolean show_preview;
+        guint preview_width_handler_id;
+
         // A closed pane's location, valid until the remaining pane
         // location changes.
         GFile *secondary_pane_last_location;

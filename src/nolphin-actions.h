@@ -47,6 +47,7 @@
 #define NOLPHIN_ACTION_SHOW_HIDE_LOCATION_BAR "Show Hide Location Bar"
 #define NOLPHIN_ACTION_SHOW_HIDE_EXTRA_PANE "Show Hide Extra Pane"
 #define NOLPHIN_ACTION_SHOW_HIDE_TERMINAL "Show Hide Terminal"
+#define NOLPHIN_ACTION_SHOW_HIDE_PREVIEW "Show Hide Preview"
 #define NOLPHIN_ACTION_GO_TO_BURN_CD "Go to Burn CD"
 #define NOLPHIN_ACTION_EDIT_LOCATION "Edit Location"
 #define NOLPHIN_ACTION_COMPACT_VIEW "CompactView"
