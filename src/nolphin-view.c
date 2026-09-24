@@ -31,6 +31,7 @@
 
 #include "nolphin-view.h"
 #include "nolphin-application.h"
+#include "nolphin-window.h"
 
 #include "nolphin-actions.h"
 #include "nolphin-desktop-icon-view.h"
@@ -1223,20 +1224,21 @@ nolphin_view_preview_files (NolphinView *view,
 			     GList *files,
 			     GArray *locations)
 {
-	NolphinPreviewer *previewer;
-	gchar *uri;
-	guint xid;
+	/* §10/§28: Leertaste blendet die Vorschau der Auswahl im F11-
+	 * Informationsbereich ein/aus - nicht mehr den externen D-Bus-
+	 * Previewer. Der Panel-Inhalt selbst folgt der Auswahl bereits
+	 * automatisch (nolphin_window_sync_preview_selection(), verdrahtet
+	 * über das "selection-changed"-Signal), daher genügt hier ein
+	 * reines Sichtbarkeits-Toggle. */
 	GtkWidget *toplevel;
 
-	previewer = nolphin_previewer_get_singleton ();
-	uri = nolphin_file_get_uri (files->data);
 	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
 
-    xid = eel_gtk_get_window_xid (GTK_WINDOW (toplevel));
+	if (NOLPHIN_IS_WINDOW (toplevel)) {
+		NolphinWindow *window = NOLPHIN_WINDOW (toplevel);
 
-	nolphin_previewer_call_show_file (previewer, uri, xid, TRUE);
-
-	g_free (uri);
+		nolphin_window_set_show_preview (window, !nolphin_window_preview_showing (window));
+	}
 }
 
 void

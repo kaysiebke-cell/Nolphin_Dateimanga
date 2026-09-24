@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Nolphin (Test-Build)
+Comment=Lokaler Entwicklungs-Build – noch nicht systemweit installiert
+Exec=env GSETTINGS_SCHEMA_DIR="/home/kaysiebke/Dropbox/Desktop/Nemo projeckt/nolphin/build/schemas" "/home/kaysiebke/Dropbox/Desktop/Nemo projeckt/nolphin/build/nolphin" %f
+Icon=/home/kaysiebke/Dropbox/Desktop/Nemo projeckt/nolphin/data/icons/org.nolphin.FileManager.svg
+Terminal=false
+Categories=System;FileTools;FileManager;
