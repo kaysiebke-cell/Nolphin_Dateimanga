@@ -79,7 +79,6 @@
 #define NOLPHIN_ACTION_OTHER_APPLICATION2 "OtherApplication2"
 #define NOLPHIN_ACTION_NEW_FOLDER "New Folder"
 #define NOLPHIN_ACTION_PROPERTIES "Properties"
-#define NOLPHIN_ACTION_PROPERTIES_ACCEL "PropertiesAccel"
 #define NOLPHIN_ACTION_LOCATION_PROPERTIES "LocationProperties"
 #define NOLPHIN_ACTION_NO_TEMPLATES "No Templates"
 #define NOLPHIN_ACTION_EMPTY_TRASH "Empty Trash"

@@ -10243,11 +10243,6 @@ real_update_menus (NolphinView *view)
 	gtk_action_set_visible (action, show_properties);
 
 	action = gtk_action_group_get_action (view->details->dir_action_group,
-					      NOLPHIN_ACTION_PROPERTIES_ACCEL);
-
-	gtk_action_set_sensitive (action, show_properties);
-
-	action = gtk_action_group_get_action (view->details->dir_action_group,
 					      NOLPHIN_ACTION_EMPTY_TRASH);
 	g_object_set (action,
 		      "label", _("E_mpty Trash"),
