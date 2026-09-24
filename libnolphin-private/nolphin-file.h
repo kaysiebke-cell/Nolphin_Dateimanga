@@ -458,6 +458,24 @@ int                     nolphin_file_compare_for_sort_by_attribute_q   (NolphinF
 gboolean                nolphin_file_is_date_sort_attribute_q          (GQuark                          attribute);
 gboolean                nolphin_file_attribute_slow_sort               (const gchar                    *sort_attribute);
 
+/* §16 Gruppierung. @group_type restricts to the four criteria the
+ * contract actually asks for (name/size/type/mtime) - any other
+ * NolphinFileSortType is not a valid grouping criterion and will
+ * assert. nolphin_file_get_group_key() returns a newly-allocated,
+ * human-readable label for the group @file belongs to (candidate
+ * text for a future group header row); nolphin_file_compare_for_group()
+ * gives a stable ordering between the GROUPS themselves (not the
+ * files within a group), so a caller can sort by (group order, then
+ * the normal sort attribute) to get a grouped, still fully sorted,
+ * list. Bucket boundaries (date/size ranges) are not specified by
+ * the contract and are this implementation's own reasonable choice. */
+gboolean                nolphin_file_sort_type_is_valid_group_type      (NolphinFileSortType             group_type);
+char *                  nolphin_file_get_group_key                     (NolphinFile                   *file,
+									 NolphinFileSortType             group_type);
+int                     nolphin_file_compare_for_group                 (NolphinFile                   *file_1,
+									 NolphinFile                   *file_2,
+									 NolphinFileSortType             group_type);
+
 int                     nolphin_file_compare_display_name              (NolphinFile                   *file_1,
 									 const char                     *pattern);
 int                     nolphin_file_compare_location                  (NolphinFile                    *file_1,

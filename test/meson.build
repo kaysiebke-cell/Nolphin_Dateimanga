@@ -53,3 +53,12 @@ test('Recursive ownership test',
   ),
   args: []
 )
+
+test('Grouping test',
+  executable('test-nolphin-grouping',
+    [ 'test-nolphin-grouping.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

@@ -3644,6 +3644,253 @@ nolphin_file_compare_for_sort_by_attribute     (NolphinFile                   *f
                                   search_dir);
 }
 
+/* ---- §16 Gruppierung ---- */
+
+gboolean
+nolphin_file_sort_type_is_valid_group_type (NolphinFileSortType group_type)
+{
+	switch (group_type) {
+	case NOLPHIN_FILE_SORT_BY_DISPLAY_NAME:
+	case NOLPHIN_FILE_SORT_BY_SIZE:
+	case NOLPHIN_FILE_SORT_BY_TYPE:
+	case NOLPHIN_FILE_SORT_BY_MTIME:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
+/* Groups by first letter (upper-cased) of the display name, with two
+ * catch-all buckets: "#" for names that don't start with a letter or
+ * digit, and "0-9" for names that start with a digit. @out_order is
+ * only meaningful for those two catch-alls (0 and 1); letter buckets
+ * all share order 2 and are then distinguished from each other by a
+ * plain string comparison of the label itself. */
+static char *
+group_key_for_name (NolphinFile *file, int *out_order)
+{
+	const char *name;
+	gunichar first;
+
+	name = nolphin_file_peek_display_name (file);
+
+	if (name == NULL || name[0] == '\0') {
+		*out_order = 0;
+		return g_strdup ("#");
+	}
+
+	first = g_utf8_get_char_validated (name, -1);
+
+	if (first == (gunichar) -1 || first == (gunichar) -2) {
+		*out_order = 0;
+		return g_strdup ("#");
+	}
+
+	if (g_unichar_isdigit (first)) {
+		*out_order = 1;
+		return g_strdup ("0-9");
+	}
+
+	if (g_unichar_isalpha (first)) {
+		gunichar upper;
+		char buf[6];
+		int len;
+
+		upper = g_unichar_toupper (first);
+		len = g_unichar_to_utf8 (upper, buf);
+		buf[len] = '\0';
+
+		*out_order = 2;
+		return g_strdup (buf);
+	}
+
+	*out_order = 0;
+	return g_strdup ("#");
+}
+
+static char *
+group_key_for_type (NolphinFile *file, int *out_order)
+{
+	if (nolphin_file_is_directory (file)) {
+		*out_order = 0;
+		return g_strdup (_("Folders"));
+	}
+
+	*out_order = 1;
+	return nolphin_file_get_type_as_string (file);
+}
+
+static char *
+group_key_for_size (NolphinFile *file, int *out_order)
+{
+	goffset size;
+
+	if (nolphin_file_is_directory (file)) {
+		*out_order = 0;
+		return g_strdup (_("Folders"));
+	}
+
+	size = nolphin_file_get_size (file);
+
+	if (size < 0) {
+		*out_order = 5;
+		return g_strdup (_("Unknown size"));
+	}
+	if (size < 100 * 1024) {
+		*out_order = 1;
+		return g_strdup (_("Tiny (under 100 KB)"));
+	}
+	if (size < 10 * 1024 * 1024) {
+		*out_order = 2;
+		return g_strdup (_("Small (under 10 MB)"));
+	}
+	if (size < 1024 * 1024 * 1024) {
+		*out_order = 3;
+		return g_strdup (_("Medium (under 1 GB)"));
+	}
+	*out_order = 4;
+	return g_strdup (_("Large (1 GB or more)"));
+}
+
+/* Day-granularity difference between @mtime's local calendar day and
+ * today's local calendar day, in whole days. May be off by one around
+ * a DST transition - acceptable for a UX grouping bucket, not exact
+ * date arithmetic. */
+static long
+days_before_today (time_t mtime)
+{
+	time_t now;
+	struct tm tm_now;
+	struct tm tm_file;
+	time_t midnight_now;
+	time_t midnight_file;
+
+	now = time (NULL);
+	localtime_r (&now, &tm_now);
+	localtime_r (&mtime, &tm_file);
+
+	tm_now.tm_hour = 0;
+	tm_now.tm_min = 0;
+	tm_now.tm_sec = 0;
+	midnight_now = mktime (&tm_now);
+
+	tm_file.tm_hour = 0;
+	tm_file.tm_min = 0;
+	tm_file.tm_sec = 0;
+	midnight_file = mktime (&tm_file);
+
+	return (long) ((midnight_now - midnight_file) / 86400);
+}
+
+static char *
+group_key_for_mtime (NolphinFile *file, int *out_order)
+{
+	time_t mtime;
+	long diff_days;
+	struct tm tm_now;
+	struct tm tm_file;
+	time_t now;
+
+	mtime = nolphin_file_get_mtime (file);
+
+	if (mtime <= 0) {
+		*out_order = 6;
+		return g_strdup (_("Unknown date"));
+	}
+
+	diff_days = days_before_today (mtime);
+
+	if (diff_days < 0) {
+		/* File modified "in the future" (clock skew, restored
+		 * backup, ...) - treat like today rather than inventing
+		 * a separate bucket for it. */
+		diff_days = 0;
+	}
+
+	if (diff_days == 0) {
+		*out_order = 0;
+		return g_strdup (_("Today"));
+	}
+	if (diff_days == 1) {
+		*out_order = 1;
+		return g_strdup (_("Yesterday"));
+	}
+	if (diff_days <= 7) {
+		*out_order = 2;
+		return g_strdup (_("This week"));
+	}
+
+	now = time (NULL);
+	localtime_r (&now, &tm_now);
+	localtime_r (&mtime, &tm_file);
+
+	if (tm_now.tm_year == tm_file.tm_year && tm_now.tm_mon == tm_file.tm_mon) {
+		*out_order = 3;
+		return g_strdup (_("This month"));
+	}
+	if (tm_now.tm_year == tm_file.tm_year) {
+		*out_order = 4;
+		return g_strdup (_("This year"));
+	}
+
+	*out_order = 5;
+	return g_strdup (_("Older"));
+}
+
+static char *
+group_key_for_type_internal (NolphinFile *file, NolphinFileSortType group_type, int *out_order)
+{
+	switch (group_type) {
+	case NOLPHIN_FILE_SORT_BY_DISPLAY_NAME:
+		return group_key_for_name (file, out_order);
+	case NOLPHIN_FILE_SORT_BY_SIZE:
+		return group_key_for_size (file, out_order);
+	case NOLPHIN_FILE_SORT_BY_TYPE:
+		return group_key_for_type (file, out_order);
+	case NOLPHIN_FILE_SORT_BY_MTIME:
+		return group_key_for_mtime (file, out_order);
+	default:
+		g_return_val_if_reached (NULL);
+	}
+}
+
+char *
+nolphin_file_get_group_key (NolphinFile *file, NolphinFileSortType group_type)
+{
+	int order;
+
+	g_return_val_if_fail (nolphin_file_sort_type_is_valid_group_type (group_type), NULL);
+
+	return group_key_for_type_internal (file, group_type, &order);
+}
+
+int
+nolphin_file_compare_for_group (NolphinFile *file_1, NolphinFile *file_2, NolphinFileSortType group_type)
+{
+	char *key_1, *key_2;
+	int order_1, order_2;
+	int result;
+
+	g_return_val_if_fail (nolphin_file_sort_type_is_valid_group_type (group_type), 0);
+
+	if (file_1 == file_2) {
+		return 0;
+	}
+
+	key_1 = group_key_for_type_internal (file_1, group_type, &order_1);
+	key_2 = group_key_for_type_internal (file_2, group_type, &order_2);
+
+	if (order_1 != order_2) {
+		result = (order_1 < order_2) ? -1 : 1;
+	} else {
+		result = g_utf8_collate (key_1, key_2);
+	}
+
+	g_free (key_1);
+	g_free (key_2);
+
+	return result;
+}
 
 /**
  * nolphin_file_compare_name:
