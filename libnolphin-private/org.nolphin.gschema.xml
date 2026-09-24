@@ -690,7 +690,7 @@
       <description>The default height in pixels of the integrated terminal panel.</description>
     </key>
     <key name="start-with-preview" type="b">
-      <default>false</default>
+      <default>true</default>
       <summary>Show the info/preview panel in new windows</summary>
       <description>If set to true, newly opened windows will have the F11 info/preview panel visible.</description>
     </key>
