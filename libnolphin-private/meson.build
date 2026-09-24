@@ -126,3 +126,10 @@ nolphin_private = declare_dependency(
 install_data('org.nolphin.gschema.xml',
     install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
 )
+
+# Compiles org.nolphin.gschema.xml into build/libnolphin-private/
+# gschemas.compiled on every build (independent of `ninja install`),
+# so an uninstalled/dev binary can run with
+# GSETTINGS_SCHEMA_DIR=<builddir>/libnolphin-private instead of
+# requiring root to install the schema system-wide first.
+gnome.compile_schemas(depend_files: files('org.nolphin.gschema.xml'))
