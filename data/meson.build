@@ -4,7 +4,7 @@
 desktopFiles = [
   'nolphin-autorun-software.desktop',
   'nolphin-autostart.desktop',
-  'nolphin.desktop',
+  'org.nolphin.FileManager.desktop',
 ]
 
 install_data(desktopFiles,

@@ -259,7 +259,7 @@ filter_nolphin_handler (GList *apps)
 		id = g_app_info_get_id (application);
 		if (id != NULL &&
 		    strcmp (id,
-			    "nolphin.desktop") == 0) {
+			    "org.nolphin.FileManager.desktop") == 0) {
 			g_object_unref (application);
 			apps = g_list_delete_link (apps, l);
 		}

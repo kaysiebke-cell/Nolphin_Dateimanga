@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Files
+Name=Nolphin
 Name[am]=ፋይሎች
 Name[ar]=الملفات
 Name[be]=Файлы
@@ -122,7 +122,7 @@ Comment[zh_CN]=访问和组织文件
 Comment[zh_HK]=存取與組織檔案
 Comment[zh_TW]=存取並組織檔案
 Exec=nolphin %U
-Icon=system-file-manager
+Icon=nolphin
 # Translators: these are keywords of the file manager
 Keywords=folders;filesystem;explorer;
 Terminal=false
