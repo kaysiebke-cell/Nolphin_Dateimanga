@@ -101,6 +101,22 @@ void nolphin_file_set_permissions_recursive (const char                     *dir
 					      NolphinOpCallback              callback,
 					      gpointer                        callback_data);
 
+/* §26 rekursive Besitzer-/Gruppenaenderung. @directory is a URI, like
+ * nolphin_file_set_permissions_recursive() above. Callers resolve a
+ * user/group NAME to a numeric id themselves (getpwnam()/getgrnam(),
+ * or reuse the resolution nolphin_file_set_owner()/_set_group() do
+ * for the single-file case) - these two take the id directly rather
+ * than duplicating that lookup here. No undo support (see comment at
+ * the SetOwnershipJob struct in the .c file for why). */
+void nolphin_file_set_owner_recursive (const char             *directory,
+					guint32                 new_uid,
+					NolphinOpCallback       callback,
+					gpointer                callback_data);
+void nolphin_file_set_group_recursive (const char             *directory,
+					guint32                 new_gid,
+					NolphinOpCallback       callback,
+					gpointer                callback_data);
+
 void nolphin_file_operations_unmount_mount (GtkWindow                      *parent_window,
 					     GMount                         *mount,
 					     gboolean                        eject,

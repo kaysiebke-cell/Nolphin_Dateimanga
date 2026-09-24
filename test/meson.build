@@ -44,3 +44,12 @@ test('CAD test',
   ),
   args: []
 )
+
+test('Recursive ownership test',
+  executable('test-nolphin-ownership',
+    [ 'test-nolphin-ownership.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

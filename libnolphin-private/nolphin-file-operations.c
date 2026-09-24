@@ -172,6 +172,31 @@ typedef struct {
 	guint32 dir_mask;
 } SetPermissionsJob;
 
+/* §26 "rekursive Berechtigungen" (Besitzer/Gruppe). No undo support
+ * here, unlike the chmod-recursive job above - §19's minimum list of
+ * operations that must have real undo (Umbenennen/Verschieben/
+ * Kopieren/In Papierkorb/Ordner erstellen) does not include
+ * permission/ownership changes, and a whole new
+ * NolphinFileUndoInfoRecOwnership class would be a separate, larger
+ * addition. Documented scope reduction, not a silent omission. */
+typedef struct {
+	CommonJob common;
+	GFile *file;
+	const char *attribute; /* G_FILE_ATTRIBUTE_UNIX_UID or _GID, static string */
+	guint32 new_id;
+	NolphinOpCallback done_callback;
+	gpointer done_callback_data;
+	/* §39.3 "keine Fake-Erfolgsmeldungen": recursive chown commonly
+	 * fails everywhere at once for a non-root user (only root, or the
+	 * file's own owner for the group case, may change it at all) - so
+	 * unlike chmod, per-file failures here are tracked and do make
+	 * the overall job report failure, rather than "ignore and keep
+	 * going" silently turning "changed nothing" into "success". */
+	gboolean any_failure;
+	guint successful_count;
+	guint failed_count;
+} SetOwnershipJob;
+
 typedef struct {
 	int num_files;
 	goffset num_bytes;
@@ -6234,6 +6259,145 @@ nolphin_file_set_permissions_recursive (const char *directory,
     generate_initial_job_details (job->common.progress, OP_KIND_PERMISSIONS, NULL, job->file);
 
     add_job_to_job_queue (set_permissions_job, job, job->common.cancellable, job->common.progress, OP_KIND_PERMISSIONS);
+}
+
+static void
+set_ownership_file (SetOwnershipJob *job, GFile *file, GFileInfo *info)
+{
+	CommonJob *common;
+	GFileInfo *child_info;
+	gboolean free_info;
+	GFileEnumerator *enumerator;
+	GFile *child;
+
+	common = (CommonJob *) job;
+
+	nolphin_progress_info_pulse_progress (common->progress);
+
+	free_info = FALSE;
+	if (info == NULL) {
+		free_info = TRUE;
+		info = g_file_query_info (file,
+					  G_FILE_ATTRIBUTE_STANDARD_TYPE,
+					  G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+					  common->cancellable, NULL);
+		if (info == NULL) {
+			return;
+		}
+	}
+
+	if (!job_aborted (common)) {
+		GError *attr_error = NULL;
+
+		if (g_file_set_attribute_uint32 (file, job->attribute, job->new_id,
+						 G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+						 common->cancellable, &attr_error)) {
+			job->successful_count++;
+		} else {
+			/* Keep walking the rest of the tree (matches
+			 * "chown -R" itself: it doesn't stop at the first
+			 * failure either) but remember that something
+			 * failed, so the final result isn't reported as an
+			 * unqualified success - see the "any_failure"
+			 * comment on the struct. */
+			job->any_failure = TRUE;
+			job->failed_count++;
+			g_clear_error (&attr_error);
+		}
+	}
+
+	if (!job_aborted (common) && g_file_info_get_file_type (info) == G_FILE_TYPE_DIRECTORY) {
+		enumerator = g_file_enumerate_children (file,
+							G_FILE_ATTRIBUTE_STANDARD_NAME","
+							G_FILE_ATTRIBUTE_STANDARD_TYPE,
+							G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+							common->cancellable, NULL);
+		if (enumerator) {
+			while (!job_aborted (common) &&
+			       (child_info = g_file_enumerator_next_file (enumerator, common->cancellable, NULL)) != NULL) {
+				child = g_file_get_child (file, g_file_info_get_name (child_info));
+				set_ownership_file (job, child, child_info);
+				g_object_unref (child);
+				g_object_unref (child_info);
+			}
+			g_file_enumerator_close (enumerator, common->cancellable, NULL);
+			g_object_unref (enumerator);
+		}
+	}
+	if (free_info) {
+		g_object_unref (info);
+	}
+}
+
+static gboolean
+set_ownership_job_done (gpointer user_data)
+{
+	SetOwnershipJob *job = user_data;
+	gboolean success = !job_aborted ((CommonJob *) job) && !job->any_failure;
+
+	if (job->any_failure) {
+		g_debug ("Recursive ownership change: %u succeeded, %u failed (%s)",
+			job->successful_count, job->failed_count, job->attribute);
+	}
+
+	if (job->done_callback) {
+		job->done_callback (success, job->done_callback_data);
+	}
+
+	finalize_common ((CommonJob *) job);
+	return FALSE;
+}
+
+static gboolean
+set_ownership_job (GIOSchedulerJob *io_job, GCancellable *cancellable, gpointer user_data)
+{
+	SetOwnershipJob *job = user_data;
+	CommonJob *common = (CommonJob *) job;
+
+	common->io_job = io_job;
+
+	nolphin_progress_info_set_status (common->progress,
+					  g_strcmp0 (job->attribute, G_FILE_ATTRIBUTE_UNIX_UID) == 0 ?
+					  _("Setting owner") : _("Setting group"));
+	nolphin_progress_info_start (common->progress);
+
+	set_ownership_file (job, job->file, NULL);
+
+	g_io_scheduler_job_send_to_mainloop_async (io_job, set_ownership_job_done, job, NULL);
+
+	return FALSE;
+}
+
+static void
+set_ownership_recursive (const char *directory, const char *attribute, guint32 new_id,
+			 NolphinOpCallback callback, gpointer callback_data)
+{
+	SetOwnershipJob *job;
+
+	job = op_job_new (SetOwnershipJob, NULL);
+	job->file = g_file_new_for_uri (directory);
+	job->attribute = attribute;
+	job->new_id = new_id;
+	job->done_callback = callback;
+	job->done_callback_data = callback_data;
+
+    generate_initial_job_details (job->common.progress, OP_KIND_PERMISSIONS, NULL, job->file);
+
+    add_job_to_job_queue (set_ownership_job, job, job->common.cancellable, job->common.progress, OP_KIND_PERMISSIONS);
+}
+
+void
+nolphin_file_set_owner_recursive (const char *directory, guint32 new_uid,
+				  NolphinOpCallback callback, gpointer callback_data)
+{
+	set_ownership_recursive (directory, G_FILE_ATTRIBUTE_UNIX_UID, new_uid, callback, callback_data);
+}
+
+void
+nolphin_file_set_group_recursive (const char *directory, guint32 new_gid,
+				  NolphinOpCallback callback, gpointer callback_data)
+{
+	set_ownership_recursive (directory, G_FILE_ATTRIBUTE_UNIX_GID, new_gid, callback, callback_data);
 }
 
 static GList *
