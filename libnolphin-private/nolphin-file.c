@@ -7695,12 +7695,6 @@ nolphin_file_get_emblem_icons (NolphinFile *file,
 	keywords = nolphin_file_get_keywords (file);
 	keywords = prepend_automatic_keywords (file, view_file, keywords);
 
-    if (view_file && nolphin_file_can_write (view_file)) {
-        if (!nolphin_file_can_write (file) && !nolphin_file_is_in_trash (file)) {
-            keywords = g_list_prepend (keywords, g_strdup (NOLPHIN_FILE_EMBLEM_NAME_CANT_WRITE));
-        }
-    }
-
 	icons = NULL;
 	for (l = keywords; l != NULL; l = l->next) {
 		keyword = l->data;
