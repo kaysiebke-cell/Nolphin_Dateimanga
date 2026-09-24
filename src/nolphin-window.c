@@ -2706,6 +2706,31 @@ nolphin_window_split_view_showing (NolphinWindow *window)
 	return g_list_length (NOLPHIN_WINDOW (window)->details->panes) > 1;
 }
 
+/* Shift+F3 ("horizontale Teilung" per spec, i.e. panes stacked top/bottom -
+ * which is GTK_ORIENTATION_VERTICAL for a GtkPaned, since GTK names paned
+ * orientation after the child-arrangement axis, not the divider line).
+ * F3 ("vertikale Teilung", panes side-by-side) remains the on/off toggle
+ * regardless of orientation; this just ensures the split is showing and
+ * stacked, re-orienting an already-open side-by-side split in place rather
+ * than opening a third pane - true recursive N-way nesting is not yet
+ * implemented. */
+void
+nolphin_window_split_view_toggle_horizontal (NolphinWindow *window)
+{
+	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
+
+	if (!nolphin_window_split_view_showing (window)) {
+		gtk_orientable_set_orientation (GTK_ORIENTABLE (window->details->split_view_hpane),
+						GTK_ORIENTATION_VERTICAL);
+		nolphin_window_split_view_on (window);
+	} else {
+		gtk_orientable_set_orientation (GTK_ORIENTABLE (window->details->split_view_hpane),
+						GTK_ORIENTATION_VERTICAL);
+	}
+
+	nolphin_window_update_show_hide_ui_elements (window);
+}
+
 void
 nolphin_window_set_show_terminal (NolphinWindow *window,
 				  gboolean        show)

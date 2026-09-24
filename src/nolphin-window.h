@@ -156,6 +156,7 @@ void     nolphin_window_back_or_forward      (NolphinWindow *window,
 void     nolphin_window_split_view_on        (NolphinWindow *window);
 void     nolphin_window_split_view_off       (NolphinWindow *window);
 gboolean nolphin_window_split_view_showing   (NolphinWindow *window);
+void     nolphin_window_split_view_toggle_horizontal (NolphinWindow *window);
 
 void     nolphin_window_set_show_terminal    (NolphinWindow *window,
                                                gboolean        show);

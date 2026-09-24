@@ -648,6 +648,11 @@ action_split_view_callback (GtkAction *action,
 		NolphinWindowSlot *slot;
 
 		if (is_active) {
+			/* F3 always means side-by-side ("vertikale Teilung"),
+			 * regardless of what orientation a previous Shift+F3
+			 * left the paned in. */
+			gtk_orientable_set_orientation (GTK_ORIENTABLE (window->details->split_view_hpane),
+							GTK_ORIENTATION_HORIZONTAL);
 			nolphin_window_split_view_on (window);
 		} else {
 			nolphin_window_split_view_off (window);
@@ -698,6 +703,17 @@ action_show_hide_preview_callback (GtkAction *action,
 	if (is_active != nolphin_window_preview_showing (window)) {
 		nolphin_window_set_show_preview (window, is_active);
 	}
+}
+
+static void
+action_split_view_horizontal_callback (GtkAction *action,
+				       gpointer   user_data)
+{
+	if (NOLPHIN_IS_DESKTOP_WINDOW (user_data)) {
+		return;
+	}
+
+	nolphin_window_split_view_toggle_horizontal (NOLPHIN_WINDOW (user_data));
 }
 
 static void
@@ -1446,6 +1462,10 @@ static const GtkActionEntry main_entries[] = {
                                  N_("Prefere_nces"),
                                  NULL, N_("Edit Nolphin preferences"),
                                  G_CALLBACK (action_preferences_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_SPLIT_VIEW_HORIZONTAL, NULL,
+  /* label, accelerator */       N_("Split View _Horizontally"), "<shift>F3",
+  /* tooltip */                  N_("Open an extra folder view stacked below (or re-orient an open extra pane)"),
+                                 G_CALLBACK (action_split_view_horizontal_callback) },
 #ifdef TEXT_CHANGE_UNDO
   /* name, stock id, label */  { "Undo", NULL, N_("_Undo"),
                                  "<control>Z", N_("Undo the last text change"),
