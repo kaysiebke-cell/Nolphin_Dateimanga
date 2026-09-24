@@ -1665,6 +1665,29 @@ nolphin_directory_match_pattern (NolphinDirectory *directory, const char *patter
 	return ret;
 }
 
+GList *
+nolphin_directory_match_type_category (NolphinDirectory *directory, NolphinFileTypeCategory category)
+{
+	GList *files, *l, *ret;
+
+	ret = NULL;
+
+	files = nolphin_directory_get_file_list (directory);
+	for (l = files; l; l = l->next) {
+		NolphinFile *file;
+
+		file = NOLPHIN_FILE (l->data);
+
+		if (nolphin_file_matches_type_category (file, category)) {
+			ret = g_list_prepend (ret, nolphin_file_ref (file));
+		}
+	}
+
+	nolphin_file_list_free (files);
+
+	return ret;
+}
+
 /**
  * nolphin_directory_list_ref
  *

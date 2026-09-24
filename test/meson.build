@@ -62,3 +62,12 @@ test('Grouping test',
   ),
   args: []
 )
+
+test('Type selection test',
+  executable('test-nolphin-type-selection',
+    [ 'test-nolphin-type-selection.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

@@ -1822,6 +1822,113 @@ action_select_pattern_callback (GtkAction *action,
 	select_pattern(callback_data);
 }
 
+/* §17 "Auswahl nach Dateityp" */
+
+static const NolphinFileTypeCategory select_type_categories[] = {
+	NOLPHIN_FILE_TYPE_CATEGORY_FOLDER,
+	NOLPHIN_FILE_TYPE_CATEGORY_IMAGE,
+	NOLPHIN_FILE_TYPE_CATEGORY_VIDEO,
+	NOLPHIN_FILE_TYPE_CATEGORY_AUDIO,
+	NOLPHIN_FILE_TYPE_CATEGORY_TEXT,
+	NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE,
+	NOLPHIN_FILE_TYPE_CATEGORY_OTHER
+};
+
+static void
+type_select_response_cb (GtkWidget *dialog, int response, gpointer user_data)
+{
+	NolphinView *view;
+	NolphinDirectory *directory;
+	GtkWidget *combo;
+	GList *selection;
+	int active;
+
+	view = NOLPHIN_VIEW (user_data);
+
+	if (response == GTK_RESPONSE_OK) {
+		combo = g_object_get_data (G_OBJECT (dialog), "combo");
+		active = gtk_combo_box_get_active (GTK_COMBO_BOX (combo));
+
+		if (active >= 0 && active < (int) G_N_ELEMENTS (select_type_categories)) {
+			directory = nolphin_view_get_model (view);
+			selection = nolphin_directory_match_type_category (directory,
+									     select_type_categories[active]);
+
+			if (selection) {
+				nolphin_view_call_set_selection (view, selection);
+				nolphin_file_list_free (selection);
+
+				nolphin_view_reveal_selection (view);
+			}
+		}
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+select_type (NolphinView *view)
+{
+	GtkWidget *dialog;
+	GtkWidget *label;
+	GtkWidget *combo;
+	GtkWidget *grid;
+	guint i;
+
+	dialog = gtk_dialog_new_with_buttons (_("Select Items By Type"),
+					      nolphin_view_get_containing_window (view),
+					      GTK_DIALOG_DESTROY_WITH_PARENT,
+					      GTK_STOCK_CANCEL,
+					      GTK_RESPONSE_CANCEL,
+					      GTK_STOCK_OK,
+					      GTK_RESPONSE_OK,
+					      NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+					 GTK_RESPONSE_OK);
+	gtk_container_set_border_width (GTK_CONTAINER (dialog), 5);
+
+	label = gtk_label_new_with_mnemonic (_("_Type:"));
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+
+	combo = gtk_combo_box_text_new ();
+	for (i = 0; i < G_N_ELEMENTS (select_type_categories); i++) {
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo),
+						nolphin_file_type_category_get_label (select_type_categories[i]));
+	}
+	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+	gtk_widget_set_hexpand (combo, TRUE);
+
+	grid = gtk_grid_new ();
+	g_object_set (grid,
+		      "orientation", GTK_ORIENTATION_VERTICAL,
+		      "border-width", 6,
+		      "row-spacing", 6,
+		      "column-spacing", 12,
+		      NULL);
+
+	gtk_container_add (GTK_CONTAINER (grid), label);
+	gtk_grid_attach_next_to (GTK_GRID (grid), combo, label,
+				 GTK_POS_RIGHT, 1, 1);
+
+	gtk_label_set_mnemonic_widget (GTK_LABEL (label), combo);
+	gtk_widget_show_all (grid);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
+	g_object_set_data (G_OBJECT (dialog), "combo", combo);
+	g_signal_connect (dialog, "response",
+			  G_CALLBACK (type_select_response_cb),
+			  view);
+	gtk_widget_show_all (dialog);
+}
+
+static void
+action_select_type_callback (GtkAction *action,
+			     gpointer callback_data)
+{
+	g_assert (NOLPHIN_IS_VIEW (callback_data));
+
+	select_type (callback_data);
+}
+
 static void
 action_reset_to_defaults_callback (GtkAction *action,
 				   gpointer callback_data)
@@ -8652,6 +8759,10 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Select I_tems Matching..."), "<control>S",
   /* tooltip */                  N_("Select items in this window matching a given pattern"),
 				 G_CALLBACK (action_select_pattern_callback) },
+  /* name, stock id */         { "Select Type", NULL,
+  /* label, accelerator */       N_("Select By _Type..."), NULL,
+  /* tooltip */                  N_("Select items in this window belonging to a given file type category"),
+				 G_CALLBACK (action_select_type_callback) },
   /* name, stock id */         { "Invert Selection", NULL,
   /* label, accelerator */       N_("_Invert Selection"), "<control><shift>I",
   /* tooltip */                  N_("Select all and only the items that are not currently selected"),

@@ -33,6 +33,7 @@
 #include "nolphin-desktop-icon-file.h"
 #include "nolphin-file-attributes.h"
 #include "nolphin-file-private.h"
+#include "nolphin-archive.h"
 #include "nolphin-file-operations.h"
 #include "nolphin-file-utilities.h"
 #include "nolphin-global-preferences.h"
@@ -3889,6 +3890,93 @@ nolphin_file_compare_for_group (NolphinFile *file_1, NolphinFile *file_2, Nolphi
 	g_free (key_1);
 	g_free (key_2);
 
+	return result;
+}
+
+/* ---- §17 Auswahl nach Dateityp ---- */
+
+const char *
+nolphin_file_type_category_get_label (NolphinFileTypeCategory category)
+{
+	switch (category) {
+	case NOLPHIN_FILE_TYPE_CATEGORY_FOLDER:
+		return _("Folders");
+	case NOLPHIN_FILE_TYPE_CATEGORY_IMAGE:
+		return _("Images");
+	case NOLPHIN_FILE_TYPE_CATEGORY_VIDEO:
+		return _("Videos");
+	case NOLPHIN_FILE_TYPE_CATEGORY_AUDIO:
+		return _("Audio");
+	case NOLPHIN_FILE_TYPE_CATEGORY_TEXT:
+		return _("Text files");
+	case NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE:
+		return _("Archives");
+	case NOLPHIN_FILE_TYPE_CATEGORY_OTHER:
+	default:
+		return _("Other");
+	}
+}
+
+gboolean
+nolphin_file_matches_type_category (NolphinFile *file, NolphinFileTypeCategory category)
+{
+	char *mime_type;
+	gboolean result;
+
+	g_return_val_if_fail (NOLPHIN_IS_FILE (file), FALSE);
+
+	if (category == NOLPHIN_FILE_TYPE_CATEGORY_FOLDER) {
+		return nolphin_file_is_directory (file);
+	}
+
+	if (nolphin_file_is_directory (file)) {
+		/* A directory can only ever match the FOLDER category
+		 * above - none of the content-based categories apply. */
+		return FALSE;
+	}
+
+	if (category == NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE) {
+		GFile *location;
+		NolphinArchiveFormat format;
+
+		location = nolphin_file_get_location (file);
+		format = nolphin_archive_detect_format (location);
+		g_object_unref (location);
+
+		return format != NOLPHIN_ARCHIVE_FORMAT_UNKNOWN;
+	}
+
+	mime_type = nolphin_file_get_mime_type (file);
+	if (mime_type == NULL) {
+		return FALSE;
+	}
+
+	switch (category) {
+	case NOLPHIN_FILE_TYPE_CATEGORY_IMAGE:
+		result = g_str_has_prefix (mime_type, "image/");
+		break;
+	case NOLPHIN_FILE_TYPE_CATEGORY_VIDEO:
+		result = g_str_has_prefix (mime_type, "video/");
+		break;
+	case NOLPHIN_FILE_TYPE_CATEGORY_AUDIO:
+		result = g_str_has_prefix (mime_type, "audio/");
+		break;
+	case NOLPHIN_FILE_TYPE_CATEGORY_TEXT:
+		result = g_str_has_prefix (mime_type, "text/");
+		break;
+	case NOLPHIN_FILE_TYPE_CATEGORY_OTHER:
+		result = !g_str_has_prefix (mime_type, "image/") &&
+			 !g_str_has_prefix (mime_type, "video/") &&
+			 !g_str_has_prefix (mime_type, "audio/") &&
+			 !g_str_has_prefix (mime_type, "text/") &&
+			 !nolphin_file_matches_type_category (file, NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE);
+		break;
+	default:
+		result = FALSE;
+		break;
+	}
+
+	g_free (mime_type);
 	return result;
 }
 

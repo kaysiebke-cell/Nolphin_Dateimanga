@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <gio/gio.h>
 #include <libnolphin-private/nolphin-file-attributes.h>
+#include <libnolphin-private/nolphin-file.h>
 
 /* NolphinDirectory is a class that manages the model for a directory,
    real or virtual, for Nolphin, mainly the file-manager component. The directory is
@@ -205,6 +206,11 @@ GList *            nolphin_directory_get_file_list            (NolphinDirectory 
 
 GList *            nolphin_directory_match_pattern            (NolphinDirectory         *directory,
 							        const char *glob);
+
+/* §17 "Auswahl nach Dateityp" - see NolphinFileTypeCategory in
+ * nolphin-file.h for what counts as a match. */
+GList *            nolphin_directory_match_type_category       (NolphinDirectory         *directory,
+							        NolphinFileTypeCategory    category);
 
 
 /* Return true if the directory has information about all the files.

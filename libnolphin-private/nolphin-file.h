@@ -476,6 +476,29 @@ int                     nolphin_file_compare_for_group                 (NolphinF
 									 NolphinFile                   *file_2,
 									 NolphinFileSortType             group_type);
 
+/* §17 AUSWAHL: "Auswahl nach Dateityp". Coarse, MIME-prefix-based
+ * categories - a file can match more than one caller-relevant
+ * category conceptually (e.g. a .txt is both TEXT and, loosely,
+ * a "document"), so this only exposes the small set of unambiguous
+ * buckets: a file's mime type either starts with "image/"/"video/"/
+ * "audio/"/"text/", is a directory, is a recognized archive
+ * (reuses nolphin_archive_detect_format() from nolphin-archive.h),
+ * or falls into OTHER. Not an attempt at a complete freedesktop.org
+ * MIME taxonomy - deliberately kept small and unambiguous. */
+typedef enum {
+	NOLPHIN_FILE_TYPE_CATEGORY_FOLDER,
+	NOLPHIN_FILE_TYPE_CATEGORY_IMAGE,
+	NOLPHIN_FILE_TYPE_CATEGORY_VIDEO,
+	NOLPHIN_FILE_TYPE_CATEGORY_AUDIO,
+	NOLPHIN_FILE_TYPE_CATEGORY_TEXT,
+	NOLPHIN_FILE_TYPE_CATEGORY_ARCHIVE,
+	NOLPHIN_FILE_TYPE_CATEGORY_OTHER
+} NolphinFileTypeCategory;
+
+const char *            nolphin_file_type_category_get_label           (NolphinFileTypeCategory         category);
+gboolean                nolphin_file_matches_type_category              (NolphinFile                   *file,
+									 NolphinFileTypeCategory         category);
+
 int                     nolphin_file_compare_display_name              (NolphinFile                   *file_1,
 									 const char                     *pattern);
 int                     nolphin_file_compare_location                  (NolphinFile                    *file_1,
