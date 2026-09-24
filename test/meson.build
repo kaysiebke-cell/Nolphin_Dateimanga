@@ -26,3 +26,12 @@ test('Copy test',
   ),
   args: []
 )
+
+test('Archive test',
+  executable('test-nolphin-archive',
+    [ 'test-nolphin-archive.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

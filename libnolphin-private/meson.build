@@ -10,6 +10,7 @@ nolphin_private_sources = [
   dbusBuiltSources,
   'nolphin-action-manager.c',
   'nolphin-action.c',
+  'nolphin-archive.c',
   'nolphin-bookmark.c',
   'nolphin-cell-renderer-disk.c',
   'nolphin-centered-placement-grid.c',
