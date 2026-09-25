@@ -77,6 +77,7 @@
 #include <libnolphin-private/nolphin-file-dnd.h>
 #include <libnolphin-private/nolphin-file-operations.h>
 #include <libnolphin-private/nolphin-archive.h>
+#include <libnolphin-private/nolphin-checksum.h>
 #include <libnolphin-private/nolphin-file-utilities.h>
 #include <libnolphin-private/nolphin-malloc-utils.h>
 #include <libnolphin-private/fzy-match.h>
@@ -7684,6 +7685,194 @@ action_test_archive_callback (GtkAction *action,
     nolphin_file_list_free (selection);
 }
 
+/* §39: Prüfsummen - berechnen und mit einem eingegebenen Wert vergleichen. */
+
+typedef struct {
+    GFile *file;
+    GtkWidget *type_combo;
+    GtkWidget *compute_button;
+    GtkWidget *spinner;
+    GtkWidget *result_entry;
+    GtkWidget *expected_entry;
+    GtkWidget *match_label;
+    NolphinChecksumType shown_types[5];
+    guint shown_count;
+} ChecksumDialogData;
+
+static void
+checksum_dialog_data_free (ChecksumDialogData *data)
+{
+    g_clear_object (&data->file);
+    g_free (data);
+}
+
+static void
+checksum_update_match_label (ChecksumDialogData *data)
+{
+    const gchar *result = gtk_entry_get_text (GTK_ENTRY (data->result_entry));
+    const gchar *expected = gtk_entry_get_text (GTK_ENTRY (data->expected_entry));
+
+    if (result[0] == '\0' || expected[0] == '\0') {
+        gtk_label_set_text (GTK_LABEL (data->match_label), "");
+        return;
+    }
+
+    if (nolphin_checksum_matches (result, expected)) {
+        gtk_label_set_markup (GTK_LABEL (data->match_label),
+                              _("<span foreground=\"#2ecc71\">Stimmt überein</span>"));
+    } else {
+        gtk_label_set_markup (GTK_LABEL (data->match_label),
+                              _("<span foreground=\"#e74c3c\">Stimmt nicht überein</span>"));
+    }
+}
+
+static void
+checksum_expected_changed_cb (GtkEditable *editable, gpointer user_data)
+{
+    checksum_update_match_label (user_data);
+}
+
+static void
+checksum_compute_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    ChecksumDialogData *data = user_data;
+    GError *error = NULL;
+    gchar *digest;
+
+    gtk_spinner_stop (GTK_SPINNER (data->spinner));
+    gtk_widget_hide (data->spinner);
+    gtk_widget_set_sensitive (data->compute_button, TRUE);
+
+    digest = nolphin_checksum_compute_finish (result, &error);
+    if (digest == NULL) {
+        gtk_entry_set_text (GTK_ENTRY (data->result_entry), "");
+        gtk_label_set_text (GTK_LABEL (data->match_label),
+                            error ? error->message : _("Unbekannter Fehler"));
+        g_clear_error (&error);
+        return;
+    }
+
+    gtk_entry_set_text (GTK_ENTRY (data->result_entry), digest);
+    g_free (digest);
+
+    checksum_update_match_label (data);
+}
+
+static void
+checksum_compute_clicked_cb (GtkButton *button, gpointer user_data)
+{
+    ChecksumDialogData *data = user_data;
+    gint active;
+    NolphinChecksumType type;
+
+    active = gtk_combo_box_get_active (GTK_COMBO_BOX (data->type_combo));
+    if (active < 0 || (guint) active >= data->shown_count) {
+        return;
+    }
+    type = data->shown_types[active];
+
+    gtk_entry_set_text (GTK_ENTRY (data->result_entry), "");
+    gtk_label_set_text (GTK_LABEL (data->match_label), "");
+    gtk_widget_set_sensitive (data->compute_button, FALSE);
+    gtk_widget_show (data->spinner);
+    gtk_spinner_start (GTK_SPINNER (data->spinner));
+
+    nolphin_checksum_compute_async (data->file, type, NULL, checksum_compute_ready_cb, data);
+}
+
+static void
+checksum_dialog_response_cb (GtkDialog *dialog, int response, gpointer user_data)
+{
+    gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+action_compute_checksum_callback (GtkAction *action,
+                                  gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    ChecksumDialogData *data;
+    GtkWidget *dialog, *grid, *label, *hbox;
+    static const NolphinChecksumType all_types[] = {
+        NOLPHIN_CHECKSUM_MD5, NOLPHIN_CHECKSUM_SHA1, NOLPHIN_CHECKSUM_SHA256,
+        NOLPHIN_CHECKSUM_SHA512, NOLPHIN_CHECKSUM_BLAKE2
+    };
+    guint i;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (g_list_length (selection) != 1 || nolphin_file_is_directory (NOLPHIN_FILE (selection->data))) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    data = g_new0 (ChecksumDialogData, 1);
+    data->file = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
+    nolphin_file_list_free (selection);
+
+    dialog = gtk_dialog_new_with_buttons (_("Prüfsumme berechnen"),
+                                          nolphin_view_get_containing_window (view),
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
+                                          NULL);
+    g_object_set_data_full (G_OBJECT (dialog), "checksum-data", data,
+                            (GDestroyNotify) checksum_dialog_data_free);
+
+    grid = gtk_grid_new ();
+    g_object_set (grid, "border-width", 12, "row-spacing", 8, "column-spacing", 12, NULL);
+
+    label = gtk_label_new (_("Algorithmus:"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+
+    data->type_combo = gtk_combo_box_text_new ();
+    for (i = 0; i < G_N_ELEMENTS (all_types); i++) {
+        if (nolphin_checksum_type_is_available (all_types[i])) {
+            gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (data->type_combo),
+                                            nolphin_checksum_type_get_label (all_types[i]));
+            data->shown_types[data->shown_count++] = all_types[i];
+        }
+    }
+    gtk_combo_box_set_active (GTK_COMBO_BOX (data->type_combo), 0);
+    gtk_widget_set_hexpand (data->type_combo, TRUE);
+    gtk_grid_attach (GTK_GRID (grid), data->type_combo, 1, 0, 1, 1);
+
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+    data->compute_button = gtk_button_new_with_label (_("Berechnen"));
+    data->spinner = gtk_spinner_new ();
+    gtk_box_pack_start (GTK_BOX (hbox), data->compute_button, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox), data->spinner, FALSE, FALSE, 0);
+    gtk_grid_attach (GTK_GRID (grid), hbox, 1, 1, 1, 1);
+
+    label = gtk_label_new (_("Ergebnis:"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
+    data->result_entry = gtk_entry_new ();
+    gtk_editable_set_editable (GTK_EDITABLE (data->result_entry), FALSE);
+    gtk_entry_set_width_chars (GTK_ENTRY (data->result_entry), 40);
+    gtk_grid_attach (GTK_GRID (grid), data->result_entry, 1, 2, 1, 1);
+
+    label = gtk_label_new (_("Vergleichswert:"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
+    data->expected_entry = gtk_entry_new ();
+    gtk_grid_attach (GTK_GRID (grid), data->expected_entry, 1, 3, 1, 1);
+
+    data->match_label = gtk_label_new ("");
+    gtk_grid_attach (GTK_GRID (grid), data->match_label, 1, 4, 1, 1);
+
+    g_signal_connect (data->compute_button, "clicked", G_CALLBACK (checksum_compute_clicked_cb), data);
+    g_signal_connect (data->expected_entry, "changed", G_CALLBACK (checksum_expected_changed_cb), data);
+    g_signal_connect (dialog, "response", G_CALLBACK (checksum_dialog_response_cb), NULL);
+
+    gtk_widget_show_all (grid);
+    gtk_widget_hide (data->spinner);
+    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
+    gtk_widget_show (dialog);
+}
+
 static void
 action_open_containing_folder_callback (GtkAction *action,
                                         gpointer callback_data)
@@ -8713,6 +8902,10 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Archiv _prüfen"), NULL,
   /* tooltip */                  N_("Das Archiv auf Fehler prüfen, ohne es zu entpacken"),
                  G_CALLBACK (action_test_archive_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_CHECKSUM, NULL,
+  /* label, accelerator */       N_("Prüfsumme _berechnen …"), NULL,
+  /* tooltip */                  N_("Eine Prüfsumme der Datei berechnen und mit einem Vergleichswert abgleichen"),
+                 G_CALLBACK (action_compute_checksum_callback) },
   /* name, stock id */         { "OtherApplication1", NULL,
   /* label, accelerator */       N_("Andere _Anwendung …"), NULL,
   /* tooltip */                  N_("Eine andere Anwendung auswählen, mit der das gewählte Objekt geöffnet werden soll"),
@@ -10475,6 +10668,12 @@ real_update_menus (NolphinView *view)
                                               NOLPHIN_ACTION_TEST_ARCHIVE);
         gtk_action_set_visible (action, is_archive);
     }
+
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_CHECKSUM);
+    gtk_action_set_visible (action,
+                            selection_count == 1 &&
+                            !nolphin_file_is_directory (NOLPHIN_FILE (selection->data)));
 
     action = gtk_action_group_get_action (view->details->dir_action_group,
                                           NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER);

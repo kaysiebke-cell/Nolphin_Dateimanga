@@ -157,6 +157,7 @@
 #define NOLPHIN_ACTION_COMPRESS "Compress"
 #define NOLPHIN_ACTION_EXTRACT_HERE "ExtractHere"
 #define NOLPHIN_ACTION_TEST_ARCHIVE "TestArchive"
+#define NOLPHIN_ACTION_CHECKSUM "ComputeChecksum"
 
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 

@@ -15,6 +15,7 @@ nolphin_private_sources = [
   'nolphin-cad.c',
   'nolphin-cell-renderer-disk.c',
   'nolphin-centered-placement-grid.c',
+  'nolphin-checksum.c',
   'nolphin-clipboard-monitor.c',
   'nolphin-clipboard.c',
   'nolphin-column-chooser.c',

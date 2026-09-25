@@ -71,3 +71,12 @@ test('Type selection test',
   ),
   args: []
 )
+
+test('Checksum test',
+  executable('test-nolphin-checksum',
+    [ 'test-nolphin-checksum.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

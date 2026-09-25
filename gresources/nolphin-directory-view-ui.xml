@@ -218,6 +218,8 @@
 	<menuitem name="Compress" action="Compress"/>
 	<menuitem name="ExtractHere" action="ExtractHere"/>
 	<menuitem name="TestArchive" action="TestArchive"/>
+	<separator name="Checksum separator"/>
+	<menuitem name="ComputeChecksum" action="ComputeChecksum"/>
 	<separator name="Dangerous separator"/>
 	<placeholder name="Dangerous File Actions">
 		<menuitem name="Trash" action="Trash"/>
