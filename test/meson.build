@@ -98,3 +98,12 @@ test('ACL test',
   ),
   args: []
 )
+
+test('Git test',
+  executable('test-nolphin-git',
+    [ 'test-nolphin-git.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

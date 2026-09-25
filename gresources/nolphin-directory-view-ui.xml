@@ -223,6 +223,20 @@
 	<menuitem name="Encrypt" action="Encrypt"/>
 	<menuitem name="Decrypt" action="Decrypt"/>
 	<menuitem name="EditAcl" action="EditAcl"/>
+	<separator name="Git separator"/>
+	<menu action="GitMenu">
+		<menuitem name="GitStatus" action="GitStatus"/>
+		<menuitem name="GitAdd" action="GitAdd"/>
+		<menuitem name="GitCommit" action="GitCommit"/>
+		<separator/>
+		<menuitem name="GitPull" action="GitPull"/>
+		<menuitem name="GitPush" action="GitPush"/>
+		<separator/>
+		<menuitem name="GitLog" action="GitLog"/>
+		<menuitem name="GitDiff" action="GitDiff"/>
+		<separator/>
+		<menuitem name="GitRemoteAdd" action="GitRemoteAdd"/>
+	</menu>
 	<separator name="Dangerous separator"/>
 	<placeholder name="Dangerous File Actions">
 		<menuitem name="Trash" action="Trash"/>

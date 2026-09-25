@@ -161,6 +161,15 @@
 #define NOLPHIN_ACTION_ENCRYPT "Encrypt"
 #define NOLPHIN_ACTION_DECRYPT "Decrypt"
 #define NOLPHIN_ACTION_EDIT_ACL "EditAcl"
+#define NOLPHIN_ACTION_GIT_MENU "GitMenu"
+#define NOLPHIN_ACTION_GIT_STATUS "GitStatus"
+#define NOLPHIN_ACTION_GIT_ADD "GitAdd"
+#define NOLPHIN_ACTION_GIT_COMMIT "GitCommit"
+#define NOLPHIN_ACTION_GIT_PULL "GitPull"
+#define NOLPHIN_ACTION_GIT_PUSH "GitPush"
+#define NOLPHIN_ACTION_GIT_LOG "GitLog"
+#define NOLPHIN_ACTION_GIT_DIFF "GitDiff"
+#define NOLPHIN_ACTION_GIT_REMOTE_ADD "GitRemoteAdd"
 
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 

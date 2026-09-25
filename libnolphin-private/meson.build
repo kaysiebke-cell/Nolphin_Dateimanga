@@ -47,6 +47,7 @@ nolphin_private_sources = [
   'nolphin-file-undo-operations.c',
   'nolphin-file-utilities.c',
   'nolphin-file.c',
+  'nolphin-git.c',
   'nolphin-global-preferences.c',
   'nolphin-icon-canvas-item.c',
   'nolphin-icon-container.c',
