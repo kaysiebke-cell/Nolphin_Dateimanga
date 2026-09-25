@@ -17,6 +17,7 @@ nolphin_private_sources = [
   'nolphin-centered-placement-grid.c',
   'nolphin-checksum.c',
   'nolphin-clipboard-monitor.c',
+  'nolphin-encryption.c',
   'nolphin-clipboard.c',
   'nolphin-column-chooser.c',
   'nolphin-column-utilities.c',

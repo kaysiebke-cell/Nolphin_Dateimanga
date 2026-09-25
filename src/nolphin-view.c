@@ -78,6 +78,7 @@
 #include <libnolphin-private/nolphin-file-operations.h>
 #include <libnolphin-private/nolphin-archive.h>
 #include <libnolphin-private/nolphin-checksum.h>
+#include <libnolphin-private/nolphin-encryption.h>
 #include <libnolphin-private/nolphin-file-utilities.h>
 #include <libnolphin-private/nolphin-malloc-utils.h>
 #include <libnolphin-private/fzy-match.h>
@@ -7873,6 +7874,309 @@ action_compute_checksum_callback (GtkAction *action,
     gtk_widget_show (dialog);
 }
 
+/* §39: Verschlüsselung über gpg - Datei verschlüsseln/entschlüsseln,
+ * Ordner verschlüsseln (als verschlüsseltes Archiv: erst komprimieren,
+ * dann das Archiv verschlüsseln, danach das unverschlüsselte
+ * Zwischenarchiv löschen). */
+
+static gchar *
+prompt_passphrase (GtkWindow *parent, const gchar *title, gboolean confirm)
+{
+    GtkWidget *dialog, *grid, *label, *entry, *confirm_entry = NULL;
+    gchar *result = NULL;
+
+    dialog = gtk_dialog_new_with_buttons (title, parent,
+                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                          NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+    grid = gtk_grid_new ();
+    g_object_set (grid, "border-width", 12, "row-spacing", 8, "column-spacing", 12, NULL);
+
+    label = gtk_label_new (_("Passwort:"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+
+    entry = gtk_entry_new ();
+    gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+    gtk_widget_set_hexpand (entry, TRUE);
+    gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
+
+    if (confirm) {
+        label = gtk_label_new (_("Passwort bestätigen:"));
+        gtk_widget_set_halign (label, GTK_ALIGN_START);
+        gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
+
+        confirm_entry = gtk_entry_new ();
+        gtk_entry_set_visibility (GTK_ENTRY (confirm_entry), FALSE);
+        gtk_entry_set_activates_default (GTK_ENTRY (confirm_entry), TRUE);
+        gtk_grid_attach (GTK_GRID (grid), confirm_entry, 1, 1, 1, 1);
+    }
+
+    gtk_widget_show_all (grid);
+    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
+
+    while (TRUE) {
+        int response = gtk_dialog_run (GTK_DIALOG (dialog));
+        const gchar *pass;
+
+        if (response != GTK_RESPONSE_OK) {
+            break;
+        }
+
+        pass = gtk_entry_get_text (GTK_ENTRY (entry));
+        if (pass[0] == '\0') {
+            continue;
+        }
+
+        if (confirm) {
+            const gchar *pass2 = gtk_entry_get_text (GTK_ENTRY (confirm_entry));
+            if (strcmp (pass, pass2) != 0) {
+                gtk_entry_set_text (GTK_ENTRY (entry), "");
+                gtk_entry_set_text (GTK_ENTRY (confirm_entry), "");
+                gtk_widget_grab_focus (entry);
+                continue;
+            }
+        }
+
+        result = g_strdup (pass);
+        break;
+    }
+
+    gtk_widget_destroy (dialog);
+    return result;
+}
+
+static void
+send_encryption_notification (const gchar *title, gboolean success, const gchar *detail_on_error)
+{
+    send_archive_notification (title, success, detail_on_error);
+}
+
+static void
+encrypt_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_encryption_encrypt_finish (result, &error);
+
+    send_encryption_notification (_("Verschlüsseln"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+typedef struct {
+    GFile *archive_file;
+    GFile *encrypted_file;
+    gchar *passphrase;
+} EncryptFolderData;
+
+static void
+encrypt_folder_data_free (EncryptFolderData *data)
+{
+    g_clear_object (&data->archive_file);
+    g_clear_object (&data->encrypted_file);
+    g_free (data->passphrase);
+    g_free (data);
+}
+
+static void
+encrypt_folder_archive_encrypted_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    EncryptFolderData *data = user_data;
+    GError *error = NULL;
+    gboolean success = nolphin_encryption_encrypt_finish (result, &error);
+
+    /* The intermediate plaintext archive is temporary - remove it
+     * either way, it's not what the user asked to keep. */
+    g_file_delete (data->archive_file, NULL, NULL);
+
+    send_encryption_notification (_("Ordner verschlüsseln"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+
+    encrypt_folder_data_free (data);
+}
+
+static void
+encrypt_folder_compressed_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    EncryptFolderData *data = user_data;
+    GError *error = NULL;
+
+    if (!nolphin_archive_compress_finish (result, &error)) {
+        send_encryption_notification (_("Ordner verschlüsseln"), FALSE, error->message);
+        g_clear_error (&error);
+        encrypt_folder_data_free (data);
+        return;
+    }
+
+    nolphin_encryption_encrypt_async (data->archive_file, data->encrypted_file, data->passphrase,
+                                      NULL, encrypt_folder_archive_encrypted_cb, data);
+}
+
+static void
+action_encrypt_callback (GtkAction *action,
+                         gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    NolphinFile *file;
+    GFile *location, *parent;
+    gchar *display_name, *passphrase;
+    gboolean is_dir;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (g_list_length (selection) != 1) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    file = NOLPHIN_FILE (selection->data);
+    location = nolphin_file_get_location (file);
+    is_dir = nolphin_file_is_directory (file);
+    display_name = nolphin_file_get_display_name (file);
+    nolphin_file_list_free (selection);
+
+    passphrase = prompt_passphrase (nolphin_view_get_containing_window (view),
+                                    _("Verschlüsseln"), TRUE);
+    if (passphrase == NULL) {
+        g_object_unref (location);
+        g_free (display_name);
+        return;
+    }
+
+    parent = g_file_get_parent (location);
+
+    if (is_dir) {
+        GFile *archive_file;
+        GFile *encrypted_file;
+        gchar *archive_name, *encrypted_name;
+        GList *sources = g_list_prepend (NULL, location);
+        EncryptFolderData *data;
+
+        archive_name = g_strconcat (display_name, ".tar.gz", NULL);
+        archive_file = find_unique_destination (parent, archive_name, "");
+        g_free (archive_name);
+
+        encrypted_name = g_strconcat (display_name, ".tar.gz.gpg", NULL);
+        encrypted_file = find_unique_destination (parent, encrypted_name, "");
+        g_free (encrypted_name);
+
+        if (archive_file == NULL || encrypted_file == NULL) {
+            send_encryption_notification (_("Ordner verschlüsseln"), FALSE,
+                                          _("Konnte keinen eindeutigen Zieldateinamen finden."));
+            g_clear_object (&archive_file);
+            g_clear_object (&encrypted_file);
+            g_list_free (sources);
+        } else {
+            data = g_new0 (EncryptFolderData, 1);
+            data->archive_file = archive_file;
+            data->encrypted_file = encrypted_file;
+            data->passphrase = g_strdup (passphrase);
+
+            nolphin_archive_compress_async (sources, archive_file, NOLPHIN_ARCHIVE_FORMAT_TAR_GZ,
+                                            NULL, encrypt_folder_compressed_cb, data);
+            g_list_free (sources);
+        }
+    } else {
+        gchar *encrypted_name = g_strconcat (display_name, ".gpg", NULL);
+        GFile *encrypted_file = find_unique_destination (parent, encrypted_name, "");
+        g_free (encrypted_name);
+
+        if (encrypted_file == NULL) {
+            send_encryption_notification (_("Verschlüsseln"), FALSE,
+                                          _("Konnte keinen eindeutigen Zieldateinamen finden."));
+        } else {
+            nolphin_encryption_encrypt_async (location, encrypted_file, passphrase,
+                                              NULL, encrypt_finished_cb, NULL);
+            g_object_unref (encrypted_file);
+        }
+    }
+
+    g_object_unref (parent);
+    g_object_unref (location);
+    g_free (display_name);
+    /* Overwrite the passphrase in memory before freeing - it already
+     * did its job (handed to gpg via stdin), no reason to keep a
+     * readable copy in freed heap memory longer than necessary. */
+    if (passphrase != NULL) {
+        memset (passphrase, 0, strlen (passphrase));
+    }
+    g_free (passphrase);
+}
+
+static void
+decrypt_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_encryption_decrypt_finish (result, &error);
+
+    send_encryption_notification (_("Entschlüsseln"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+static void
+action_decrypt_callback (GtkAction *action,
+                         gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    GFile *location, *parent;
+    gchar *display_name, *passphrase, *dest_name;
+    GFile *dest_file;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+
+    if (g_list_length (selection) != 1) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+
+    location = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
+    display_name = nolphin_file_get_display_name (NOLPHIN_FILE (selection->data));
+    nolphin_file_list_free (selection);
+
+    if (!g_str_has_suffix (display_name, ".gpg")) {
+        g_object_unref (location);
+        g_free (display_name);
+        return;
+    }
+
+    passphrase = prompt_passphrase (nolphin_view_get_containing_window (view),
+                                    _("Entschlüsseln"), FALSE);
+    if (passphrase == NULL) {
+        g_object_unref (location);
+        g_free (display_name);
+        return;
+    }
+
+    dest_name = g_strndup (display_name, strlen (display_name) - strlen (".gpg"));
+    parent = g_file_get_parent (location);
+    dest_file = find_unique_destination (parent, dest_name, "");
+    g_free (dest_name);
+    g_object_unref (parent);
+
+    if (dest_file == NULL) {
+        send_encryption_notification (_("Entschlüsseln"), FALSE,
+                                      _("Konnte keinen eindeutigen Zieldateinamen finden."));
+    } else {
+        nolphin_encryption_decrypt_async (location, dest_file, passphrase,
+                                          NULL, decrypt_finished_cb, NULL);
+        g_object_unref (dest_file);
+    }
+
+    g_object_unref (location);
+    g_free (display_name);
+    if (passphrase != NULL) {
+        memset (passphrase, 0, strlen (passphrase));
+    }
+    g_free (passphrase);
+}
+
 static void
 action_open_containing_folder_callback (GtkAction *action,
                                         gpointer callback_data)
@@ -8906,6 +9210,14 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Prüfsumme _berechnen …"), NULL,
   /* tooltip */                  N_("Eine Prüfsumme der Datei berechnen und mit einem Vergleichswert abgleichen"),
                  G_CALLBACK (action_compute_checksum_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_ENCRYPT, NULL,
+  /* label, accelerator */       N_("_Verschlüsseln …"), NULL,
+  /* tooltip */                  N_("Datei oder Ordner mit einem Passwort verschlüsseln (gpg)"),
+                 G_CALLBACK (action_encrypt_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_DECRYPT, NULL,
+  /* label, accelerator */       N_("En_tschlüsseln …"), NULL,
+  /* tooltip */                  N_("Eine mit gpg verschlüsselte Datei entschlüsseln"),
+                 G_CALLBACK (action_decrypt_callback) },
   /* name, stock id */         { "OtherApplication1", NULL,
   /* label, accelerator */       N_("Andere _Anwendung …"), NULL,
   /* tooltip */                  N_("Eine andere Anwendung auswählen, mit der das gewählte Objekt geöffnet werden soll"),
@@ -10674,6 +10986,24 @@ real_update_menus (NolphinView *view)
     gtk_action_set_visible (action,
                             selection_count == 1 &&
                             !nolphin_file_is_directory (NOLPHIN_FILE (selection->data)));
+
+    {
+        gboolean is_gpg_file = FALSE;
+
+        action = gtk_action_group_get_action (view->details->dir_action_group,
+                                              NOLPHIN_ACTION_ENCRYPT);
+        gtk_action_set_visible (action, selection_count == 1);
+
+        if (selection_count == 1) {
+            gchar *name = nolphin_file_get_display_name (NOLPHIN_FILE (selection->data));
+            is_gpg_file = g_str_has_suffix (name, ".gpg");
+            g_free (name);
+        }
+
+        action = gtk_action_group_get_action (view->details->dir_action_group,
+                                              NOLPHIN_ACTION_DECRYPT);
+        gtk_action_set_visible (action, is_gpg_file);
+    }
 
     action = gtk_action_group_get_action (view->details->dir_action_group,
                                           NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER);

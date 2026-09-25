@@ -220,6 +220,8 @@
 	<menuitem name="TestArchive" action="TestArchive"/>
 	<separator name="Checksum separator"/>
 	<menuitem name="ComputeChecksum" action="ComputeChecksum"/>
+	<menuitem name="Encrypt" action="Encrypt"/>
+	<menuitem name="Decrypt" action="Decrypt"/>
 	<separator name="Dangerous separator"/>
 	<placeholder name="Dangerous File Actions">
 		<menuitem name="Trash" action="Trash"/>

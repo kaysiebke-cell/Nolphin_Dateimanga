@@ -80,3 +80,12 @@ test('Checksum test',
   ),
   args: []
 )
+
+test('Encryption test',
+  executable('test-nolphin-encryption',
+    [ 'test-nolphin-encryption.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

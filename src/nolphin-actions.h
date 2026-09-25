@@ -158,6 +158,8 @@
 #define NOLPHIN_ACTION_EXTRACT_HERE "ExtractHere"
 #define NOLPHIN_ACTION_TEST_ARCHIVE "TestArchive"
 #define NOLPHIN_ACTION_CHECKSUM "ComputeChecksum"
+#define NOLPHIN_ACTION_ENCRYPT "Encrypt"
+#define NOLPHIN_ACTION_DECRYPT "Decrypt"
 
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 
