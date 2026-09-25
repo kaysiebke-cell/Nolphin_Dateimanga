@@ -160,6 +160,7 @@
 #define NOLPHIN_ACTION_CHECKSUM "ComputeChecksum"
 #define NOLPHIN_ACTION_ENCRYPT "Encrypt"
 #define NOLPHIN_ACTION_DECRYPT "Decrypt"
+#define NOLPHIN_ACTION_EDIT_ACL "EditAcl"
 
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 

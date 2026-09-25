@@ -89,3 +89,12 @@ test('Encryption test',
   ),
   args: []
 )
+
+test('ACL test',
+  executable('test-nolphin-acl',
+    [ 'test-nolphin-acl.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

@@ -8,6 +8,7 @@ dbusBuiltSources = gnome.gdbus_codegen('nolphin-generated',
 
 nolphin_private_sources = [
   dbusBuiltSources,
+  'nolphin-acl.c',
   'nolphin-action-manager.c',
   'nolphin-action.c',
   'nolphin-archive.c',
