@@ -81,6 +81,7 @@
 #include <libnolphin-private/nolphin-encryption.h>
 #include <libnolphin-private/nolphin-acl.h>
 #include <libnolphin-private/nolphin-git.h>
+#include <libnolphin-private/nolphin-saved-selections.h>
 #include <libnolphin-private/nolphin-file-utilities.h>
 #include <libnolphin-private/nolphin-malloc-utils.h>
 #include <libnolphin-private/fzy-match.h>
@@ -345,6 +346,9 @@ typedef struct {
 
 /* forward declarations */
 
+static void     send_archive_notification                     (const gchar          *title,
+								gboolean              success,
+								const gchar          *detail_on_error);
 static gboolean display_selection_info_idle_callback           (gpointer              data);
 static void     nolphin_view_duplicate_selection              (NolphinView      *view,
 							        GList                *files,
@@ -1931,6 +1935,206 @@ action_select_type_callback (GtkAction *action,
 	g_assert (NOLPHIN_IS_VIEW (callback_data));
 
 	select_type (callback_data);
+}
+
+/* §19: Auswahl speichern/wiederherstellen - merkt sich die aktuelle
+ * Auswahl unter einem Namen, gebunden an den aktuellen Ordner, und
+ * kann sie später dort wiederherstellen. */
+
+static void
+save_selection_response_cb (GtkWidget *dialog, int response, gpointer user_data)
+{
+	NolphinView *view = NOLPHIN_VIEW (user_data);
+
+	if (response == GTK_RESPONSE_OK) {
+		GtkWidget *entry = g_object_get_data (G_OBJECT (dialog), "entry");
+		const gchar *name = gtk_entry_get_text (GTK_ENTRY (entry));
+
+		if (name[0] != '\0') {
+			GList *selection = nolphin_view_get_selection (view);
+
+			if (selection == NULL) {
+				GtkWidget *info = gtk_message_dialog_new (nolphin_view_get_containing_window (view),
+									   GTK_DIALOG_DESTROY_WITH_PARENT,
+									   GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+									   "%s", _("Keine Objekte ausgewählt."));
+				gtk_dialog_run (GTK_DIALOG (info));
+				gtk_widget_destroy (info);
+			} else {
+				GList *l, *basenames = NULL;
+				gchar *folder_uri;
+				GError *error = NULL;
+
+				for (l = selection; l != NULL; l = l->next) {
+					basenames = g_list_prepend (basenames, nolphin_file_get_name (NOLPHIN_FILE (l->data)));
+				}
+
+				folder_uri = nolphin_directory_get_uri (nolphin_view_get_model (view));
+
+				if (!nolphin_saved_selections_save (folder_uri, name, basenames, &error)) {
+					GtkWidget *err_dialog = gtk_message_dialog_new (nolphin_view_get_containing_window (view),
+											 GTK_DIALOG_DESTROY_WITH_PARENT,
+											 GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+											 "%s", error->message);
+					gtk_dialog_run (GTK_DIALOG (err_dialog));
+					gtk_widget_destroy (err_dialog);
+					g_clear_error (&error);
+				} else {
+					send_archive_notification (_("Auswahl speichern"), TRUE, NULL);
+				}
+
+				g_free (folder_uri);
+				g_list_free_full (basenames, g_free);
+				nolphin_file_list_free (selection);
+			}
+		}
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+action_save_selection_callback (GtkAction *action, gpointer callback_data)
+{
+	NolphinView *view = NOLPHIN_VIEW (callback_data);
+	GtkWidget *dialog, *grid, *label, *entry;
+
+	dialog = gtk_dialog_new_with_buttons (_("Auswahl speichern"),
+					      nolphin_view_get_containing_window (view),
+					      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+					      GTK_STOCK_OK, GTK_RESPONSE_OK,
+					      NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+	grid = gtk_grid_new ();
+	g_object_set (grid, "border-width", 12, "row-spacing", 8, "column-spacing", 12, NULL);
+	label = gtk_label_new (_("Name:"));
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+	entry = gtk_entry_new ();
+	gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+	gtk_widget_set_hexpand (entry, TRUE);
+	gtk_widget_set_size_request (entry, 320, -1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
+	gtk_widget_show_all (grid);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
+	g_object_set_data (G_OBJECT (dialog), "entry", entry);
+
+	g_signal_connect (dialog, "response", G_CALLBACK (save_selection_response_cb), view);
+	gtk_widget_show_all (dialog);
+}
+
+static void
+restore_selection_response_cb (GtkWidget *dialog, int response, gpointer user_data)
+{
+	NolphinView *view = NOLPHIN_VIEW (user_data);
+
+	if (response == GTK_RESPONSE_OK) {
+		GtkWidget *combo = g_object_get_data (G_OBJECT (dialog), "combo");
+		gchar *chosen_name = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT (combo));
+
+		if (chosen_name != NULL) {
+			gchar *folder_uri = nolphin_directory_get_uri (nolphin_view_get_model (view));
+			GList *basenames = nolphin_saved_selections_restore (folder_uri, chosen_name);
+
+			if (basenames == NULL) {
+				GtkWidget *info = gtk_message_dialog_new (nolphin_view_get_containing_window (view),
+									   GTK_DIALOG_DESTROY_WITH_PARENT,
+									   GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+									   "%s", _("Diese gespeicherte Auswahl konnte nicht gelesen werden."));
+				gtk_dialog_run (GTK_DIALOG (info));
+				gtk_widget_destroy (info);
+			} else {
+				NolphinDirectory *directory = nolphin_view_get_model (view);
+				GList *all_files = nolphin_directory_get_file_list (directory);
+				GList *l, *to_select = NULL;
+
+				for (l = all_files; l != NULL; l = l->next) {
+					NolphinFile *file = NOLPHIN_FILE (l->data);
+					gchar *file_name = nolphin_file_get_name (file);
+					gboolean wanted = (g_list_find_custom (basenames, file_name, (GCompareFunc) g_strcmp0) != NULL);
+					g_free (file_name);
+
+					if (wanted) {
+						to_select = g_list_prepend (to_select, nolphin_file_ref (file));
+					}
+				}
+
+				if (to_select != NULL) {
+					nolphin_view_call_set_selection (view, to_select);
+					nolphin_view_reveal_selection (view);
+				}
+
+				nolphin_file_list_free (to_select);
+				nolphin_file_list_free (all_files);
+				g_list_free_full (basenames, g_free);
+			}
+
+			g_free (folder_uri);
+			g_free (chosen_name);
+		}
+	}
+
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+action_restore_selection_callback (GtkAction *action, gpointer callback_data)
+{
+	NolphinView *view = NOLPHIN_VIEW (callback_data);
+	gchar *folder_uri;
+	GList *names, *l;
+	GtkWidget *dialog;
+
+	folder_uri = nolphin_directory_get_uri (nolphin_view_get_model (view));
+	names = nolphin_saved_selections_list_names (folder_uri);
+	g_free (folder_uri);
+
+	if (names == NULL) {
+		dialog = gtk_message_dialog_new (nolphin_view_get_containing_window (view),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+						 "%s", _("Für diesen Ordner ist keine Auswahl gespeichert."));
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+		return;
+	}
+
+	{
+		GtkWidget *grid, *label, *combo;
+
+		dialog = gtk_dialog_new_with_buttons (_("Gespeicherte Auswahl wiederherstellen"),
+						      nolphin_view_get_containing_window (view),
+						      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						      GTK_STOCK_OK, GTK_RESPONSE_OK,
+						      NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+		grid = gtk_grid_new ();
+		g_object_set (grid, "border-width", 12, "row-spacing", 8, "column-spacing", 12, NULL);
+		label = gtk_label_new (_("Gespeicherte Auswahl:"));
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+
+		combo = gtk_combo_box_text_new ();
+		for (l = names; l != NULL; l = l->next) {
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), (const gchar *) l->data);
+		}
+		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+		gtk_widget_set_hexpand (combo, TRUE);
+		gtk_grid_attach (GTK_GRID (grid), combo, 1, 0, 1, 1);
+
+		gtk_widget_show_all (grid);
+		gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
+		g_object_set_data (G_OBJECT (dialog), "combo", combo);
+	}
+
+	g_list_free_full (names, g_free);
+
+	g_signal_connect (dialog, "response", G_CALLBACK (restore_selection_response_cb), view);
+	gtk_widget_show_all (dialog);
 }
 
 static void
@@ -10104,6 +10308,14 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Aus_wahl umkehren"), "<control><shift>I",
   /* tooltip */                  N_("Alle und nur die Objekte auswählen, die momentan nicht ausgewählt sind"),
 				 G_CALLBACK (action_invert_selection_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_SAVE_SELECTION, NULL,
+  /* label, accelerator */       N_("Auswahl _speichern …"), NULL,
+  /* tooltip */                  N_("Die aktuelle Auswahl unter einem Namen merken, um sie später in diesem Ordner wiederherzustellen"),
+				 G_CALLBACK (action_save_selection_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RESTORE_SELECTION, NULL,
+  /* label, accelerator */       N_("Gespeicherte Auswahl _wiederherstellen …"), NULL,
+  /* tooltip */                  N_("Eine zuvor in diesem Ordner gespeicherte Auswahl wiederherstellen"),
+				 G_CALLBACK (action_restore_selection_callback) },
   /* name, stock id */         { "Duplicate", NULL,
   /* label, accelerator */       N_("Ver_doppeln"), NULL,
   /* tooltip */                  N_("Alle gewählten Objekte verdoppeln"),

@@ -65,6 +65,9 @@
 		<menuitem name="Select Pattern" action="Select Pattern"/>
 		<menuitem name="Select Type" action="Select Type"/>
 		<menuitem name="Invert Selection" action="Invert Selection"/>
+		<separator/>
+		<menuitem name="SaveSelection" action="SaveSelection"/>
+		<menuitem name="RestoreSelection" action="RestoreSelection"/>
 		</placeholder>
 		<placeholder name="File Items Placeholder">
             <menuitem name="Favorite" action="Favorite File"/>

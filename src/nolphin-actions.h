@@ -105,6 +105,8 @@
 #define NOLPHIN_ACTION_SELECT_ALL "Select All"
 #define NOLPHIN_ACTION_INVERT_SELECTION "Invert Selection"
 #define NOLPHIN_ACTION_SELECT_PATTERN "Select Pattern"
+#define NOLPHIN_ACTION_SAVE_SELECTION "SaveSelection"
+#define NOLPHIN_ACTION_RESTORE_SELECTION "RestoreSelection"
 #define NOLPHIN_ACTION_TRASH "Trash"
 #define NOLPHIN_ACTION_LOCATION_TRASH "LocationTrash"
 #define NOLPHIN_ACTION_DELETE "Delete"

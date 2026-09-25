@@ -70,6 +70,7 @@ nolphin_private_sources = [
   'nolphin-progress-info.c',
   'nolphin-query.c',
   'nolphin-recent.c',
+  'nolphin-saved-selections.c',
   'nolphin-search-directory-file.c',
   'nolphin-search-directory.c',
   'nolphin-search-engine-advanced.c',

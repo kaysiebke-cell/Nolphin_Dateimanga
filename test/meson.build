@@ -116,3 +116,12 @@ test('Trash cleanup test',
   ),
   args: []
 )
+
+test('Saved selections test',
+  executable('test-nolphin-saved-selections',
+    [ 'test-nolphin-saved-selections.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)
