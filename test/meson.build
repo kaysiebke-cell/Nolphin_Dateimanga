@@ -107,3 +107,12 @@ test('Git test',
   ),
   args: []
 )
+
+test('Trash cleanup test',
+  executable('test-nolphin-trash-cleanup',
+    [ 'test-nolphin-trash-cleanup.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)

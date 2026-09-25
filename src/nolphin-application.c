@@ -61,6 +61,8 @@
 #include <libnolphin-private/nolphin-ui-utilities.h>
 #include <libnolphin-private/nolphin-undo-manager.h>
 #include <libnolphin-private/nolphin-thumbnails.h>
+#include <libnolphin-private/nolphin-trash-cleanup.h>
+#include <libnolphin-private/nolphin-trash-monitor.h>
 #include <libnolphin-extension/nolphin-menu-provider.h>
 
 #define DEBUG_FLAG NOLPHIN_DEBUG_APPLICATION
@@ -301,6 +303,105 @@ process_system_theme (GtkSettings *gtk_settings)
 
     gtk_style_context_reset_widgets (gdk_screen_get_default ());
     g_free (theme_name);
+}
+
+/* §23: automatische Papierkorb-Bereinigung nach Aufbewahrungsdauer
+ * (GSettings "trash-retention-days", 0 = deaktiviert) sowie eine
+ * Benachrichtigung, wenn der Papierkorb ein Größenlimit überschreitet
+ * (GSettings "trash-size-limit-mb", 0 = deaktiviert). Beides ist per
+ * Voreinstellung aus (0), damit ohne ausdrückliche Konfiguration
+ * nichts automatisch gelöscht wird. */
+
+static gboolean trash_size_warning_active = FALSE;
+
+static void
+trash_size_checked_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    goffset total_bytes;
+    gint limit_mb;
+
+    total_bytes = nolphin_trash_cleanup_get_total_size_finish (result, &error);
+    if (error != NULL) {
+        g_clear_error (&error);
+        return;
+    }
+
+    limit_mb = g_settings_get_int (nolphin_preferences, "trash-size-limit-mb");
+    if (limit_mb <= 0 || total_bytes < (goffset) limit_mb * 1024 * 1024) {
+        trash_size_warning_active = FALSE;
+        return;
+    }
+
+    if (!trash_size_warning_active) {
+        GNotification *notification;
+        gchar *body;
+
+        trash_size_warning_active = TRUE;
+        body = g_strdup_printf (_("Der Papierkorb belegt mehr als %d MB. Erwäge, ihn zu leeren."), limit_mb);
+        notification = g_notification_new (_("Papierkorb wird groß"));
+        g_notification_set_body (notification, body);
+        g_application_send_notification (G_APPLICATION (nolphin_application_get_singleton ()),
+                                         "trash-size-warning", notification);
+        g_object_unref (notification);
+        g_free (body);
+    }
+}
+
+static void
+trash_cleanup_check_size (void)
+{
+    nolphin_trash_cleanup_get_total_size_async (NULL, NULL, trash_size_checked_cb, NULL);
+}
+
+static void
+trash_purge_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    nolphin_trash_cleanup_purge_expired_finish (result, &error);
+    g_clear_error (&error);
+
+    /* Re-check the size regardless of whether anything was purged, so
+     * the size-limit warning reflects the current state. */
+    trash_cleanup_check_size ();
+}
+
+static void
+trash_cleanup_run_now (void)
+{
+    gint retention_days = g_settings_get_int (nolphin_preferences, "trash-retention-days");
+
+    if (retention_days > 0) {
+        nolphin_trash_cleanup_purge_expired_async (NULL, retention_days, NULL, trash_purge_finished_cb, NULL);
+    } else {
+        trash_cleanup_check_size ();
+    }
+}
+
+static gboolean
+trash_cleanup_timeout_cb (gpointer user_data)
+{
+    trash_cleanup_run_now ();
+    return G_SOURCE_CONTINUE;
+}
+
+static void
+trash_cleanup_trash_state_changed_cb (NolphinTrashMonitor *monitor, gboolean new_state, gpointer user_data)
+{
+    /* A content change only triggers a size re-check here - the
+     * periodic timeout below is what runs the retention-based purge,
+     * so a single "file moved to trash" doesn't itself trigger a
+     * delete pass. */
+    trash_cleanup_check_size ();
+}
+
+static void
+init_trash_cleanup_scheduler (void)
+{
+    trash_cleanup_run_now ();
+    g_timeout_add_seconds (6 * 60 * 60, trash_cleanup_timeout_cb, NULL);
+    g_signal_connect (nolphin_trash_monitor_get (), "trash_state_changed",
+                      G_CALLBACK (trash_cleanup_trash_state_changed_cb), NULL);
 }
 
 static void
@@ -603,6 +704,9 @@ nolphin_application_startup (GApplication *app)
 
 	/* initialize preferences and create the global GSettings objects */
 	nolphin_global_preferences_init ();
+
+	/* §23: automatische Papierkorb-Bereinigung + Größenlimit-Warnung */
+	init_trash_cleanup_scheduler ();
 
     /* Run desktop- or main- specific things */
     NOLPHIN_APPLICATION_CLASS (G_OBJECT_GET_CLASS (self))->continue_startup (self);

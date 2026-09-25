@@ -78,6 +78,7 @@ nolphin_private_sources = [
   'nolphin-separator-action.c',
   'nolphin-signaller.c',
   'nolphin-thumbnails.c',
+  'nolphin-trash-cleanup.c',
   'nolphin-trash-monitor.c',
   'nolphin-tree-view-drag-dest.c',
   'nolphin-ui-utilities.c',

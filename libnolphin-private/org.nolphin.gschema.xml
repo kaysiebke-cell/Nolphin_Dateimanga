@@ -216,6 +216,16 @@
       <summary>Whether to swap the hotkeys for Trash and Delete</summary>
       <description>If set to true, the Delete key will permanently delete a file, and the Shift-Delete key will only trash a file.</description>
     </key>
+    <key name="trash-retention-days" type="i">
+      <default>0</default>
+      <summary>Automatic Trash retention period in days</summary>
+      <description>Items in Trash older than this many days (based on trash::deletion-date) are permanently deleted automatically. 0 disables automatic cleanup.</description>
+    </key>
+    <key name="trash-size-limit-mb" type="i">
+      <default>0</default>
+      <summary>Trash size limit in megabytes for the warning notification</summary>
+      <description>When the total size of Trash exceeds this many megabytes, Nolphin shows a warning notification. 0 disables the warning.</description>
+    </key>
     <key name="show-directory-item-counts"  enum="org.nolphin.SpeedTradeoff">
       <aliases><alias value='local_only' target='local-only'/></aliases>
       <default>'local-only'</default>
