@@ -115,6 +115,13 @@ static struct MethodInfo methods[] = {
 	{ "dav",  SHOW_PORT | SHOW_USER, 80 },
 	/* FIXME: hrm, shouldn't it work? */
 	{ "davs", SHOW_PORT | SHOW_USER, 443 },
+	/* §37: NFS - the export path is entered in the folder field like
+	 * any other scheme here, no separate share/user/port widgets
+	 * needed for the common case. */
+	{ "nfs",  0, 0 },
+	/* §37: HTTP/HTTPS - read-only browsing, no credentials field. */
+	{ "http",  SHOW_PORT, 80 },
+	{ "https", SHOW_PORT, 443 },
 };
 
 /* To get around non constant gettext strings */
@@ -135,6 +142,12 @@ get_method_description (struct MethodInfo *meth)
 		return _("WebDAV (HTTP)");
 	} else if (strcmp (meth->scheme, "davs") == 0) {
 		return _("Sicheres WebDAV (HTTPS)");
+	} else if (strcmp (meth->scheme, "nfs") == 0) {
+		return _("NFS");
+	} else if (strcmp (meth->scheme, "http") == 0) {
+		return _("HTTP (nur lesend)");
+	} else if (strcmp (meth->scheme, "https") == 0) {
+		return _("Sicheres HTTP (nur lesend)");
 
 	/* No descriptive text */
 	} else {
