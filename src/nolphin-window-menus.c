@@ -82,6 +82,7 @@ enum {
     ICON_VIEW,
     LIST_VIEW,
     COMPACT_VIEW,
+    GALLERY_VIEW,
     SIDEBAR_PLACES,
     SIDEBAR_TREE,
     TOOLBAR_PATHBAR,
@@ -780,6 +781,9 @@ view_radio_entry_changed_cb (GtkAction *action,
         case COMPACT_VIEW:
             set_content_view_type (window, FM_COMPACT_VIEW_ID);
             break;
+        case GALLERY_VIEW:
+            set_content_view_type (window, NOLPHIN_GALLERY_VIEW_ID);
+            break;
         default:
             ;
             break;
@@ -1148,6 +1152,8 @@ action_for_view_id (const char *view_id)
         return LIST_VIEW;
     } else if (g_strcmp0(view_id, FM_COMPACT_VIEW_ID) == 0) {
         return COMPACT_VIEW;
+    } else if (g_strcmp0(view_id, NOLPHIN_GALLERY_VIEW_ID) == 0) {
+        return GALLERY_VIEW;
     } else {
         return NULL_VIEW;
     }
@@ -1710,7 +1716,10 @@ static const GtkRadioActionEntry view_radio_entries[] = {
       LIST_VIEW },
     { "CompactView", NULL,
       N_("Kompaktansicht"), "<ctrl>3", N_("Compact View"),
-      COMPACT_VIEW }
+      COMPACT_VIEW },
+    { "GalleryView", NULL,
+      N_("Galerieansicht"), "<ctrl>4", N_("Gallery View"),
+      GALLERY_VIEW }
 };
 
 static const GtkRadioActionEntry toolbar_radio_entries[] = {

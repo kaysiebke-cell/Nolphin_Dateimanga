@@ -76,6 +76,7 @@
 enum
 {
 	PROP_COMPACT = 1,
+	PROP_GALLERY,
 	PROP_SUPPORTS_AUTO_LAYOUT,
 	PROP_IS_DESKTOP,
 	PROP_SUPPORTS_KEEP_ALIGNED,
@@ -113,6 +114,7 @@ struct NolphinIconViewDetails
 	guint icon_merge_id;
 
 	gboolean compact;
+	gboolean gallery;
 
 	gulong clipboard_handler_id;
 
@@ -2563,6 +2565,9 @@ nolphin_icon_view_get_id (NolphinView *view)
 	if (nolphin_icon_view_is_compact (NOLPHIN_ICON_VIEW (view))) {
 		return FM_COMPACT_VIEW_ID;
 	}
+	if (nolphin_icon_view_is_gallery (NOLPHIN_ICON_VIEW (view))) {
+		return NOLPHIN_GALLERY_VIEW_ID;
+	}
 
 	return NOLPHIN_ICON_VIEW_ID;
 }
@@ -2586,7 +2591,22 @@ set_compact_view (NolphinIconView *icon_view,
                                                                                                      NOLPHIN_ICON_LAYOUT_R_L_T_B :
                                                                                                      NOLPHIN_ICON_LAYOUT_L_R_T_B);
         nolphin_icon_container_set_forced_icon_size (get_icon_container (icon_view),
-                                                  0);
+                                                  icon_view->details->gallery ? NOLPHIN_ICON_SIZE_LARGEST : 0);
+    }
+}
+
+/* §18: Galerieansicht - dieselbe Symbolansicht, nur mit erzwungener
+ * großer Symbolgröße statt der über die Zoomstufe gesteuerten Größe,
+ * analog zu set_compact_view() oben. */
+static void
+set_gallery_view (NolphinIconView *icon_view,
+                  gboolean      gallery)
+{
+    icon_view->details->gallery = gallery;
+
+    if (!icon_view->details->compact) {
+        nolphin_icon_container_set_forced_icon_size (get_icon_container (icon_view),
+                                                  gallery ? NOLPHIN_ICON_SIZE_LARGEST : 0);
     }
 }
 
@@ -2603,6 +2623,9 @@ nolphin_icon_view_set_property (GObject         *object,
 	switch (prop_id)  {
 	case PROP_COMPACT:
         set_compact_view (icon_view, g_value_get_boolean (value));
+		break;
+	case PROP_GALLERY:
+        set_gallery_view (icon_view, g_value_get_boolean (value));
 		break;
 	case PROP_SUPPORTS_AUTO_LAYOUT:
 		icon_view->details->supports_auto_layout = g_value_get_boolean (value);
@@ -2810,6 +2833,12 @@ nolphin_icon_view_class_init (NolphinIconViewClass *klass)
 				      "Whether this view provides a compact listing",
 				      FALSE,
 				      G_PARAM_WRITABLE);
+	properties[PROP_GALLERY] =
+		g_param_spec_boolean ("gallery",
+				      "Gallery",
+				      "Whether this view forces large gallery-style icons",
+				      FALSE,
+				      G_PARAM_WRITABLE);
 	properties[PROP_SUPPORTS_AUTO_LAYOUT] =
 		g_param_spec_boolean ("supports-auto-layout",
 				      "Supports auto layout",
@@ -2883,6 +2912,24 @@ nolphin_compact_view_create (NolphinWindowSlot *slot)
     return NOLPHIN_VIEW (view);
 }
 
+static NolphinView *
+nolphin_gallery_view_create (NolphinWindowSlot *slot)
+{
+	NolphinIconView *view;
+
+	view = g_object_new (NOLPHIN_TYPE_ICON_VIEW,
+			     "window-slot", slot,
+			     NULL);
+#if GTK_CHECK_VERSION (3, 20, 0)
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET(view)), GTK_STYLE_CLASS_VIEW);
+#endif
+
+    set_compact_view (view, FALSE);
+    set_gallery_view (view, TRUE);
+
+    return NOLPHIN_VIEW (view);
+}
+
 static gboolean
 nolphin_icon_view_supports_uri (const char *uri,
 			   GFileType file_type,
@@ -2937,10 +2984,30 @@ static NolphinViewInfo nolphin_compact_view = {
 	nolphin_icon_view_supports_uri
 };
 
+static NolphinViewInfo nolphin_gallery_view = {
+	(char *)NOLPHIN_GALLERY_VIEW_ID,
+	/* translators: this is used in the view selection dropdown
+	 * of navigation windows and in the preferences dialog */
+	(char *)N_("Galerieansicht"),
+	/* translators: this is used in the view menu */
+	(char *)N_("_Galerie"),
+	(char *)N_("Die Galerieansicht stieß auf einen Fehler."),
+	(char *)N_("Die Galerieansicht stieß beim Starten auf einen Fehler."),
+	(char *)N_("Diesen Ort mit der Galerieansicht anzeigen"),
+	nolphin_gallery_view_create,
+	nolphin_icon_view_supports_uri
+};
+
 gboolean
 nolphin_icon_view_is_compact (NolphinIconView *view)
 {
 	return view->details->compact;
+}
+
+gboolean
+nolphin_icon_view_is_gallery (NolphinIconView *view)
+{
+	return view->details->gallery;
 }
 
 void
@@ -2955,5 +3022,12 @@ nolphin_icon_view_compact_register (void)
 {
 	TRANSLATE_VIEW_INFO (nolphin_compact_view)
 		nolphin_view_factory_register (&nolphin_compact_view);
+}
+
+void
+nolphin_icon_view_gallery_register (void)
+{
+	TRANSLATE_VIEW_INFO (nolphin_gallery_view)
+		nolphin_view_factory_register (&nolphin_gallery_view);
 }
 

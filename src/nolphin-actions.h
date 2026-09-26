@@ -57,6 +57,7 @@
 #define NOLPHIN_ACTION_COMPACT_VIEW "CompactView"
 #define NOLPHIN_ACTION_ICON_VIEW "IconView"
 #define NOLPHIN_ACTION_LIST_VIEW "ListView"
+#define NOLPHIN_ACTION_GALLERY_VIEW "GalleryView"
 #define NOLPHIN_ACTION_GO_HOME "Home"
 #define NOLPHIN_ACTION_ADD_BOOKMARK "Add Bookmark"
 #define NOLPHIN_ACTION_EDIT_BOOKMARKS "Edit Bookmarks"

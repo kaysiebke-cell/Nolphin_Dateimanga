@@ -45,6 +45,7 @@ typedef struct NolphinIconViewClass NolphinIconViewClass;
 
 #define NOLPHIN_ICON_VIEW_ID "OAFIID:Nolphin_File_Manager_Icon_View"
 #define FM_COMPACT_VIEW_ID "OAFIID:Nolphin_File_Manager_Compact_View"
+#define NOLPHIN_GALLERY_VIEW_ID "OAFIID:Nolphin_File_Manager_Gallery_View"
 
 typedef struct NolphinIconViewDetails NolphinIconViewDetails;
 
@@ -65,9 +66,11 @@ int     nolphin_icon_view_compare_files (NolphinIconView   *icon_view,
 					  NolphinFile *a,
 					  NolphinFile *b);
 gboolean nolphin_icon_view_is_compact   (NolphinIconView *icon_view);
+gboolean nolphin_icon_view_is_gallery   (NolphinIconView *icon_view);
 
 void    nolphin_icon_view_register         (void);
 void    nolphin_icon_view_compact_register (void);
+void    nolphin_icon_view_gallery_register (void);
 
 NolphinIconContainer * nolphin_icon_view_get_icon_container (NolphinIconView *view);
 

@@ -1154,6 +1154,7 @@ nolphin_main_application_continue_startup (NolphinApplication *app)
 	nolphin_icon_view_register ();
 	nolphin_list_view_register ();
 	nolphin_icon_view_compact_register ();
+	nolphin_icon_view_gallery_register ();
 #if defined(ENABLE_EMPTY_VIEW) && ENABLE_EMPTY_VIEW
 	nolphin_empty_view_register ();
 #endif
