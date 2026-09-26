@@ -17,7 +17,14 @@ Nolphin startete als unveränderter Nemo-6.7.7-Quellstand und wurde seitdem schr
 - Rückgängig/Wiederholen, Papierkorb, Drag & Drop
 - Eigenschaften-Dialog, Berechtigungen, Netzwerkzugriff über GVfs (SMB, NFS, HTTP/HTTPS)
 
-**Eigene, in diesem Fork neu implementierte Funktionen:**
+**Eigene, in diesem Fork neu implementierte Funktionen — das hat das originale Nemo nicht:**
+
+- **Vorschau-/Info-Panel rechts (F11)**: zeigt zur ausgewählten Datei direkt Bild-Vorschau, Text-Inhalt und technische Metadaten an. Im originalen Nemo gibt es das nicht eingebaut — dort ist Vorschau höchstens über eine separate, optionale Cinnamon-Spice-Erweiterung nachrüstbar.
+- **3D-/CAD-Dateierkennung** im selben Vorschau-Panel:
+  - **STL**: erkennt ASCII- oder Binärformat, liest die Dreieckszahl aus
+  - **STEP/STP**: liest Header-Metadaten (Beschreibung, Dateiname, Zeitstempel, Autor, Schema)
+  - **FCStd** (FreeCAD): liest Dokumenteigenschaften (Kommentar, Autor, Firma, Erstellungs-/Änderungsdatum) und zeigt das im Archiv eingebettete Vorschaubild, falls vorhanden
+  - Weitere Formate (IGES, OBJ, 3MF, DXF, DWG) werden zuverlässig erkannt und ehrlich als "kein Vorschau-Backend verfügbar" gemeldet, statt eine Vorschau vorzutäuschen
 - **Sicherheit**: Prüfsummen (MD5, SHA-1, SHA-256, SHA-512, BLAKE2), Datei-/Ordnerverschlüsselung über gpg, ACL-Verwaltung über getfacl/setfacl
 - **Git-Integration**: Status, Hinzufügen, Commit, Pull, Push, Log, Diff, Remote hinzufügen — direkt im Kontextmenü, ohne Terminal
 - **Papierkorb-Automatik**: Bereinigung nach konfigurierbarer Aufbewahrungsdauer, Warnung bei Größenlimit
