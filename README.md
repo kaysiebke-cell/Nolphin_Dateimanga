@@ -31,6 +31,22 @@ Nolphin startete als unveränderter Nemo-6.7.7-Quellstand und wurde seitdem schr
 - **Auswahl speichern/wiederherstellen**: benannte Dateiauswahlen pro Ordner merken und später wiederherstellen
 - Eigene, abhängigkeitsfreie Symbole (fest in die Anwendung eingebettet, kein externes Icon-Theme nötig)
 
+## Geplant, aber noch nicht gebaut
+
+Laut Entwicklungsvertrag ([`docs/NOLPHIN_SPEC.md`](docs/NOLPHIN_SPEC.md)) noch offen:
+
+- **Erweiterte Suche**: explizite Operatoren UND/ODER/NICHT (Filterung selbst funktioniert bereits)
+- **Erweiterte Vorschau**: PDF-Vorschau (Poppler-GLib) und Video-/Audio-Informationen (GStreamer) — beide Abhängigkeiten sind aktuell noch gar nicht im Build eingebunden
+- **Metadaten und Tags**: eigenes Bedienfeld für Tags, Bewertung, Kommentare (GVfs-Metadaten-Zugriff besteht bereits als Grundlage)
+- **Arbeitsbereiche**: Tabs, Bereiche, Layout und Terminalzustand unter einem Namen speichern und wiederherstellen
+- **Massenumbenennung**: eigener Dialog mit Suchen/Ersetzen, Nummerierung und Vorschau (aktuell nur über ein extern konfigurierbares Werkzeug)
+- **Regeln**: automatische Aktionen nach Dateityp/Name/Größe/Datum mit Vorschau vor Ausführung
+- **Synchronisation** über rsync (Ordner vergleichen, einseitig abgleichen, Konfliktbehandlung)
+- **Versionierung**: eigene Dateiversionen speichern, anzeigen, wiederherstellen
+- **Duplikaterkennung**
+- **Verwaltung und Diagnose**: Diagnose-Dialog, Fehlerbericht-Export, Systeminformationen
+- Prüfen, ob SFTP/FTP/WebDAV tatsächlich funktionieren (SMB/NFS/HTTP/HTTPS sind bereits bestätigt)
+
 ## Bauen
 
 ```bash
