@@ -28,6 +28,7 @@ Statt beispielsweise für verschiedene Aufgaben zwischen Dateimanager, Terminal 
 * ACL-Verwaltung
 * automatisierte Papierkorbbereinigung
 * gespeicherte Dateiauswahlen
+* Erstellen von .deb-Paketen aus der Dateiauswahl
 * klassische Nemo-Dateiverwaltung
 
 ---
@@ -211,6 +212,22 @@ Damit können detailliertere Zugriffsrechte direkt aus dem Dateimanager heraus v
 
 ---
 
+# .deb-Pakete erstellen
+
+Über das Kontextmenü und Bearbeiten ▸ Archiv lässt sich eine Dateiauswahl direkt zu einem installierbaren Debian-Paket (`.deb`) packen.
+
+Ein Einstellungsdialog fragt dafür die nötigen Angaben ab:
+
+* Paketname, Version, Architektur
+* Zielverzeichnis im Paket (z. B. `/opt/paketname`)
+* Maintainer, Bereich (Section), Abhängigkeiten (Depends)
+* Beschreibung
+* Speicherort der `.deb`-Datei
+
+Gebaut wird das Paket über das Systemwerkzeug `dpkg-deb --build --root-owner-group`, wodurch kein Root oder `fakeroot` nötig ist. Ohne installiertes `dpkg-deb` bleibt der Menüeintrag ausgegraut.
+
+---
+
 # Papierkorb-Automatik
 
 Nolphin kann den Papierkorb automatisch verwalten.
@@ -267,6 +284,7 @@ Ein Teil der geplanten Funktionen ist bereits implementiert, während weitere Fu
 * [x] Papierkorb-Automatik
 * [x] gespeicherte Dateiauswahlen
 * [x] eigene eingebettete Symbole
+* [x] Auswahl als .deb-Paket erstellen
 
 ---
 
@@ -421,6 +439,7 @@ Optionale Abhängigkeiten:
 
 * libexif
 * exempi
+* dpkg-deb (für „Als .deb-Paket erstellen …“; ohne dpkg-deb ist der Menüeintrag ausgegraut)
 
 Weitere technische Details und verbindliche Anforderungen befinden sich in:
 
@@ -570,6 +589,7 @@ Nolphin basiert auf Nemo, verfolgt aber ein eigenes Entwicklungsziel.
 | ACL-Verwaltung              | –                              | ✓       |
 | Papierkorb-Automatik        | –                              | ✓       |
 | Gespeicherte Dateiauswahl   | –                              | ✓       |
+| Auswahl als .deb-Paket      | –                              | ✓       |
 
 Nolphin soll dabei **nicht einfach ein optisch veränderter Dateimanager** sein. Der Fokus liegt darauf, zusätzliche Funktionen direkt in die Dateiverwaltung zu integrieren.
 

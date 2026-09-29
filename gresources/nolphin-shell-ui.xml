@@ -45,7 +45,11 @@
 		<separator/>
 		<placeholder name="Dangerous File Items Placeholder"/>
 		<separator/>
-		<placeholder name="Edit Items Placeholder"/>
+		<placeholder name="Edit Items Placeholder">
+			<menu action="ArchiveMenu">
+				<menuitem name="CreateDebPackage" action="CreateDebPackage"/>
+			</menu>
+		</placeholder>
 		<placeholder name="Global Edit Items Placeholder"/>
 		<separator/>
 		<placeholder name="Extension Actions"/>
