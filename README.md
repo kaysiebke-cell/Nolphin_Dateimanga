@@ -224,7 +224,7 @@ Ein Einstellungsdialog fragt dafür die nötigen Angaben ab:
 * Beschreibung
 * Speicherort der `.deb`-Datei
 
-Gebaut wird das Paket über das Systemwerkzeug `dpkg-deb --build --root-owner-group`, wodurch kein Root oder `fakeroot` nötig ist. Ohne installiertes `dpkg-deb` bleibt der Menüeintrag ausgegraut.
+Gebaut wird das Paket über das Systemwerkzeug `dpkg-deb --build --root-owner-group`, wodurch kein Root oder `fakeroot` nötig ist. Ohne installiertes `dpkg-deb` meldet der Dialog beim Erstellen einen verständlichen Fehler, statt einen Erfolg vorzutäuschen; der Kontextmenü-Eintrag ist zusätzlich ausgegraut, wenn `dpkg-deb` fehlt.
 
 ---
 

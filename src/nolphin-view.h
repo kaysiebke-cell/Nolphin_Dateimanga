@@ -456,5 +456,6 @@ void              nolphin_view_pop_up_location_context_menu (NolphinView    *vie
 void              nolphin_view_grab_focus                 (NolphinView      *view);
 void              nolphin_view_update_menus               (NolphinView      *view);
 void              nolphin_view_new_folder                 (NolphinView      *view);
+void              nolphin_view_create_deb_package          (NolphinView      *view);
 
 #endif /* NOLPHIN_VIEW_H */

@@ -8267,11 +8267,15 @@ create_deb_package_finished_cb (GObject *source, GAsyncResult *result, gpointer 
     g_clear_error (&error);
 }
 
-static void
-action_create_deb_package_callback (GtkAction *action,
-                                    gpointer callback_data)
+/* Öffentlich (nolphin-view.h), damit sowohl die Kontextmenü-Aktion
+ * (dieselbe View, per GtkAction-Callback) als auch der Menüleisten-
+ * Eintrag Bearbeiten ▸ Archiv (fensterweite Aktion, ermittelt zuerst
+ * die aktive View - siehe action_create_deb_package_callback in
+ * nolphin-window-menus.c) dieselbe Logik verwenden; genau das Muster,
+ * das nolphin_view_new_folder für "Neuer Ordner" bereits nutzt. */
+void
+nolphin_view_create_deb_package (NolphinView *view)
 {
-    NolphinView *view;
     GList *selection;
     GList *sources = NULL;
     GList *l;
@@ -8282,10 +8286,18 @@ action_create_deb_package_callback (GtkAction *action,
     NolphinDebPackageInfo *info = NULL;
     GFile *destination = NULL;
 
-    view = NOLPHIN_VIEW (callback_data);
+    g_return_if_fail (NOLPHIN_IS_VIEW (view));
+
     selection = nolphin_view_get_selection (view);
 
     if (selection == NULL) {
+        GtkWidget *dialog = gtk_message_dialog_new (nolphin_view_get_containing_window (view),
+                                                    GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+                                                    GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s",
+                                                    _("Bitte zuerst die Dateien oder Ordner auswählen, "
+                                                      "die in das .deb-Paket sollen."));
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
         return;
     }
 
@@ -8317,6 +8329,13 @@ action_create_deb_package_callback (GtkAction *action,
     g_free (suggested_package_name);
     g_clear_object (&dir_location);
     nolphin_file_list_free (selection);
+}
+
+static void
+action_create_deb_package_callback (GtkAction *action,
+                                    gpointer callback_data)
+{
+    nolphin_view_create_deb_package (NOLPHIN_VIEW (callback_data));
 }
 
 /* §39: Prüfsummen - berechnen und mit einem eingegebenen Wert vergleichen. */
@@ -10638,7 +10657,6 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("Archiv _prüfen"), NULL,
   /* tooltip */                  N_("Das Archiv auf Fehler prüfen, ohne es zu entpacken"),
                  G_CALLBACK (action_test_archive_callback) },
-  /* name, stock id, label */  { NOLPHIN_ACTION_ARCHIVE_MENU, NULL, N_("A_rchiv") },
   /* name, stock id */         { NOLPHIN_ACTION_CREATE_DEB_PACKAGE, NULL,
   /* label, accelerator */       N_("Als _.deb-Paket erstellen …"), NULL,
   /* tooltip */                  N_("Ausgewählte Objekte zu einem installierbaren Debian-Paket (.deb) packen"),
