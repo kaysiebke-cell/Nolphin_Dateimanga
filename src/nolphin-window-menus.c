@@ -1413,17 +1413,6 @@ action_new_folder_callback (GtkAction *action,
 }
 
 static void
-action_create_deb_package_callback (GtkAction *action,
-                                    gpointer user_data)
-{
-    g_assert (NOLPHIN_IS_WINDOW (user_data));
-    NolphinWindow *window = user_data;
-    NolphinView *view = get_current_view (window);
-
-    nolphin_view_create_deb_package (view);
-}
-
-static void
 open_in_terminal_other (const gchar *path)
 {
     gchar *gsetting_terminal;
@@ -1492,11 +1481,6 @@ static const GtkActionEntry main_entries[] = {
   /* label, accelerator */       N_("_Beenden"), "<control>W",
   /* tooltip */                  N_("Diesen Ordner schließen"),
                                  G_CALLBACK (action_close_window_slot_callback) },
-  /* name, stock id, label */  { NOLPHIN_ACTION_ARCHIVE_MENU, NULL, N_("A_rchiv") },
-  /* name, stock id */         { NOLPHIN_ACTION_CREATE_DEB_PACKAGE, NULL,
-  /* label, accelerator */       N_("Als _.deb-Paket erstellen …"), NULL,
-  /* tooltip */                  N_("Ausgewählte Objekte zu einem installierbaren Debian-Paket (.deb) packen"),
-                                 G_CALLBACK (action_create_deb_package_callback) },
                                { "Preferences", "xsi-toolbox-symbolic",
                                  N_("_Einstellungen"),
                                  NULL, N_("Nolphin-Einstellungen bearbeiten"),

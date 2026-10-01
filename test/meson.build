@@ -36,15 +36,6 @@ test('Archive test',
   args: []
 )
 
-test('Deb package test',
-  executable('test-nolphin-deb-package',
-    [ 'test-nolphin-deb-package.c' ],
-    include_directories: [ rootInclude, ],
-    dependencies: [ gtk, nolphin_private ],
-  ),
-  args: []
-)
-
 test('CAD test',
   executable('test-nolphin-cad',
     [ 'test-nolphin-cad.c' ],

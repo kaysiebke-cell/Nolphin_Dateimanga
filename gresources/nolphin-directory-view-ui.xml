@@ -221,7 +221,6 @@
 	<menuitem name="Compress" action="Compress"/>
 	<menuitem name="ExtractHere" action="ExtractHere"/>
 	<menuitem name="TestArchive" action="TestArchive"/>
-	<menuitem name="CreateDebPackage" action="CreateDebPackage"/>
 	<separator name="Checksum separator"/>
 	<menuitem name="ComputeChecksum" action="ComputeChecksum"/>
 	<menuitem name="Encrypt" action="Encrypt"/>

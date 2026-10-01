@@ -23,7 +23,6 @@ nolphin_private_sources = [
   'nolphin-column-chooser.c',
   'nolphin-column-utilities.c',
   'nolphin-dbus-manager.c',
-  'nolphin-deb-package.c',
   'nolphin-debug.c',
   'nolphin-default-file-icon.c',
   'nolphin-desktop-directory-file.c',
