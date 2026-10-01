@@ -1,17 +1,9 @@
-ANWEISUNG FÜR DIESE SITZUNG
-
-Ignoriere alle bisherigen Startanweisungen und frühere Versionen des Vertrags. Ab jetzt gilt ausschließlich der folgende Entwicklungsvertrag.
-
-1. Speichere den Vertrag unten unverändert als docs/NOLPHIN_SPEC.md im Repository (vorhandene Version ersetzen).
-2. Erstelle oder aktualisiere im Hauptordner die CLAUDE.md mit dem Hinweis: „docs/NOLPHIN_SPEC.md ist der verbindliche Entwicklungsvertrag für Nolphin und muss vor jeder Aufgabe gelesen werden."
-3. Committe beide Dateien.
-4. Führe danach ausschließlich die Erstanalyse aus Abschnitt 6 durch. Ändere keinen Code. Warte auf meine Freigabe.
-
-==================================================
-
-# NOLPHIN – MASTER DEVELOPMENT CONTRACT (Version 2)
+# NOLPHIN – MASTER DEVELOPMENT CONTRACT (Version 2.3)
 
 Verbindlicher Entwicklungs-, Funktions- und Arbeitsvertrag
+
+**Aktualisierung 2.2:** Klarstellung und Konfliktauflösung zum rechten integrierten Arbeitsbereich (siehe Abschnitt 58.0 und 58.1).
+**Aktualisierung 2.3:** Nachträgliche Dokumentation der bereits implementierten Funktion „DEB-Paket erstellen" als Teil des Archiv-Panels (siehe Abschnitt 36.1). Alle übrigen Abschnitte sind gegenüber Version 2.1 inhaltlich unverändert.
 
 ---
 
@@ -68,50 +60,362 @@ Die Benutzeroberfläche orientiert sich an der von mir bereitgestellten Referenz
 
 ## 3. TECHNISCHE GRUNDLAGE
 
-Nolphin wird ausschließlich mit den Mitteln gebaut, die auch der Linux-Mint-Dateimanager Nemo verwendet bzw. die unter Linux Mint standardmäßig verfügbar sind. Nemo dient als technische Orientierung dafür, welche Bibliotheken, Systemdienste und Standards verwendet werden. Es wird kein Code aus Nemo oder anderen Projekten kopiert, und die Oberfläche richtet sich nach meiner Referenz, nicht nach Nemo.
+Nolphin wird ausschließlich mit den Mitteln gebaut, die auch der Linux-Mint-Dateimanager Nemo verwendet bzw. die unter Linux Mint standardmäßig verfügbar sind. Nemo dient ausschließlich als technische Orientierung dafür, welche Bibliotheken, Systemdienste, APIs und Standards unter Linux Mint sinnvoll und verfügbar sind. Es wird kein Code aus Nemo oder anderen Projekten kopiert. Die Oberfläche richtet sich ausschließlich nach meiner bereitgestellten Referenz und den Anforderungen dieses Entwicklungsvertrags, nicht nach der Oberfläche von Nemo.
 
-Sprache und Build:
+Nolphin ist eine vollständig eigenständige Anwendung. Es besteht keine Abhängigkeit zu Nemo, zu Nemo-Paketen, zu Nemo-Erweiterungsbibliotheken oder zu Nemo-Konfigurationsdateien. Nolphin darf keine Dateien, Einstellungen oder Konfigurationen anderer Dateimanager verändern.
 
-- C11
-- Meson, Ninja
+### Sprache und Build
 
-Kernbibliotheken:
+* C11
+* Meson
+* Ninja
 
-- GTK3, GLib, GObject, GIO, GVFS, GdkPixbuf
-- VTE 2.91 (integriertes Terminal)
+### Kernbibliotheken
 
-Nolphin ist eine vollständig eigenständige Anwendung. Es besteht keine Abhängigkeit zu Nemo, zu Nemo-Paketen, zu Nemo-Erweiterungsbibliotheken oder zu Nemo-Konfigurationsdateien. Nolphin verändert keine Dateien oder Einstellungen anderer Dateimanager.
+* GTK3
+* GLib
+* GObject
+* GIO
+* GVFS
+* GdkPixbuf
+* VTE 2.91 für das integrierte Terminal
 
-Optionale Mint-Komponenten (Einsatz jeweils in der Analyse begründen). Nolphin muss ohne jede dieser Komponenten kompilieren, starten und alle Kernfunktionen ausführen; fehlt eine, wird nur die jeweilige Zusatzfunktion deaktiviert und der Grund angezeigt:
+Diese Bibliotheken bilden die technische Grundlage der Kernanwendung. Die Kernfunktionen von Nolphin dürfen nicht von Nemo oder Nemo-spezifischen Bibliotheken abhängig sein.
 
-- libxapp (XApp-Favoriten, XApp-Hilfsfunktionen)
-- cinnamon-desktop (Thumbnail-Erzeugung nach Freedesktop-Standard); ohne diese Komponente liest Nolphin vorhandene Vorschaubilder aus ~/.cache/thumbnails und ruft installierte Freedesktop-Thumbnailer selbst auf
-- libexif (EXIF-Daten von Bildern)
-- GStreamer (Video- und Audioinformationen)
-- Poppler-GLib (PDF-Vorschau)
+### Eigenständigkeit und Abgrenzung
 
-Standards:
+Nolphin muss als eigenständige Linux-Anwendung entwickelt und betrieben werden.
 
-- Freedesktop/XDG: Benutzerverzeichnisse, MIME, Desktop-Dateien, Papierkorb, Thumbnails
-- GTK-Lesezeichendatei für Orte
-- GVFS-Metadaten (metadata::-Attribute) für Tags, Bewertungen, Kommentare, Emblems
+Insbesondere gilt:
 
-Systemwerkzeuge, die unter Linux Mint vorhanden sind oder dort üblich nachinstalliert werden (nur über kontrollierte Subprozesse, Abschnitt 53.5):
+* Keine Abhängigkeit zu Nemo.
+* Keine Verwendung von Nemo-Konfigurationsdateien.
+* Keine Verwendung von Nemo-Erweiterungsbibliotheken.
+* Keine Kommunikation mit Nemo, um grundlegende Nolphin-Funktionen bereitzustellen.
+* Keine Übernahme von Nemo-Laufzeitdaten oder Nemo-internen UI-Einstellungen.
+* Keine Veränderung von Dateien oder Einstellungen anderer Dateimanager.
+* Keine Nachbildung von Nemo-internen APIs, wenn dafür eine standardisierte Linux-, GTK-, GLib-, GIO-, XDG- oder Freedesktop-Schnittstelle vorhanden ist.
 
-- file-roller, tar, gzip, bzip2, xz, zip/unzip, 7z (Archive)
-- rsync (Synchronisation)
-- gpg (Verschlüsselung)
-- git (Git-Aktionen)
-- getfacl/setfacl (ACL)
-- b2sum (BLAKE2-Prüfsummen)
-- libreoffice --headless (Office-Vorschau, nur wenn installiert)
-- dconf (Einstellungen exportieren/importieren)
+Nemo darf ausschließlich als technische Referenz dafür dienen, welche unter Linux Mint verfügbaren Systemmechanismen für eine bestimmte Funktion grundsätzlich geeignet sind.
 
-Nicht verwenden: Qt, QML oder KDE-Bibliotheken jeglicher Art.
+---
 
-Jede weitere Bibliothek oder jedes weitere Werkzeug nur nach technischer Begründung und meiner Freigabe.
+### Optionale Mint-Komponenten
 
-Grundsatz: Ist eine Funktion mit diesen Mitteln nicht umsetzbar, wird sie nicht nachgebaut oder vorgetäuscht, sondern als Konflikt gemeldet.
+Folgende Komponenten dürfen nur optional verwendet werden. Ihr Einsatz muss jeweils technisch begründet werden.
+
+Nolphin muss ohne jede dieser Komponenten kompilieren, starten und alle Kernfunktionen ausführen können. Fehlt eine optionale Komponente, wird ausschließlich die davon abhängige Zusatzfunktion deaktiviert und der Grund technisch korrekt angezeigt.
+
+* `libxapp` für XApp-Favoriten und XApp-Hilfsfunktionen
+* `cinnamon-desktop` für Thumbnail-Erzeugung nach dem Freedesktop-Standard
+
+  * ohne `cinnamon-desktop` liest Nolphin vorhandene Vorschaubilder aus `~/.cache/thumbnails`
+  * zusätzlich ruft Nolphin installierte Freedesktop-Thumbnailer selbst auf, sofern diese vorhanden und verwendbar sind
+* `libexif` für EXIF-Daten von Bildern
+* `GStreamer` für Video- und Audioinformationen
+* `Poppler-GLib` für PDF-Vorschauen
+
+Eine optionale Komponente darf niemals zu einer künstlichen Abhängigkeit der gesamten Anwendung werden.
+
+---
+
+### Desktop-Integration und Systemdarstellung
+
+Nolphin übernimmt die Darstellung und relevante Benutzereinstellungen des vorhandenen Linux-Desktops über standardisierte GTK-, GLib-, GSettings-, XDG- und Freedesktop-Schnittstellen.
+
+Nolphin soll sich auf Linux Mint/Cinnamon wie eine native GTK-Anwendung in den vorhandenen Desktop einfügen, ohne selbst Bestandteil von Cinnamon oder Nemo zu werden.
+
+Die Desktop-Integration muss deshalb über eine klar getrennte interne Desktop-Bridge beziehungsweise eine vergleichbare Abstraktionsschicht erfolgen.
+
+Der Nolphin-Kern darf nicht direkt von Cinnamon-spezifischen Implementierungsdetails abhängig sein.
+
+Die Desktop-Bridge ist dafür verantwortlich, standardisierte Informationen des Betriebssystems und der Desktop-Umgebung bereitzustellen, insbesondere:
+
+* Sprache und Locale
+* Übersetzungsumgebung
+* GTK-Theme
+* Icon-Theme
+* Systemschrift
+* relevante GTK-Schrifteinstellungen
+* Skalierung und Darstellung
+* relevante standardisierte Desktop-Einstellungen
+* weitere standardisierte Darstellungseinstellungen, sofern GTK, GLib, GSettings, XDG oder Freedesktop diese bereitstellen
+
+Die Kernanwendung verwendet ausschließlich die von dieser Abstraktionsschicht bereitgestellten Informationen und darf keine Desktop-spezifischen Konfigurationsdateien direkt auswerten, wenn dafür eine standardisierte API vorhanden ist.
+
+---
+
+### Sprache und Internationalisierung
+
+Die Sprache der Anwendung wird nicht fest auf Deutsch oder Englisch vorgegeben.
+
+Die Sprache wird anhand der System-/Benutzer-Locale ermittelt und über die Nolphin-Übersetzungsinfrastruktur umgesetzt.
+
+Alle sichtbaren und übersetzbaren Texte müssen über die Übersetzungsinfrastruktur laufen.
+
+Beispielsweise müssen sichtbare Texte über gettext beziehungsweise die dafür vorgesehene Nolphin-Internationalisierung verarbeitet werden:
+
+```c
+_("Datei")
+_("Bearbeiten")
+_("Öffnen")
+_("Eigenschaften")
+```
+
+Texte dürfen nicht dauerhaft fest auf Deutsch, Englisch oder eine andere Sprache programmiert werden, wenn sie dem Benutzer angezeigt werden.
+
+Die Sprachkette muss grundsätzlich nach folgendem Prinzip funktionieren:
+
+```text
+System-/Benutzer-Locale
+        ↓
+GLib / Locale
+        ↓
+gettext / Nolphin-Übersetzungen
+        ↓
+Nolphin-Benutzeroberfläche
+```
+
+Wenn für eine Sprache keine Nolphin-Übersetzung vorhanden ist, wird ein definierter Fallback verwendet.
+
+Nolphin darf die vom Benutzer beziehungsweise System vorgegebene Sprache nicht ohne ausdrückliche Nolphin-Einstellung überschreiben.
+
+---
+
+### GTK-Theme und Layout-Integration
+
+Nolphin verwendet das aktive GTK-Theme des Systems.
+
+Die Anwendung darf nicht dauerhaft ein eigenes GTK-Theme erzwingen, wenn der Benutzer ein anderes Systemtheme ausgewählt hat.
+
+Relevante GTK-Systemeinstellungen sollen über die vorgesehenen GTK-/GLib-Schnittstellen übernommen werden.
+
+Dazu gehören insbesondere:
+
+* aktiver GTK-Stil
+* Systemschrift
+* relevante Schriftgrößen
+* relevante GTK-Darstellungseinstellungen
+* relevante Skalierungsinformationen
+* weitere von GTK bereitgestellte Darstellungseinstellungen
+
+Nolphin darf diese Einstellungen nur überschreiben, wenn eine ausdrücklich definierte Nolphin-Einstellung dies verlangt.
+
+Das interne Nolphin-Layout darf die fachlich definierte Oberfläche und Benutzerführung bestimmen. Es darf jedoch nicht versuchen, das Linux-Mint-Theme oder andere Desktop-Themes nachzubauen.
+
+Die Anwendung soll GTK-Widgets und standardisierte GTK-Darstellungsmechanismen verwenden, damit sich die Darstellung automatisch an das aktive Systemtheme anpasst.
+
+---
+
+### Icons und Icon-Theme
+
+Nolphin verwendet grundsätzlich das aktive System-Icon-Theme.
+
+Standardicons müssen über die GTK-/Freedesktop-Icon-Theme-Mechanismen anhand semantischer Icon-Namen angefordert werden.
+
+Beispielsweise soll Nolphin nicht dauerhaft eine eigene PNG-Datei für einen Ordner erzwingen, wenn das System ein entsprechendes Standardicon bereitstellt.
+
+Das grundsätzliche Verhalten ist:
+
+```text
+Nolphin benötigt semantisches Icon
+            ↓
+GTK / System-Icon-Theme
+            ↓
+passendes Systemicon vorhanden?
+       ┌──────────────┐
+       │              │
+      Ja             Nein
+       │              │
+       ↓              ↓
+System-Icon      Nolphin-Fallback
+```
+
+Eigene Nolphin-Icons dürfen verwendet werden:
+
+* wenn kein passendes standardisiertes Systemicon existiert
+* wenn es sich um ein eindeutig Nolphin-spezifisches UI-Element handelt
+* als definierter Fallback, wenn das benötigte Systemicon nicht verfügbar ist
+
+Eigene eingebettete Icons dürfen jedoch nicht dazu verwendet werden, das aktive System-Icon-Theme grundsätzlich zu ersetzen.
+
+Nolphin darf kein eigenes vollständiges Linux-Mint- oder Cinnamon-Icon-Theme mitbringen, um das Systemtheme nachzubauen.
+
+Das Ziel ist:
+
+```text
+Linux Mint Icon Theme
+        ↓
+GTK Icon Theme
+        ↓
+Nolphin
+```
+
+und nicht:
+
+```text
+Linux Mint Icon Theme
+        X
+        ↓
+Nolphin eigenes Icon-System
+```
+
+---
+
+### Desktop-Bridge und Fallback-Verhalten
+
+Die Desktop-Integration muss nach folgendem Prioritätsprinzip funktionieren:
+
+```text
+1. Standardisierte System-/GTK-Schnittstelle
+                  ↓
+2. Standardisierte GLib-/GSettings-/XDG-/Freedesktop-Schnittstelle
+                  ↓
+3. Optionale Desktop-spezifische Erweiterung
+                  ↓
+4. Nolphin-definierter Fallback
+```
+
+Eine Cinnamon-spezifische Schnittstelle darf nur als optionale Erweiterung eingesetzt werden.
+
+Fehlt Cinnamon beziehungsweise eine Cinnamon-spezifische Bibliothek, muss Nolphin weiterhin als eigenständige GTK-Anwendung funktionieren.
+
+Wenn eine Information über eine optionale Desktop-Komponente nicht verfügbar ist, darf Nolphin nicht abbrechen oder eine nicht vorhandene Funktion vortäuschen. Stattdessen wird die nächstliegende standardisierte Schnittstelle verwendet und anschließend, falls notwendig, ein definierter Fallback.
+
+Damit muss Nolphin beispielsweise auch auf einem anderen GTK-basierten Linux-Desktop grundsätzlich starten und seine Kernfunktionen ausführen können.
+
+---
+
+### Standards
+
+Nolphin verwendet nach Möglichkeit vorhandene Linux-/Freedesktop-/XDG-Standards anstelle eigener proprietärer Mechanismen.
+
+Dazu gehören:
+
+* Freedesktop/XDG für Benutzerverzeichnisse
+* Freedesktop/XDG für MIME-Typen
+* Freedesktop/XDG für Desktop-Dateien
+* Freedesktop/XDG für Papierkorb
+* Freedesktop/XDG für Thumbnails
+* Freedesktop-Icon-Theme-Mechanismen
+* GTK-Lesezeichendatei für Orte
+* GVFS-Metadaten (`metadata::`-Attribute) für Tags, Bewertungen, Kommentare und Emblems
+* GSettings/dconf für Anwendungseinstellungen
+* GAppInfo für Anwendungen und „Öffnen mit“
+* GIO/GVFS für lokale und entfernte Dateien sowie Geräte
+* GTK/GDK für Benutzeroberfläche, Eingaben und Zwischenablage
+* GNotification für Desktop-Benachrichtigungen
+
+Eigene Implementierungen dürfen nur verwendet werden, wenn keine geeignete standardisierte Schnittstelle vorhanden ist oder die konkrete Nolphin-Funktion eine zusätzliche eigene Logik benötigt.
+
+---
+
+### Vorschaubilder
+
+Die Thumbnail-Architektur muss ebenfalls möglichst unabhängig von einer einzelnen Desktop-Implementierung sein.
+
+Priorität:
+
+```text
+vorhandenes Freedesktop-Thumbnail
+        ↓
+installierter Freedesktop-Thumbnailer
+        ↓
+optionale cinnamon-desktop-Unterstützung
+        ↓
+Nolphin-eigene Unterstützung nur wenn technisch erforderlich
+        ↓
+keine Vorschau, wenn kein Backend verfügbar
+```
+
+Nolphin darf keine Vorschau vortäuschen.
+
+Wenn ein erforderliches Backend fehlt, wird dies technisch korrekt erkannt und dem Benutzer angezeigt.
+
+---
+
+### Systemwerkzeuge
+
+Folgende Systemwerkzeuge dürfen unter Linux Mint vorhanden sein oder dort üblich nachinstalliert werden und dürfen ausschließlich über kontrollierte Subprozesse gemäß Abschnitt 53.5 verwendet werden:
+
+* `file-roller`
+* `tar`
+* `gzip`
+* `bzip2`
+* `xz`
+* `zstd`
+* `lz4`
+* `zip`
+* `unzip`
+* `7z`
+* `unrar`
+* `rsync`
+* `gpg`
+* `git`
+* `getfacl`
+* `setfacl`
+* `b2sum`
+* `libreoffice --headless`
+* `dconf`
+* `dpkg-deb` (Bestandteil des Basispakets `dpkg`, auf jedem Debian-/Ubuntu-basierten System inkl. Linux Mint vorinstalliert) – für „DEB-Paket erstellen" (Abschnitt 36.1)
+
+Ihre Verfügbarkeit muss vor der Verwendung geprüft werden.
+
+Fehlt ein Werkzeug, darf Nolphin die davon abhängige Funktion nicht als verfügbar darstellen.
+
+Die übrige Anwendung muss weiterhin funktionieren.
+
+---
+
+### Nicht verwenden
+
+Nicht verwenden:
+
+* Qt
+* QML
+* KDE-Bibliotheken jeglicher Art
+* Nemo als Laufzeitabhängigkeit
+* Nemo-Bibliotheken
+* Nemo-Konfigurationsdateien
+* Nemo-Erweiterungsbibliotheken
+* proprietäre oder nicht standardisierte Desktop-Integrationsmechanismen, wenn eine geeignete GTK-, GLib-, GIO-, GSettings-, XDG- oder Freedesktop-Schnittstelle vorhanden ist
+
+---
+
+### Neue Bibliotheken und Werkzeuge
+
+Jede weitere Bibliothek oder jedes weitere externe Werkzeug darf nur nach technischer Begründung und meiner ausdrücklichen Freigabe verwendet werden.
+
+Dabei muss dokumentiert werden:
+
+1. Welche konkrete Funktion benötigt die Bibliothek beziehungsweise das Werkzeug?
+2. Warum kann diese Funktion nicht mit den bereits freigegebenen Mitteln umgesetzt werden?
+3. Ist die Abhängigkeit zwingend oder optional?
+4. Wie verhält sich Nolphin, wenn die Abhängigkeit nicht installiert ist?
+5. Welche Auswirkungen hat die Abhängigkeit auf Kompilierung, Installation und Laufzeit?
+6. Ist die Abhängigkeit unter Linux Mint verfügbar beziehungsweise standardmäßig oder üblich installierbar?
+
+---
+
+### Grundsatz
+
+Ist eine Funktion mit den freigegebenen Mitteln nicht zuverlässig und technisch korrekt umsetzbar, wird sie nicht nachgebaut, vorgetäuscht oder durch eine ungeprüfte Drittanbieterabhängigkeit ersetzt.
+
+Stattdessen wird der technische Konflikt gemäß dem dafür vorgesehenen Abschnitt dieses Entwicklungsvertrags gemeldet.
+
+Nolphin muss jederzeit klar zwischen:
+
+* eigener Anwendungslogik,
+* standardisierter Linux-/GTK-Systemintegration,
+* optionaler Desktop-Integration,
+* optionalen externen Komponenten
+* und nicht verfügbaren Funktionen
+
+unterscheiden können.
+
+Das übergeordnete Ziel lautet:
+
+**Nolphin ist eine eigenständige native Linux-Anwendung, die sich automatisch an Sprache, Theme, Schrift, Skalierung, Icons und relevante Darstellungseinstellungen des vorhandenen GTK/Linux-Desktops anpasst, ohne von Nemo abhängig zu sein und ohne einen bestimmten Desktop durch eigene Implementierungen nachzubauen.**
 
 ---
 
@@ -225,9 +529,11 @@ Mindestens: `src/`, `data/`, `data/icons/`, `tests/`, `docs/`
 
 Mögliche Module (jeweils .c/.h):
 
-nolphin-main, nolphin-window, nolphin-file-view, nolphin-navigation, nolphin-tabs, nolphin-split-view, nolphin-sidebar, nolphin-preview, nolphin-preview-3d, nolphin-terminal, nolphin-search, nolphin-properties, nolphin-file-operations, nolphin-operation-queue, nolphin-device-manager, nolphin-network, nolphin-archive, nolphin-cad, nolphin-settings, nolphin-actions, nolphin-plugins, nolphin-metadata, nolphin-workspace, nolphin-sync, nolphin-versions
+nolphin-main, nolphin-window, nolphin-file-view, nolphin-navigation, nolphin-tabs, nolphin-split-view, nolphin-sidebar, nolphin-preview, nolphin-preview-3d, nolphin-panel, nolphin-terminal, nolphin-search, nolphin-properties, nolphin-file-operations, nolphin-operation-queue, nolphin-device-manager, nolphin-network, nolphin-archive, nolphin-cad, nolphin-settings, nolphin-actions, nolphin-plugins, nolphin-metadata, nolphin-workspace, nolphin-sync, nolphin-versions
 
 Die Modulaufteilung darf verbessert werden, wenn es technisch sinnvoller ist. Funktionalität darf dabei nicht entfernt werden.
+
+Die Module `nolphin-properties`, `nolphin-terminal`, `nolphin-search` und `nolphin-archive` stellen jeweils ein Panel-Widget bereit, das von `nolphin-panel` (Panel-Engine) in den rechten Arbeitsbereich eingebunden wird; keines dieser Module implementiert seine Hauptfunktion als eigenes Top-Level-Fenster (siehe Abschnitt 58.1).
 
 ---
 
@@ -239,7 +545,10 @@ Nolphin besteht aus getrennten Engines:
 - **Operations-Engine:** Kopieren, Verschieben, Löschen, Umbenennen, Wiederherstellen, mit Warteschlange und Rückgängig-Verlauf
 - **Such-Engine:** Dateisuche, Inhaltssuche, Filter (ohne eigenen Hintergrund-Index)
 - **Vorschau-Engine:** Vorschau-Erzeugung, Thumbnail-System, Metadaten-Auslesen
+- **Panel-Engine:** Verwaltung des integrierten rechten Arbeitsbereichs und seiner Funktionspanels
 - **Plugin-Engine:** Laden und Verwalten von Plugins und Aktionen
+
+Die Panel-Engine ist eine eigene UI-Schicht zwischen Hauptfenster und den einzelnen Funktionsmodulen. Sie stellt einen gemeinsamen rechten Arbeitsbereich bereit, in dem Vorschau, Informationen und interaktive Funktionen dargestellt werden können. Für Vorschau/Informationen, Eigenschaften, Terminal, Suche und Archiv ist diese Einbindung ausnahmslos verbindlich – keine Interpretation im Einzelfall (verbindliche Fassung: Abschnitt 58.1).
 
 ---
 
@@ -368,6 +677,109 @@ Einstellungen exportieren, importieren und zurücksetzen befinden sich im Einste
 
 Weicht diese Menüstruktur an einer Stelle von der Referenz ab oder ist eine Einordnung technisch unsinnig, meldest du das als Konflikt, statt die Struktur eigenständig zu ändern.
 
+### 11.2 RECHTER INTEGRIERTER ARBEITSBEREICH
+
+Der bisherige rechte Informations-/Vorschaubereich wird zu einem **integrierten rechten Arbeitsbereich** erweitert. Er ist ein zentraler Bestandteil des Hauptfensters und dient nicht nur der passiven Vorschau, sondern auch der interaktiven Bearbeitung von Funktionen. Die Bedienlogik orientiert sich dabei am Grundprinzip moderner Office-Anwendungen: Die Hauptansicht bleibt sichtbar, während eine ausgewählte Funktion in einem festen Arbeitsbereich geöffnet wird.
+
+Grundaufbau:
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Menü / Werkzeugleiste / Adresse                                         │
+├───────────────┬──────────────────────────────────┬──────────────────────┤
+│ Seitenleiste  │ Hauptansicht / Dateiansicht      │ Arbeitsbereich       │
+│ Orte / Baum   │ Dateien und Ordner               │ Vorschau             │
+│               │                                  │ Eigenschaften        │
+│               │                                  │ Archiv               │
+│               │                                  │ Terminal             │
+│               │                                  │ Suche / Aktionen     │
+│               │                                  │ Kompriemieren        │ 
+│               │                                  │ gid                  │
+│               │                                  │ deb-packet-erstellen │ 
+│               │                                  │                      │          
+├───────────────┴──────────────────────────────────┴──────────────────────┤
+│ Statusleiste                                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+```
+
+Die Aufteilung in Pflicht-Panels und geplante Panels ist in Abschnitt 58.1 verbindlich geregelt. Die DEB-Paket-Erstellung ist Teil des Archiv-Panels (siehe Abschnitt 36.1). Weitere, in diesem Vertrag nicht spezifizierte Zusatz-Panels sind kein Bestandteil des aktuellen Funktionsumfangs (siehe Abschnitt 58.1.5).
+
+Der rechte Arbeitsbereich muss:
+
+- ein- und ausblendbar sein (F11)
+- in seiner Breite veränderbar sein
+- den aktuellen Zustand des ausgewählten Panels anzeigen
+- beim Wechsel der Auswahl die kontextbezogenen Inhalte aktualisieren
+- zwischen mehreren geöffneten bzw. verfügbaren Panel-Funktionen wechseln können, ohne das Hauptfenster zu verlassen
+- die Hauptansicht und ihre Auswahl nicht unnötig verlieren oder neu laden
+- vollständig tastatur- und mausbedienbar sein
+- bei Bedarf ein Panel als maximierten Arbeitsbereich innerhalb des Hauptfensters darstellen können
+- asynchrone Vorgänge anzeigen, ohne die GUI zu blockieren
+
+#### Panel-Typen
+
+**Pflicht-Panels (siehe Abschnitt 58.1 für die verbindliche technische Regelung, ausnahmslos ab Version 2.2):**
+
+- **Vorschau/Informationen:** Bilder, Text, Markdown und weitere unterstützte Vorschauen; Dateiinformationen, Speicherort, Berechtigungen und technische Angaben
+- **Eigenschaften:** interaktive Eigenschaften und Berechtigungsänderungen
+- **Terminal:** VTE-Terminal für das aktuelle Verzeichnis
+- **Suche:** Such- und Filterergebnisse sowie Suchoptionen
+- **Archiv:** Komprimieren, Entpacken, Archivinhalt und Archivaktionen
+
+**Weitere Panels (optional bzw. spätere Phasen, gleiche Panel-Architektur, aber ohne die ausnahmslose Pflicht aus Abschnitt 58.1):**
+
+- **Aktionen:** kontextbezogene Aktionen, Stapelverarbeitung und weitere interaktive Werkzeuge, sofern die jeweilige Funktion dies unterstützt
+- **Einstellungen:** einzelne Einstellungsseiten dürfen im Arbeitsbereich dargestellt werden, sofern geeignet; komplexe systemweite oder sicherheitsrelevante Entscheidungen dürfen weiterhin einen separaten Dialog verwenden
+- **Git, Synchronisation, Versionierung, Duplikaterkennung, 3D-/CAD-Werkzeuge:** integrieren sich in dieselbe Panel-Architektur, sobald die jeweilige Phase (2 bzw. 3) freigegeben wird (siehe Abschnitt 40 für Git)
+
+Die DEB-Paket-Erstellung ist als Teil des Archiv-Panels spezifiziert (Abschnitt 36.1) und zählt damit zum Pflicht-Panel Archiv. Weitere Panel-Ideen, die in keinem Abschnitt dieses Vertrags funktional beschrieben sind, sind kein Bestandteil des aktuellen Funktionsumfangs (siehe Abschnitt 58.1.5).
+
+#### Panel-Navigation
+
+Der Arbeitsbereich besitzt eine eindeutige Panel-Navigation. Ein Panel kann über Menü, Werkzeugleiste, Kontextmenü oder Tastenkürzel geöffnet werden. Wird bereits ein Panel angezeigt, wird es wiederverwendet und nicht als zusätzliches Fenster geöffnet.
+
+Beispiel:
+
+```text
+Datei auswählen
+      ↓
+Funktion auswählen
+      ↓
+Rechter Arbeitsbereich
+      ↓
+passendes Panel laden
+      ↓
+Funktion innerhalb des Hauptfensters bedienen
+```
+
+Beim Schließen des Panels wird der normale Vorschau-/Informationszustand wiederhergestellt, sofern der Benutzer nicht ausdrücklich einen anderen Zustand gewählt hat.
+
+#### Separate Fenster
+
+Ein separates Top-Level-Fenster ist für eine Funktion nicht der Standard. Für Vorschau/Informationen, Eigenschaften, Terminal, Suche und Archiv gibt es dazu keine Ausnahme im Einzelfall mehr – die abschließende, verbindliche Regelung inklusive der vollständigen Ausnahmeliste steht in Abschnitt 58.1.2.
+
+Für alle anderen, hier nicht als Pflicht-Panel gelisteten Funktionen gilt: Ein eigenes Fenster ist nur zulässig bei mindestens einem der folgenden, im Änderungsprotokoll (Abschnitt 8) konkret zu benennenden Gründe:
+
+- die Funktion benötigt technisch nachweisbar ein eigenständiges Fenster (z. B. weil GTK dafür keinen einbettbaren Widget-Typ vorsieht)
+- ein nativer Systemdialog ist erforderlich (siehe Ausnahmeliste in Abschnitt 58.1.2)
+- die Funktion wurde in diesem Vertrag ausdrücklich als unabhängiges Fenster spezifiziert
+
+„Das wäre einfacher" oder eine allgemeine Einschätzung „nicht sinnvoll im Hauptfenster darstellbar" reichen als Begründung nicht aus (vgl. Abschnitt 57).
+
+#### Gemeinsame Zustandsverwaltung
+
+Die Panel-Engine verwaltet mindestens:
+
+- aktuellen Panel-Typ
+- Sichtbarkeit des Arbeitsbereichs
+- Panel-Breite
+- zugehöriges Objekt bzw. Dateiauswahl
+- laufenden Vorgang
+- Panel-spezifischen Zustand
+- Rückkehrzustand zur Vorschau/Information
+
+Panel-Module dürfen ihre fachliche Logik behalten, müssen aber über eine gemeinsame Panel-Schnittstelle in den Arbeitsbereich eingebunden werden.
+
 ---
 
 ## 12. TASTATURBEDIENUNG
@@ -455,13 +867,18 @@ Jeder Tab hat eigenen Pfad, eigene Navigation, eigene Auswahl, eigene Dateiansic
 
 ## 17. INTEGRIERTES TERMINAL (F4)
 
-- VTE 2.91, im unteren Bereich über GtkPaned, Höhe veränderbar
-- mehrere Terminals als Tabs im Terminalbereich
+- VTE 2.91, standardmäßig als **Panel im rechten integrierten Arbeitsbereich**
+- das Terminal darf nicht als separates Top-Level-Fenster geöffnet werden, sofern der rechte Arbeitsbereich verfügbar ist
+- Höhe und Breite des Terminal-Panels passen sich an den rechten Arbeitsbereich an; die Breite des Arbeitsbereichs ist veränderbar
+- mehrere Terminals als Tabs innerhalb des Terminal-Panels
 - Terminalpfad folgt dem aktuellen Verzeichnis; Navigation im Dateimanager aktualisiert den Terminalpfad
-- „Terminal hier öffnen" im Kontextmenü öffnet das integrierte Terminal im gewählten Ordner
+- „Terminal hier öffnen" im Kontextmenü öffnet das integrierte Terminal-Panel im gewählten Ordner
+- F4 öffnet bzw. fokussiert das Terminal-Panel; bei erneutem F4 kann das Panel geschlossen werden
 - Befehle und Skripte ausführen; Befehl als Aktion speichern (Abschnitt 43)
 
-Keine externe Terminalanwendung als Ersatz.
+Das Terminal-Panel ist ein GtkWidget (kein GtkWindow/GtkDialog); `gtk_dialog_new()` bzw. `GTK_TYPE_DIALOG` sind für diese Funktion nicht zulässig (siehe Abschnitt 58.1).
+
+Keine externe Terminalanwendung als Ersatz für das integrierte Terminal.
 
 ---
 
@@ -471,7 +888,7 @@ Keine externe Terminalanwendung als Ersatz.
 - Darstellung: Symbolgröße, Miniaturansichten, Dateiname, Größe, Typ, Änderungsdatum, Berechtigungen, Besitzer, Speicherort
 - Sortierung: Name, Größe, Typ, Datum, Besitzer, Erweiterung – jeweils auf- und absteigend
 - Gruppierung: Name, Typ, Datum, Größe, Erweiterung
-- Anzeige: versteckte Dateien, Informations-/Vorschaubereich, Statusleiste (mit freiem Speicherplatz), Seitenleiste
+- Anzeige: versteckte Dateien, rechter integrierter Arbeitsbereich, Statusleiste (mit freiem Speicherplatz), Seitenleiste
 - Detailspalten konfigurierbar (ein-/ausblenden, Reihenfolge, Breite), Schriftgröße
 
 ---
@@ -574,6 +991,8 @@ Kopieren, Ausschneiden, Einfügen von mehreren Dateien und Ordnern, mit internen
 
 Ordnergrößen blockieren nie die GUI. Keine stillen Root-Aktionen; Operationen, die Root-Rechte benötigen, werden klar gemeldet.
 
+Eigenschaften und Berechtigungen werden standardmäßig im rechten integrierten Arbeitsbereich als interaktives Eigenschaften-Panel geöffnet. Diese Funktion ist ab Version 2.2 ausnahmslos als Panel-Widget zu implementieren; eine Umsetzung als `GTK_TYPE_DIALOG` (wie im bisherigen `NolphinPropertiesWindow`) gilt als Altlast und ist gemäß Abschnitt 58.1.3 umzubauen, nicht als Konflikt zu melden.
+
 ---
 
 ## 29. FILTER UND SUCHE (GRUNDFUNKTIONEN)
@@ -582,12 +1001,16 @@ Ordnergrößen blockieren nie die GUI. Keine stillen Root-Aktionen; Operationen,
 - Suche (Strg+F): Dateiname, Ordnername, Erweiterung, Pfad
 - Ergebnisse: filtern, sortieren, öffnen, zum Speicherort springen
 - keine Blockierung der GUI, auch bei großen Verzeichnissen
+- die Suchfunktion wird standardmäßig im rechten integrierten Arbeitsbereich als Such-Panel dargestellt, sofern die Ergebnisse nicht ausdrücklich als eigene Hauptansicht benötigt werden
+- `gtk_dialog_new()` bzw. `GTK_TYPE_DIALOG` sind für die Suchfunktion nicht zulässig (siehe Abschnitt 58.1)
 
 ---
 
 ## 30. VORSCHAU UND INFORMATIONSBEREICH (GRUNDFUNKTIONEN)
 
-Rechter Bereich (F11):
+Der rechte Bereich (F11) ist der **integrierte rechte Arbeitsbereich** gemäß Abschnitt 11.2. Die Vorschau ist dessen Standardzustand, wenn keine andere Funktion geöffnet wurde. Dieses Panel zählt zu den Pflicht-Panels aus Abschnitt 58.1 und darf nicht als eigenes Fenster implementiert werden.
+
+Vorschau-/Informationszustand:
 
 - Datei: Name, Typ, Größe, Datum, Berechtigungen, Besitzer, Gruppe
 - Speicher: Speicherort, Gerät, Dateisystem, Speicherverbrauch
@@ -595,7 +1018,20 @@ Rechter Bereich (F11):
 - Text und Markdown: Textvorschau
 - nicht unterstützte Dateien: sinnvolle Fallback-Anzeige
 
-Architektur: eigenständiges Modul mit Backend-Struktur, alle Operationen asynchron. Beispiel-API: `nolphin_preview_new()`, `nolphin_preview_set_file()`, `nolphin_preview_clear()`, `nolphin_preview_update()` (anpassbar, solange das Modul getrennt bleibt).
+Der rechte Arbeitsbereich darf von interaktiven Funktionspanels übernommen werden. Beim Öffnen eines solchen Panels bleibt die aktuelle Dateiauswahl und Hauptansicht erhalten. Nach dem Schließen wird wieder die vorherige Vorschau-/Informationsdarstellung hergestellt, sofern kein anderer Panel-Zustand gespeichert wurde.
+
+Architektur: eigenständiges Vorschau-Modul mit Backend-Struktur sowie eigenständige Panel-Engine für die Einbindung in den rechten Arbeitsbereich. Alle Operationen sind asynchron. Beispiel-API für die Vorschau: `nolphin_preview_new()`, `nolphin_preview_set_file()`, `nolphin_preview_clear()`, `nolphin_preview_update()`. Die konkrete API darf angepasst werden, solange Vorschau und Panel-Container getrennt bleiben.
+
+Für die Panel-Integration ist eine vergleichbare gemeinsame Schnittstelle vorzusehen, beispielsweise:
+
+- Panel registrieren
+- Panel öffnen
+- Panel schließen
+- Panel fokussieren
+- Panel mit aktuellem Objekt aktualisieren
+- Panel-Zustand erhalten/wiederherstellen
+
+Konkrete Funktionsnamen sind nicht verbindlich; die Architektur muss jedoch eine einheitliche Einbindung aller interaktiven rechten Panels ermöglichen.
 
 ---
 
@@ -607,12 +1043,15 @@ Vollständig über GSettings/dconf mit XML-Schema `data/org.nolphin.gschema.xml`
 - Navigation: Tabs, Split View, Verlauf, Breadcrumbs, Tabs beim Start wiederherstellen
 - Darstellung: Symbolgröße, Vorschauen, Spalten, Zeilenhöhe in der Listenansicht, Sortierung, Gruppierung
 - Dateioperationen: Kopierverhalten, Überschreibverhalten, Papierkorb (Aufbewahrung, Größenlimit), Löschbestätigung, Warteschlange
-- Terminal: Standardzustand, Höhe
 - Suche: Suchpfade, Standardfilter
 - Netzwerk: Standardprotokoll im Verbindungsdialog, gespeicherte Verbindungen
-- Vorschau: aktivieren/deaktivieren, automatische Vorschau, maximale Dateigröße, unterstützte Typen, Breite des Informationsbereichs
+- Vorschau: aktivieren/deaktivieren, automatische Vorschau, maximale Dateigröße, unterstützte Typen, Breite des rechten Arbeitsbereichs
+- Arbeitsbereich: sichtbar/ausgeblendet, zuletzt verwendetes Panel, Panel-Breite, Verhalten beim Öffnen von Funktionen, Rückkehr zur Vorschau nach dem Schließen eines Panels
+- Terminal: Panel als Standarddarstellung, Terminalhöhe/-breite innerhalb des Arbeitsbereichs, Anzahl der Terminal-Tabs und Wiederherstellungsverhalten
 - 3D/CAD: 3D-Vorschau aktivieren/deaktivieren, maximale Dateigröße, erlaubte Formate
 - Kontextmenü: Aktionen und Skripte ein-/ausblenden
+
+Einzelne Einstellungsseiten folgen, wo sinnvoll, der Panel-Architektur aus Abschnitt 11.2; dies ist optional, nicht Pflicht (Einstellungen zählt nicht zu den Pflicht-Panels aus Abschnitt 58.1).
 
 Nach Schemaänderungen: `glib-compile-schemas`. Einstellungen sind persistent.
 
@@ -664,14 +1103,58 @@ Anzeige im Informationsbereich und im Eigenschaften-Dialog.
 
 ---
 
-## 36. ARCHIVE
+## 36. ARCHIVE UND KOMPRIMIERUNGSFORMATE
+Abstrahierte Backend-Struktur über file-roller bzw. direkte Systemwerkzeuge (Abschnitt 53.5).
 
-- Erstellen: ZIP, TAR, TAR.GZ, TAR.BZ2, TAR.XZ, 7Z
-- Entpacken: hier, nach …, einzelne oder mehrere Dateien extrahieren
-- Verwaltung: Archiv öffnen, Inhalt anzeigen, Dateien hinzufügen, entfernen, ersetzen, Archiv testen, Archivinformationen
-- weitere Formate, soweit die installierten Werkzeuge sie unterstützen
+Komprimieren, Entpacken und die interaktive Archivverwaltung werden standardmäßig als **Archiv-Panel im rechten integrierten Arbeitsbereich** geöffnet. Ein separates Fenster ist hierfür nicht der Standard; `gtk_dialog_new()` bzw. `GTK_TYPE_DIALOG` sind für diese Funktion nicht zulässig (siehe Abschnitt 58.1).
 
-Abstrahierte Backend-Struktur über file-roller bzw. Systemwerkzeuge (Regeln aus Abschnitt 53.5). Bei TAR-basierten Formaten erfordert Bearbeiten ein Neupacken; der Benutzer wird bei großen Archiven darauf hingewiesen.
+Das Archiv-Panel muss mindestens die Auswahl von Format, Zielort, Optionen und Passwortschutz sowie Fortschritt, Fehler und Abschlusszustand darstellen können. Die bestehende Hauptansicht bleibt während des Vorgangs sichtbar.
+
+Erstellung & Komprimierung:
+- ZIP (.zip)
+- TAR (.tar)
+- TAR.GZ / TGZ (.tar.gz, .tgz)
+- TAR.BZ2 / TBZ2 (.tar.bz2, .tbz2)
+- TAR.XZ / TXZ (.tar.xz, .txz)
+- TAR.ZST / TZST (.tar.zst, .tzst) (Zstandard)
+- TAR.LZ4 (.tar.lz4) (LZ4)
+- 7Z (.7z)
+- Einzeldateikomprimierung ohne Tarball: GZ (.gz), BZ2 (.bz2), XZ (.xz), ZST (.zst), LZ4 (.lz4)
+
+Entpacken / Nur Lesen (über file-roller oder installierte Systemwerkzeuge):
+- RAR (.rar) (sofern unrar oder p7zip-rar installiert ist)
+- CAB (.cab)
+- ARJ (.arj)
+- LZH / LHA (.lzh)
+- ISO (.iso Image-Dateien entpacken/auslesen)
+- CPIO / RPM / DEB (Paket- und Archiv-Container auslesen)
+
+Erweiterte Einstellungen & Erstellungsdialog:
+- Eingabe von Dateiname und Wahl des Formats über Dropdown-Menü
+- Zielort-Auswahl (z. B. Home-Verzeichnis oder benutzerdefinierte Ordner)
+- Passwordschutz & Verschlüsselung (inklusive Option "Dateiliste ebenfalls verschlüsseln", sofern vom Format unterstützt)
+- Aufteilen in Teilarchive mit definierbarer Größe in MB
+
+Verwaltung & Funktionen:
+- Hier entpacken, nach … entpacken, einzelne oder mehrere Dateien extrahieren
+- Archiv öffnen, Inhalt anzeigen, Dateien hinzufügen, entfernen, ersetzen, Archiv testen, Archivinformationen
+- Bei TAR-basierten Formaten erfordert Bearbeiten ein Neupacken; der Benutzer wird bei großen Archiven darauf hingewiesen.
+- Fehlt ein benötigtes Hilfsprogramm für ein Format, wird dies dynamisch erkannt und dem Benutzer verständlich mitgeteilt.
+
+---
+
+## 36.1 DEB-PAKET ERSTELLEN
+
+Zusätzlich zu den reinen Lese-Funktionen für DEB-Archive (Abschnitt 36) kann Nolphin aus einem ausgewählten, bereits vorbereiteten Ordner (mit vorhandener `DEBIAN/control`-Struktur) über `dpkg-deb --build` ein installierbares .deb-Paket erzeugen.
+
+- Kontextmenü auf einem geeigneten Ordner: „DEB-Paket erstellen …"
+- Der Vorgang läuft im **Archiv-Panel** des rechten integrierten Arbeitsbereichs (Abschnitt 11.2/58.1), nicht als eigenes Fenster; `gtk_dialog_new()` bzw. `GTK_TYPE_DIALOG` sind auch für diese Funktion nicht zulässig.
+- Zielort für die erzeugte .deb-Datei ist wählbar.
+- Fortschritt, Fehler (z. B. fehlende oder ungültige `DEBIAN/control`-Datei, fehlendes `dpkg-deb`) und Abschlusszustand werden im Panel angezeigt.
+- Fehlt `dpkg-deb`, wird die Funktion ausgegraut und der Grund angezeigt (Abschnitt 53.5).
+- Menüeintrag unter Bearbeiten ▸ Archiv (Abschnitt 11.1).
+
+Diese Funktion ist in der bestehenden Anwendung bereits implementiert; dieser Abschnitt dokumentiert sie nachträglich und ordnet sie verbindlich in die Panel-Architektur ein (Altlast-Prüfung gemäß Abschnitt 58.0: falls die bestehende Implementierung aktuell als eigenes Fenster läuft, ist das eine Altlast und wird ins Archiv-Panel überführt, kein Konflikt). Weicht der tatsächliche Funktionsumfang hiervon ab (z. B. ein zusätzliches Formular zur Eingabe von Name/Version/Architektur/Abhängigkeiten), wird dieser Abschnitt entsprechend präzisiert und mir zur Freigabe vorgelegt.
 
 ---
 
@@ -708,6 +1191,8 @@ Abstrahierte Backend-Struktur über file-roller bzw. Systemwerkzeuge (Regeln aus
 
 Über das Systemwerkzeug git: Status von Dateien anzeigen (als Emblem bzw. Spalte), Hinzufügen, Commit, Pull, Push, Log anzeigen, Diff anzeigen. Ohne installiertes git wird die Funktion ausgeblendet und der Grund angezeigt.
 
+Die Bedienung erfolgt als Git-Panel im rechten integrierten Arbeitsbereich (siehe Abschnitt 11.2), sobald dieser Abschnitt in Phase 2 umgesetzt wird; kein separates Git-Fenster.
+
 ---
 
 ## 41. ARBEITSBEREICHE
@@ -732,7 +1217,6 @@ Mindestens: STL, STEP, STP, FCStd (FreeCAD).
 
 Architektur getrennt vom Bild-Backend:
 
-```
 Vorschau
 ├── Bild
 ├── Text
@@ -740,10 +1224,10 @@ Vorschau
 ├── Video/Audio
 ├── Dokument
 └── 3D
-    ├── STL
-    ├── STEP/STP
-    └── FCStd
-```
+├── STL
+├── STEP/STP
+└── FCStd
+
 
 Dateityp-Erkennung → Backend-Auswahl → Metadaten → Vorschau → Aktionen. Neue Formate lassen sich ohne Umbau ergänzen. Weitere Formate (IGES, OBJ, 3MF, DXF, DWG) werden erkannt und als nicht unterstützt ausgewiesen.
 
@@ -826,11 +1310,10 @@ Test: Normaler Start aus dem Mint-Menü → alle Texte deutsch, keine englischen
 
 ## 50. BUILD
 
-```
 meson setup build        (bzw. meson setup --reconfigure build)
 ninja -C build
 ninja -C build install
-```
+
 
 Nach jeder Änderung: kompilieren, Compiler- und Linkerfehler beheben, Warnungen prüfen, Anwendung starten, Funktion testen. Optionale Komponenten (z. B. Poppler, GStreamer) werden in Meson als optionale Abhängigkeiten behandelt.
 
@@ -841,13 +1324,12 @@ Nach jeder Änderung: kompilieren, Compiler- und Linkerfehler beheben, Warnungen
 - Erlaubt sind ausschließlich die Bibliotheken und Werkzeuge aus Abschnitt 3.
 - Du installierst keine Pakete (apt, pip, npm oder andere) und fügst keine neue Abhängigkeit in meson.build ein, ohne vorher zu fragen. Format:
 
-```
 NEUE ABHÄNGIGKEIT: …
 WOFÜR: …
 PFLICHT ODER OPTIONAL: …
 OHNE SIE: …
 ALTERNATIVE OHNE NEUE ABHÄNGIGKEIT: …
-```
+
 
   Danach auf meine Entscheidung warten.
 - Reine Build-Pakete (z. B. `libgtk-3-dev`, `libvte-2.91-dev`, `meson`) aus Abschnitt 3 dürfen in der Entwicklungsumgebung installiert werden, um kompilieren zu können; jede solche Installation wird im Änderungsprotokoll genannt.
@@ -903,7 +1385,9 @@ Jede Funktion wird getestet. Mindestens:
 - Dateioperationen: kopieren, verschieben, umbenennen, löschen, Papierkorb, wiederherstellen, Rückgängig
 - Navigation: Zurück, Vorwärts, übergeordnet, Pfad, URI, Tabs
 - Split: vertikal, horizontal, Kopieren zwischen Bereichen
-- Terminal: F4, Pfadwechsel, Befehl, schließen
+- Terminal: F4, Pfadwechsel, Befehl, schließen, Panel-Fokus, mehrere Terminal-Tabs
+- Rechter Arbeitsbereich: F11, Ein-/Ausblenden, Breitenänderung, Panel-Wechsel, Rückkehr zur Vorschau, Erhalt der Dateiauswahl
+- Integrierte Panels: Eigenschaften, Suche und Archivfunktionen öffnen und bedienen, ohne ein separates Top-Level-Fenster zu erzeugen
 - Suche: Name, Inhalt, Typ, Größe, Datum, Operatoren
 - Vorschau: Bild, Text, PDF, unbekannter Typ, große Datei, ungültige Datei
 - Geräte: erkennen, einbinden, aushängen
@@ -914,6 +1398,7 @@ Jede Funktion wird getestet. Mindestens:
 - Sprache: alle Texte deutsch, keine englischen Reste (Abschnitt 49)
 - Symbole: normale Symbole, Schloss nur bei fehlenden Rechten (Abschnitt 18.1)
 - Eigenständigkeit: Build und Start ohne die optionalen Komponenten aus Abschnitt 3
+- Pflicht-Panels (Abschnitt 58.1): Repository-weiter Suchlauf ohne Treffer für `GTK_TYPE_DIALOG`/`gtk_dialog_new` in den betroffenen Modulen; Fensterliste vor/nach Öffnen von Eigenschaften, Terminal, Suche und Archiv unverändert
 
 Nach jeder größeren Implementierung:
 
@@ -974,17 +1459,103 @@ Eindeutige Anforderung: umsetzen. Mehrdeutige Anforderung: Interpretation dokume
 
 Konfliktformat:
 
-```
 KONFLIKT: …
 ANFORDERUNG A: …
 ANFORDERUNG B: …
 TECHNISCHE AUSWIRKUNG: …
 VORSCHLAG: …
-```
+
 
 Dann auf meine Entscheidung warten.
 
-Prioritäten: 1. meine ausdrücklichen Anforderungen, 2. tatsächliche Funktionalität, 3. Datenintegrität, 4. Stabilität, 5. korrekte Linux-Integration, 6. UI-Konsistenz, 7. Performance, 8. Erweiterbarkeit, 9. Codequalität.
+Prioritäten: 1. meine ausdrücklichen Anforderungen, 2. tatsächliche Funktionalität, 3. Datenintegrität, 4. Stabilität, 5. korrekte Linux-Integration, 6. UI-Konsistency, 7. Performance, 8. Erweiterbarkeit, 9. Codequalität.
+
+### 58.0 ECHTER KONFLIKT VS. ALTLAST
+
+Nicht jede Abweichung zwischen bestehendem Code und diesem Vertrag ist ein Konflikt im Sinne des Konfliktformats.
+
+**Echter Konflikt** (Konfliktformat verwenden, auf Freigabe warten): zwei Anforderungen dieses Vertrags widersprechen sich inhaltlich, oder eine Anforderung ist technisch nicht wie beschrieben umsetzbar.
+
+**Altlast** (kein Konflikt, keine Rückfrage nötig, einfach umsetzen): bestehender Code entspricht einer bereits eindeutig entschiedenen Anforderung dieses Vertrags noch nicht. Das ist erwarteter, normaler Projektfortschritt, kein Entscheidungsbedarf. Beispiel: Eine Funktion ist aktuell als `GTK_TYPE_DIALOG` implementiert, obwohl dieser Vertrag für sie ausdrücklich ein Panel im rechten Arbeitsbereich vorschreibt (siehe Abschnitt 58.1) – das wird umgebaut, nicht gemeldet.
+
+Im Zweifel gilt: Wenn dieser Vertrag für den fraglichen Fall bereits eine eindeutige Aussage trifft, ist es eine Altlast. Nur wenn der Vertrag selbst unklar, widersprüchlich oder technisch nicht umsetzbar ist, ist es ein echter Konflikt.
+
+---
+
+## 58.1 UI-ARCHITEKTUR: INTEGRIERTER RECHTER ARBEITSBEREICH (verbindliche Fassung, Version 2.2)
+
+Dieser Abschnitt ist für die fünf Pflicht-Panels abschließend und verbindlich. Er ersetzt/konkretisiert alle weicheren Formulierungen an anderer Stelle des Vertrags (u. a. Abschnitt 10, 11.2, 17, 28, 29, 30, 31, 36). Bei Widerspruch zwischen diesem Abschnitt und einer älteren Formulierung gilt dieser Abschnitt.
+
+### 58.1.1 Pflicht-Panels
+
+Folgende fünf Funktionen MÜSSEN als Panel-Widget im rechten integrierten Arbeitsbereich laufen – ausnahmslos, ab sofort, ohne weitere Rückfrage:
+
+1. Vorschau/Informationen (Abschnitt 30)
+2. Eigenschaften und Berechtigungen (Abschnitt 28)
+3. Terminal (Abschnitt 17)
+4. Suche (Abschnitt 29)
+5. Archiv – Komprimieren/Entpacken/DEB-Paket erstellen (Abschnitt 36, 36.1)
+
+Für diese fünf Funktionen gilt technisch verbindlich:
+
+- Implementierung als eigenständiges `GtkWidget` (z. B. Subklasse von `GtkBox` oder `GtkGrid`), NICHT als `GtkWindow`, `GtkDialog` oder `GTK_TYPE_DIALOG`-Subtyp.
+- `gtk_dialog_new()`, `gtk_dialog_new_with_buttons()` und jede `GTK_TYPE_DIALOG`-Subklasse sind für diese fünf Funktionen verboten.
+- Einbindung ausschließlich über die Panel-Engine (Abschnitt 10) in einen gemeinsamen Container (z. B. `GtkStack`) innerhalb des rechten `GtkPaned`-Bereichs.
+- Öffnen/Wechseln über Menü, Werkzeugleiste, Kontextmenü oder Tastenkürzel aktiviert das jeweilige Panel im bestehenden Arbeitsbereich; es wird nie ein zusätzliches Top-Level-Fenster erzeugt.
+
+### 58.1.2 Ausnahmen (abschließende Liste)
+
+Nur folgende Dialoge/Fenster bleiben ausdrücklich als klassische GTK-Dialoge bzw. eigene Fenster bestehen, weil sie native Systemfunktionen sind oder eine eindeutige Bestätigung/Blockierung erfordern:
+
+- `GtkFileChooserDialog` (Öffnen/Speichern unter, Zielordner wählen)
+- Lösch-/Überschreib-Bestätigungsdialoge (z. B. „Endgültig löschen?")
+- Fehlermeldungen und kritische Warnungen (`GtkMessageDialog`)
+- `GtkMountOperation` (Zugangsdaten, LUKS-Entsperrung)
+- Der „Über Nolphin"-Dialog
+- Das Hauptfenster selbst sowie zusätzliche Datei-Manager-Fenster (Abschnitt 11, „mehrere Fenster gleichzeitig möglich")
+
+Jede weitere Funktion, die nicht in 58.1.1 oder in dieser Ausnahmeliste steht, entscheidet sich nach der allgemeinen Regel in Abschnitt 11.2 („Separate Fenster"): Panel ist Standard, ein eigenes Fenster nur bei zwingendem technischem Grund – und dieser Grund wird im Änderungsprotokoll (Abschnitt 8) konkret benannt, nicht pauschal behauptet.
+
+### 58.1.3 Migration bestehenden Codes (Altlasten, keine Konflikte)
+
+Eine bestehende Implementierung, die einer der fünf Pflicht-Panel-Funktionen entspricht, aber aktuell als `GTK_TYPE_DIALOG` bzw. eigenes Top-Level-Fenster gebaut ist (bekanntes Beispiel: `NolphinPropertiesWindow`), ist eine Altlast gemäß Abschnitt 58.0 – kein Konflikt. Der Umbau in ein Panel-Widget ist hiermit für alle fünf Funktionen ausdrücklich freigegeben; dafür ist keine weitere Rückfrage nötig. Vorgehen:
+
+1. Bestehende fachliche Logik (z. B. Berechnungen, GIO-Aufrufe, Callbacks) so weit wie möglich unverändert aus dem bisherigen Dialog-Code übernehmen.
+2. Nur die Hülle austauschen: `GtkDialog`/`GtkWindow` → `GtkWidget`-Panel, das über die Panel-Engine eingebunden wird.
+3. Bisherige Tastenkürzel, Menüeinträge, Kontextmenüeinträge und GActions bleiben erhalten und binden ab jetzt an das Panel statt an den Dialog.
+4. Der Umbau wird wie jede andere Änderung im Änderungsprotokoll (Abschnitt 8) dokumentiert.
+
+### 58.1.4 Panel-Engine – Architekturvorgaben
+
+Die Panel-Engine (Abschnitt 10) verwaltet mindestens:
+
+- Registrierung eines Panel-Typs (feste interne Kennung, z. B. `NOLPHIN_PANEL_EIGENSCHAFTEN`, `NOLPHIN_PANEL_TERMINAL`, `NOLPHIN_PANEL_SUCHE`, `NOLPHIN_PANEL_ARCHIV`, `NOLPHIN_PANEL_VORSCHAU`)
+- Öffnen, Wechseln, Fokussieren und Schließen eines Panels
+- Sichtbarkeit und Breite des Arbeitsbereichs (F11, ziehbarer Splitter)
+- aktuelle Dateiauswahl/-objekt je Panel
+- Rückkehr zum Vorschau-/Informationszustand nach Schließen eines Panels
+
+Konkrete Funktions- und Signalnamen bleiben – wie schon in Abschnitt 30 festgelegt – nicht verbindlich vorgegeben; verbindlich ist ausschließlich, dass alle fünf Pflicht-Panels dieselbe Panel-Schnittstelle verwenden und keines davon einen eigenen Weg über ein Top-Level-Fenster nimmt.
+
+### 58.1.5 Nicht spezifizierte Zusatz-Panels
+
+Panel-Ideen, die in keinem Abschnitt dieses Vertrags funktional spezifiziert sind, sind ausdrücklich NICHT Teil des aktuellen Funktionsumfangs und werden nicht umgesetzt, bis ich sie in einem eigenen Abschnitt spezifiziere. Ein Modul darf hierfür vorbereitet, aber nicht implementiert werden. (Die DEB-Paket-Erstellung fällt seit Version 2.3 nicht mehr unter diese Regel, siehe Abschnitt 36.1.)
+
+### 58.1.6 Test/Definition-of-Done für diesen Abschnitt
+
+Zusätzlich zu Abschnitt 54 gilt für die fünf Pflicht-Panels:
+
+- Ein Repository-weiter Suchlauf nach `GTK_TYPE_DIALOG`, `gtk_dialog_new` und `gtk_dialog_new_with_buttons` in den Modulen für Eigenschaften, Terminal, Suche und Archiv liefert keine Treffer außerhalb der in 58.1.2 gelisteten Ausnahmen.
+- Öffnen jeder der fünf Funktionen erzeugt nachweislich kein zusätzliches Top-Level-Fenster (manueller Test: Fensterliste vor/nach dem Öffnen vergleichen).
+- Panel-Wechsel, F11, Breitenänderung, Erhalt der Dateiauswahl und Rückkehr zur Vorschau funktionieren für alle fünf Panels identisch (siehe Abschnitt 54).
+
+### 58.1.7 Änderungsprotokoll dieses Abschnitts
+
+- REQUIREMENT: Beseitigung der Mehrdeutigkeit „soweit technisch und ergonomisch sinnvoll" für die fünf Pflicht-Panels; verbindliche Klärung, dass bestehende Dialog-Implementierungen (z. B. `NolphinPropertiesWindow`) Altlasten und keine Konflikte sind.
+- DATEI: docs/NOLPHIN_SPEC.md, Abschnitt 9, 10, 11.2, 17, 28, 29, 30, 31, 36, 40, 54, 58, 58.1.
+- ÄNDERUNG: siehe 58.1.1–58.1.6 oben; Abschnitt 58.0 neu eingeführt (echter Konflikt vs. Altlast); ASCII-Diagramm in Abschnitt 11.2 bereinigt (Tippfehler entfernt, nicht spezifizierte Panels als „geplant/offen" markiert statt implizit als Anforderung dargestellt).
+- WARUM: Die bisherige Formulierung erlaubte unterschiedliche Auslegungen und führte dazu, dass eine bereits entschiedene Anforderung (Panel statt Dialog) wiederholt als klärungsbedürftiger Konflikt gemeldet wurde, statt umgesetzt zu werden.
+- TEST: siehe 58.1.6.
 
 ---
 
@@ -994,4 +1565,4 @@ Ich entscheide, was Nolphin sein soll. Du analysierst, planst, implementierst, b
 
 ---
 
-ENDE DES NOLPHIN MASTER DEVELOPMENT CONTRACT
+ENDE DES NOLPHIN MASTER DEVELOPMENT CONTRACT (Version 2.2)
