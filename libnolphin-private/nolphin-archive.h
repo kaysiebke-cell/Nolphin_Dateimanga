@@ -28,15 +28,44 @@
 
 G_BEGIN_DECLS
 
+/* §36: Erstellung & Komprimierung (create_tool gesetzt) danach
+ * Entpacken/Nur-Lesen (create_tool == NULL - kein vorgetaeuschtes
+ * "Erstellen", das die zugrundeliegenden Werkzeuge nicht koennen). */
 typedef enum {
     NOLPHIN_ARCHIVE_FORMAT_ZIP,
     NOLPHIN_ARCHIVE_FORMAT_TAR,
     NOLPHIN_ARCHIVE_FORMAT_TAR_GZ,
     NOLPHIN_ARCHIVE_FORMAT_TAR_BZ2,
     NOLPHIN_ARCHIVE_FORMAT_TAR_XZ,
+    NOLPHIN_ARCHIVE_FORMAT_TAR_ZST,
+    NOLPHIN_ARCHIVE_FORMAT_TAR_LZ4,
     NOLPHIN_ARCHIVE_FORMAT_SEVEN_ZIP,
+    NOLPHIN_ARCHIVE_FORMAT_GZ,   /* Einzeldatei, kein Tarball */
+    NOLPHIN_ARCHIVE_FORMAT_BZ2,
+    NOLPHIN_ARCHIVE_FORMAT_XZ,
+    NOLPHIN_ARCHIVE_FORMAT_ZST,
+    NOLPHIN_ARCHIVE_FORMAT_LZ4,
+    NOLPHIN_ARCHIVE_FORMAT_RAR,  /* ab hier: nur entpacken/lesen */
+    NOLPHIN_ARCHIVE_FORMAT_CAB,
+    NOLPHIN_ARCHIVE_FORMAT_ARJ,
+    NOLPHIN_ARCHIVE_FORMAT_LZH,
+    NOLPHIN_ARCHIVE_FORMAT_ISO,
+    NOLPHIN_ARCHIVE_FORMAT_CPIO,
+    NOLPHIN_ARCHIVE_FORMAT_RPM,
+    NOLPHIN_ARCHIVE_FORMAT_DEB,
     NOLPHIN_ARCHIVE_FORMAT_UNKNOWN
 } NolphinArchiveFormat;
+
+/* TRUE für die "Erstellung & Komprimierung"-Formate aus §36, FALSE für
+ * die "Entpacken / Nur Lesen"-Formate (RAR bis DEB) - die Oberfläche
+ * nutzt das, um im Format-Dropdown beim Erstellen nur die erstellbaren
+ * Formate anzubieten. */
+gboolean     nolphin_archive_format_can_create (NolphinArchiveFormat format);
+
+/* Formate, die genau eine Datei komprimieren (kein Tar-Container):
+ * GZ/BZ2/XZ/ZST/LZ4. nolphin_archive_compress_async() verlangt dafür
+ * genau eine Quelle. */
+gboolean     nolphin_archive_format_is_single_file (NolphinArchiveFormat format);
 
 #define NOLPHIN_ARCHIVE_ERROR (nolphin_archive_error_quark ())
 GQuark nolphin_archive_error_quark (void);
@@ -55,6 +84,14 @@ const gchar *nolphin_archive_format_get_label (NolphinArchiveFormat format);
 const gchar *nolphin_archive_format_get_extension (NolphinArchiveFormat format);
 gboolean     nolphin_archive_format_is_available (NolphinArchiveFormat format);
 
+/* Nur ZIP und 7-Zip koennen als Werkzeug selbst Passwort-Verschluesselung
+ * bzw. Teilarchive (Mehrbaendigkeit) - die TAR-Varianten schlicht nicht,
+ * das ist keine Nolphin-Einschraenkung. Die Oberflaeche fragt hier ab,
+ * um die jeweiligen Felder auszugrauen statt eine vorgetaeuschte
+ * Funktion anzubieten (§53.1/§57 des Entwicklungsvertrags). */
+gboolean     nolphin_archive_format_supports_password (NolphinArchiveFormat format);
+gboolean     nolphin_archive_format_supports_split     (NolphinArchiveFormat format);
+
 /* Guess the format from an archive's filename. FORMAT_UNKNOWN if no
  * known extension matches. */
 NolphinArchiveFormat nolphin_archive_detect_format (GFile *archive_file);
@@ -62,10 +99,27 @@ NolphinArchiveFormat nolphin_archive_detect_format (GFile *archive_file);
 /* Compress @sources (all siblings in the same directory) into a new
  * archive at @destination in @format. Fails with
  * NOLPHIN_ARCHIVE_ERROR_TOOL_NOT_FOUND if the required tool isn't
- * installed, checked up front before spawning anything. */
+ * installed, checked up front before spawning anything.
+ *
+ * @password: NULL/"" for an unencrypted archive; otherwise a
+ * password only ZIP and 7-Zip support (nolphin_archive_format_supports_
+ * password()) - fails with NOLPHIN_ARCHIVE_ERROR_UNKNOWN_FORMAT for any
+ * other format rather than silently ignoring it. Handed to the
+ * underlying zip/7z tool as a plain argv entry, since neither tool
+ * offers a way to read it from a pipe/fd - like every other GUI archive
+ * tool built on them, it is therefore briefly visible in this process's
+ * own argv (e.g. via /proc or `ps`) while the tool runs. Nolphin itself
+ * never stores or logs it.
+ *
+ * @split_size_mb: 0 for a single archive file; otherwise the per-volume
+ * size in MiB for a multi-volume archive - only ZIP and 7-Zip support
+ * this (nolphin_archive_format_supports_split()), same failure mode as
+ * an unsupported password otherwise. */
 void     nolphin_archive_compress_async  (GList               *sources,
                                           GFile               *destination,
                                           NolphinArchiveFormat  format,
+                                          const gchar          *password,
+                                          guint                 split_size_mb,
                                           GCancellable        *cancellable,
                                           GAsyncReadyCallback   callback,
                                           gpointer              user_data);

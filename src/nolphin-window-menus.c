@@ -32,6 +32,7 @@
 #include "nolphin-window-menus.h"
 #include "nolphin-actions.h"
 #include "nolphin-application.h"
+#include "nolphin-workspace-panel.h"
 #include "nolphin-connect-server-dialog.h"
 #include "nolphin-file-management-properties.h"
 #include "nolphin-navigation-action.h"
@@ -1472,6 +1473,19 @@ on_file_menu_show (GtkWidget *widget, gpointer user_data)
     nolphin_view_update_actions_and_extensions (view);
 }
 
+/* Das .deb-Paket-Formular lebt jetzt dauerhaft als Reiter in der rechten
+ * Arbeitsbereich-Leiste (nolphin-workspace-panel.c) statt als eigenes
+ * Dialogfenster - dieser Menüeintrag (Hilfe ▸ .deb-Paket erstellen …)
+ * zeigt die Leiste nur noch an und wechselt zu diesem Reiter, statt die
+ * Eingabemaske ein zweites Mal zu bauen. */
+static void
+action_build_deb_callback (GtkAction *action, gpointer user_data)
+{
+	NolphinWindow *window = NOLPHIN_WINDOW (user_data);
+
+	nolphin_workspace_panel_show_deb_builder (nolphin_window_get_workspace_panel (window), window);
+}
+
 static const GtkActionEntry main_entries[] = {
   /* name, stock id, label */  { "File", NULL, N_("_Datei") },
   /* name, stock id, label */  { "Edit", NULL, N_("_Bearbeiten") },
@@ -1544,6 +1558,10 @@ static const GtkActionEntry main_entries[] = {
      label, accelerator        N_("Share and transfer files"), NULL,
      tooltip                   N_("Easily transfer files to your contacts and devices from the file manager."),
                                  G_CALLBACK (action_nolphin_manual_callback) }, **/
+  /* name, stock id */         { "Build Deb Package", "xsi-package-x-generic-symbolic",
+  /* label, accelerator */       N_(".deb-_Paket erstellen …"), NULL,
+  /* tooltip */                  N_("Aus ausgewählten Dateien ein installierbares .deb-Paket erstellen"),
+                                 G_CALLBACK (action_build_deb_callback) },
   /* name, stock id */         { "About Nolphin", "xsi-help-about-symbolic",
   /* label, accelerator */       N_("_Über"), NULL,
   /* tooltip */                  N_("Danksagungen für die Urheber von Nolphin anzeigen"),

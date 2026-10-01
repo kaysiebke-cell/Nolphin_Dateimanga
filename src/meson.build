@@ -26,6 +26,7 @@ nolphinCommon_sources = [
   'nolphin-connect-server-dialog-nonmain.c',
   'nolphin-connect-server-dialog.c',
   'nolphin-connect-server-operation.c',
+  'nolphin-deb-builder.c',
   'nolphin-desktop-icon-grid-view.c',
   'nolphin-desktop-item-properties.c',
   'nolphin-desktop-manager.c',
@@ -78,6 +79,7 @@ nolphinCommon_sources = [
   'nolphin-window-slot-dnd.c',
   'nolphin-window-slot.c',
   'nolphin-window.c',
+  'nolphin-workspace-panel.c',
   'nolphin-x-content-bar.c',
 ]
 

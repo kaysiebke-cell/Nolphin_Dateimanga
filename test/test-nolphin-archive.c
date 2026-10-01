@@ -179,7 +179,7 @@ main (int argc, char **argv)
     sources = g_list_append (sources, file_b);
 
     nolphin_archive_compress_async (sources, archive_file, NOLPHIN_ARCHIVE_FORMAT_ZIP,
-                                    NULL, on_compress_done, NULL);
+                                    NULL, 0, NULL, on_compress_done, NULL);
 
     gtk_main ();
 

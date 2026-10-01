@@ -1,0 +1,67 @@
+/* nolphin-workspace-panel.h
+ *
+ * Rechte Arbeitsbereich-Leiste (F11): ein GtkStack ohne Reiterleiste.
+ * "Vorschau" (§30) ist die Ruhelage und immer da, solange F11 an ist.
+ * Eigenschaften, Archiv, Terminal, Git und der .deb-Paket-Ersteller
+ * blenden sich nur ein, wenn ihre jeweilige Funktion tatsächlich
+ * ausgelöst wird (Menü, Kontextmenü, Alt+Enter, F4, …) - über die
+ * show_*()-Funktionen unten - statt dauerhaft als Reiter sichtbar zu
+ * sein.
+ */
+
+#ifndef NOLPHIN_WORKSPACE_PANEL_H
+#define NOLPHIN_WORKSPACE_PANEL_H
+
+#include <gtk/gtk.h>
+
+#include "nolphin-window.h"
+
+G_BEGIN_DECLS
+
+/* @preview_widget wird als "preview"-Seite eingehaengt, @terminal_widget
+ * als "terminal"-Seite. Der Aufrufer bleibt weiterhin fuer deren
+ * Lebenszyklus verantwortlich - dieses Modul haelt nur die Referenz zum
+ * Einhaengen. */
+GtkWidget *nolphin_workspace_panel_new (NolphinWindow *window,
+					GtkWidget     *preview_widget,
+					GtkWidget     *terminal_widget);
+
+/* Wechselt zurück zur Vorschau-Ruhelage, ohne das Panel ein-/auszublenden. */
+void       nolphin_workspace_panel_show_preview      (GtkWidget *workspace_panel);
+
+/* Baut die Eigenschaften-Seite für @files neu auf, zeigt sie und blendet
+ * das Panel ein (F11) - der Ersatz für nolphin_properties_window_present(). */
+void       nolphin_workspace_panel_show_properties   (GtkWidget *workspace_panel,
+						       NolphinWindow *window,
+						       GList *files);
+
+/* Zeigt die Archiv-Seite (Komprimieren) und blendet das Panel ein. */
+void       nolphin_workspace_panel_show_archive      (GtkWidget *workspace_panel,
+						       NolphinWindow *window);
+
+/* Zeigt die Git-Seite, blendet das Panel ein und stößt sofort eine
+ * Status-Aktualisierung an. */
+void       nolphin_workspace_panel_show_git          (GtkWidget *workspace_panel,
+						       NolphinWindow *window);
+
+/* Zeigt den .deb-Paket-Ersteller und blendet das Panel ein. */
+void       nolphin_workspace_panel_show_deb_builder  (GtkWidget *workspace_panel,
+						       NolphinWindow *window);
+
+/* Zeigt das eingebettete Terminal (F4) und blendet das Panel ein. */
+void       nolphin_workspace_panel_show_terminal     (GtkWidget *workspace_panel,
+						       NolphinWindow *window);
+
+/* Löst die vorhandene Suche/Filterleiste aus (§58.1.1 Pflicht-Panel
+ * "Suche") und blendet das Panel ein. */
+void       nolphin_workspace_panel_show_search       (GtkWidget *workspace_panel,
+						       NolphinWindow *window);
+
+/* Zeigt die Massenumbenennung (§36) für @files und blendet das Panel ein. */
+void       nolphin_workspace_panel_show_batch_rename (GtkWidget *workspace_panel,
+						       NolphinWindow *window,
+						       GList *files);
+
+G_END_DECLS
+
+#endif /* NOLPHIN_WORKSPACE_PANEL_H */

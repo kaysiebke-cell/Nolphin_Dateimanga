@@ -1447,7 +1447,7 @@ changed_group_callback (GtkComboBox *combo_box, NolphinFile *file)
 
 	if (group != NULL && strcmp (group, cur_group) != 0) {
 		/* Try to change file group. If this fails, complain to user. */
-		window = NOLPHIN_PROPERTIES_WINDOW (gtk_widget_get_ancestor (GTK_WIDGET (combo_box), GTK_TYPE_WINDOW));
+		window = NOLPHIN_PROPERTIES_WINDOW (g_object_get_data (G_OBJECT (combo_box), "properties-window"));
 
 		unschedule_or_cancel_group_change (window);
 		schedule_group_change (window, file, group);
@@ -1692,7 +1692,8 @@ attach_combo_box (GtkGrid *grid,
 }
 
 static GtkComboBox*
-attach_group_combo_box (GtkGrid *grid,
+attach_group_combo_box (NolphinPropertiesWindow *window,
+			GtkGrid *grid,
 			GtkWidget *sibling,
 		        NolphinFile *file)
 {
@@ -1701,6 +1702,13 @@ attach_group_combo_box (GtkGrid *grid,
 	combo_box = attach_combo_box (grid, sibling, FALSE);
 
 	synch_groups_combo_box (combo_box, file);
+
+	/* Merkt sich das Fenster direkt am Widget, statt es bei jeder
+	 * Änderung über gtk_widget_get_ancestor() aus der Widget-Hierarchie
+	 * zu suchen - das bleibt auch korrekt, wenn der Inhalt aus dem
+	 * GtkDialog heraus in den rechten Arbeitsbereich-Reiter umgehängt
+	 * wird (siehe nolphin_properties_window_build_embedded()). */
+	g_object_set_data (G_OBJECT (combo_box), "properties-window", window);
 
 	/* Connect to signal to update menu when file changes. */
 	g_signal_connect_object (file, "changed",
@@ -1869,7 +1877,7 @@ changed_owner_callback (GtkComboBox *combo_box, NolphinFile* file)
 
 	if (strcmp (new_owner, cur_owner) != 0) {
 		/* Try to change file owner. If this fails, complain to user. */
-		window = NOLPHIN_PROPERTIES_WINDOW (gtk_widget_get_ancestor (GTK_WIDGET (combo_box), GTK_TYPE_WINDOW));
+		window = NOLPHIN_PROPERTIES_WINDOW (g_object_get_data (G_OBJECT (combo_box), "properties-window"));
 
 		unschedule_or_cancel_owner_change (window);
 		schedule_owner_change (window, file, new_owner);
@@ -1976,7 +1984,8 @@ synch_user_menu (GtkComboBox *combo_box, NolphinFile *file)
 }
 
 static GtkComboBox*
-attach_owner_combo_box (GtkGrid *grid,
+attach_owner_combo_box (NolphinPropertiesWindow *window,
+		        GtkGrid *grid,
 		        GtkWidget *sibling,
 		        NolphinFile *file)
 {
@@ -1985,6 +1994,8 @@ attach_owner_combo_box (GtkGrid *grid,
 	combo_box = attach_combo_box (grid, sibling, TRUE);
 
 	synch_user_menu (combo_box, file);
+
+	g_object_set_data (G_OBJECT (combo_box), "properties-window", window);
 
 	/* Connect to signal to update menu when file changes. */
 	g_signal_connect_object (file, "changed",
@@ -4183,7 +4194,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 	if (!is_multi_file_window (window) && nolphin_file_can_set_owner (get_target_file (window))) {
 		owner_label = attach_title_field (page_grid, _("_Besitzer:"));
 		/* Combo box in this case. */
-		owner_combo_box = attach_owner_combo_box (page_grid,
+		owner_combo_box = attach_owner_combo_box (window, page_grid,
 							  GTK_WIDGET (owner_label),
 							  get_target_file (window));
 		gtk_label_set_mnemonic_widget (owner_label,
@@ -4214,7 +4225,7 @@ create_simple_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid)
 		group_label = attach_title_field (page_grid, _("_Gruppe:"));
 
 		/* Combo box in this case. */
-		group_combo_box = attach_group_combo_box (page_grid, GTK_WIDGET (group_label),
+		group_combo_box = attach_group_combo_box (window, page_grid, GTK_WIDGET (group_label),
 							  get_target_file (window));
 		gtk_label_set_mnemonic_widget (group_label,
 					       GTK_WIDGET (group_combo_box));
@@ -4375,7 +4386,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 
 		owner_label  = attach_title_field (page_grid, _("_Besitzer:"));
 		/* Combo box in this case. */
-		owner_combo_box = attach_owner_combo_box (page_grid,
+		owner_combo_box = attach_owner_combo_box (window, page_grid,
 							  GTK_WIDGET (owner_label),
 							  get_target_file (window));
 		gtk_label_set_mnemonic_widget (owner_label,
@@ -4398,7 +4409,7 @@ create_advanced_permissions (NolphinPropertiesWindow *window, GtkGrid *page_grid
 		group_label = attach_title_field (page_grid, _("_Gruppe:"));
 
 		/* Combo box in this case. */
-		group_combo_box = attach_group_combo_box (page_grid, GTK_WIDGET (group_label),
+		group_combo_box = attach_group_combo_box (window, page_grid, GTK_WIDGET (group_label),
 							  get_target_file (window));
 		gtk_label_set_mnemonic_widget (group_label,
 					       GTK_WIDGET (group_combo_box));
@@ -5154,6 +5165,106 @@ is_directory_ready_callback (NolphinFile *file,
 	}
 }
 
+/* --- Eingebettete Variante für die rechte Arbeitsbereich-Leiste --------
+ *
+ * Baut dieselbe Eigenschaften-Seite wie nolphin_properties_window_present(),
+ * aber ohne sie als eigenes Dialogfenster anzuzeigen: der Inhalt wird aus
+ * dem (nie sichtbar gemachten) GtkDialog in eine normale GtkBox umgehängt,
+ * die sich direkt in einen Reiter einbauen lässt - ein GtkWindow/GtkDialog
+ * kann in GTK3 nicht als Kind-Widget in einen Container gepackt werden.
+ *
+ * Bewusst NICHT über add_window()/pending_lists dedupliziert: das dient
+ * dort dazu, für dieselbe Datei nicht zwei echte Fenster zu öffnen - hier
+ * gibt es ohnehin nur diese eine eingebettete Instanz, die der Aufrufer
+ * (nolphin-workspace-panel.c) bei jeder Aktualisierung verwirft und neu
+ * anfordert. */
+
+typedef struct {
+	StartupData *startup_data;
+	void       (*ready_callback) (GtkWidget *content, gpointer user_data);
+	gpointer     user_data;
+} EmbeddedPropertiesRequest;
+
+static void
+embedded_is_directory_ready_callback (NolphinFile *file, gpointer data)
+{
+	EmbeddedPropertiesRequest *req = data;
+
+	g_hash_table_remove (req->startup_data->pending_files, file);
+
+	if (g_hash_table_size (req->startup_data->pending_files) == 0) {
+		NolphinPropertiesWindow *new_window;
+		GtkWidget *content_area;
+		GtkWidget *embed_box;
+		GList *children, *l;
+
+		new_window = create_properties_window (req->startup_data);
+
+		content_area = gtk_dialog_get_content_area (GTK_DIALOG (new_window));
+		embed_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
+		children = gtk_container_get_children (GTK_CONTAINER (content_area));
+		for (l = children; l != NULL; l = l->next) {
+			GtkWidget *child = GTK_WIDGET (l->data);
+
+			g_object_ref (child);
+			gtk_container_remove (GTK_CONTAINER (content_area), child);
+			gtk_container_add (GTK_CONTAINER (embed_box), child);
+			g_object_unref (child);
+		}
+		g_list_free (children);
+
+		/* new_window bleibt am Ergebnis-Widget hängen: die
+		 * Datei-Überwachung (file_changed_callback) und die
+		 * Gruppen-/Besitzer-Änderung sind mit diesem Objekt
+		 * verdrahtet, nicht mit den einzelnen Widgets.
+		 *
+		 * WICHTIG: Aufräumen muss über gtk_widget_destroy(), nicht
+		 * nur g_object_unref() - nolphin_properties_window_destroy()
+		 * (GtkWidget::destroy) entfernt dort u. a. den
+		 * update_files_timeout_id-Timeout. Ohne echtes destroy()
+		 * bleibt der Timeout aktiv und feuert später auf bereits
+		 * freigegebenen Speicher - abgestürzt genau so gefunden
+		 * (SIGSEGV in update_files_callback via g_timeout). */
+		g_object_set_data_full (G_OBJECT (embed_box), "properties-window-object",
+					new_window, (GDestroyNotify) gtk_widget_destroy);
+
+		req->ready_callback (embed_box, req->user_data);
+
+		startup_data_free (req->startup_data);
+		g_free (req);
+	}
+}
+
+void
+nolphin_properties_window_build_embedded (GList *original_files,
+					  void (*ready_callback) (GtkWidget *content, gpointer user_data),
+					  gpointer user_data)
+{
+	GList *target_files;
+	EmbeddedPropertiesRequest *req;
+	GList *l, *next;
+
+	g_return_if_fail (original_files != NULL);
+	g_return_if_fail (ready_callback != NULL);
+
+	target_files = get_target_file_list (original_files);
+
+	req = g_new0 (EmbeddedPropertiesRequest, 1);
+	req->startup_data = startup_data_new (original_files, target_files, NULL, NULL, NULL);
+	req->ready_callback = ready_callback;
+	req->user_data = user_data;
+
+	nolphin_file_list_free (target_files);
+
+	for (l = req->startup_data->target_files; l != NULL; l = next) {
+		next = l->next;
+		nolphin_file_call_when_ready (NOLPHIN_FILE (l->data),
+					      NOLPHIN_FILE_ATTRIBUTE_INFO,
+					      embedded_is_directory_ready_callback,
+					      req);
+	}
+}
 
 void
 nolphin_properties_window_present (GList       *original_files,

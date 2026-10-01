@@ -63,6 +63,7 @@
 #include "nolphin-properties-window.h"
 #include "nolphin-window.h"
 #include "nolphin-window-slot.h"
+#include "nolphin-workspace-panel.h"
 
 #define DEBUG_FLAG NOLPHIN_DEBUG_PLACES
 #include <libnolphin-private/nolphin-debug.h>
@@ -3249,10 +3250,18 @@ properties_cb (GtkAction           *item,
 
 	if (uri != NULL) {
 
+		GtkWidget *toplevel;
+
 		file = nolphin_file_get_by_uri (uri);
 		list = g_list_prepend (NULL, nolphin_file_ref (file));
 
-		nolphin_properties_window_present (list, GTK_WIDGET (sidebar), NULL);
+		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (sidebar));
+		if (NOLPHIN_IS_WINDOW (toplevel)) {
+			nolphin_workspace_panel_show_properties (nolphin_window_get_workspace_panel (NOLPHIN_WINDOW (toplevel)),
+								 NOLPHIN_WINDOW (toplevel), list);
+		} else {
+			nolphin_properties_window_present (list, GTK_WIDGET (sidebar), NULL);
+		}
 
 		nolphin_file_list_free (list);
 		g_free (uri);

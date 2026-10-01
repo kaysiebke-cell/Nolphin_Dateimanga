@@ -328,7 +328,7 @@ check_fcstd (void)
      * with the archive backend already verified in the previous
      * commit, then feed it back through the CAD backend. */
     nolphin_archive_compress_async (sources, fcstd_file, NOLPHIN_ARCHIVE_FORMAT_ZIP,
-                                    NULL, on_fcstd_compress_done, NULL);
+                                    NULL, 0, NULL, on_fcstd_compress_done, NULL);
     gtk_main ();
 
     g_list_free (sources);

@@ -88,7 +88,7 @@ cinnamon= dependency('cinnamon-desktop',            version: '>=4.8.0')
 gail    = dependency('gail-3.0')
 x11     = dependency('x11')
 xapp    = dependency('xapp',                        version: '>=2.0.0')
-vte     = dependency('vte-2.91',                    version: '>=0.40')
+vte     = dependency('vte-2.91',                    version: '>=0.50.0')
 
 # Facultative dependencies
 

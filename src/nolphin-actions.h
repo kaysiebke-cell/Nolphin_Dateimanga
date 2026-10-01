@@ -101,6 +101,7 @@
 #define NOLPHIN_ACTION_MOVE_TO_MENU "MoveToMenu"
 #define NOLPHIN_ACTION_LOCATION_PASTE_FILES_INTO "LocationPasteFilesInto"
 #define NOLPHIN_ACTION_RENAME "Rename"
+#define NOLPHIN_ACTION_BATCH_RENAME "Massenumbenennung"
 #define NOLPHIN_ACTION_DUPLICATE "Duplicate"
 #define NOLPHIN_ACTION_CREATE_LINK "Create Link"
 #define NOLPHIN_ACTION_SELECT_ALL "Select All"

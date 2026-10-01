@@ -65,4 +65,12 @@ void 	nolphin_properties_window_present    (GList       *files,
 					       GtkWidget   *parent_widget,
 					       const gchar *startup_id);
 
+/* Baut dieselbe Eigenschaften-Seite wie nolphin_properties_window_present(),
+ * aber ohne Dialogfenster: @ready_callback wird (asynchron, sobald die
+ * Datei-Infos vorliegen) mit dem fertigen, in einen Reiter einbaubaren
+ * Inhalts-Widget aufgerufen. Für die rechte Arbeitsbereich-Leiste. */
+void	nolphin_properties_window_build_embedded (GList *files,
+						  void (*ready_callback) (GtkWidget *content, gpointer user_data),
+						  gpointer user_data);
+
 #endif /* NOLPHIN_PROPERTIES_WINDOW_H */

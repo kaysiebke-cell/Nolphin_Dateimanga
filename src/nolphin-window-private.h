@@ -95,14 +95,17 @@ struct NolphinWindowDetails
         /* split view */
         GtkWidget *split_view_hpane;
 
-        /* integrated terminal (F4) */
-        GtkWidget *terminal_vpaned;
+        /* integrated terminal (F4) - lebt als Seite im workspace_panel
+         * (rechte Leiste), nicht mehr in einem eigenen unteren Bereich. */
         GtkWidget *terminal;
         gboolean show_terminal;
-        guint terminal_height_handler_id;
 
-        /* info/preview panel (F11) */
+        /* info/preview panel (F11) - "workspace_panel" is the tabbed
+         * container (Vorschau, Eigenschaften, Archiv, Terminal,
+         * Suche/Aktionen, Git, .deb-Paket); "preview" is still just the
+         * NolphinPreview widget nested in its first tab. */
         GtkWidget *preview_hpaned;
+        GtkWidget *workspace_panel;
         GtkWidget *preview;
         gboolean show_preview;
         guint preview_width_handler_id;

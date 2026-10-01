@@ -76,6 +76,197 @@
     <child name="desktop" schema="org.nolphin.desktop"/>
     <child name="window-state" schema="org.nolphin.window-state"/>
     <child name="search" schema="org.nolphin.search"/>
+    <child name="terminal" schema="org.nolphin.terminal"/>
+  </schema>
+
+  <schema id="org.nolphin.terminal" path="/org/nolphin/terminal/" gettext-domain="nolphin">
+    <key name="font-family" type="s">
+      <default>'Monospace'</default>
+      <summary>Terminal font family</summary>
+      <description>Pango font family name used by the integrated terminal.</description>
+    </key>
+    <key name="font-size" type="d">
+      <default>10.0</default>
+      <summary>Terminal font size</summary>
+      <description>Font size in points used by the integrated terminal.</description>
+    </key>
+    <key name="cursor-shape" type="i">
+      <default>0</default>
+      <summary>Cursor shape</summary>
+      <description>0 = block, 1 = underline, 2 = I-beam.</description>
+    </key>
+    <key name="cursor-blink-mode" type="i">
+      <default>0</default>
+      <summary>Cursor blink mode</summary>
+      <description>0 = follow system setting, 1 = always blink, 2 = never blink.</description>
+    </key>
+    <key name="solarized" type="b">
+      <default>false</default>
+      <summary>Use the Solarized color scheme</summary>
+      <description>If true, the Solarized palette and default colors are used instead of the standard scheme.</description>
+    </key>
+    <key name="palette-customized" type="b">
+      <default>false</default>
+      <summary>Whether the 16-color palette was edited by hand</summary>
+      <description>If true, "palette" below overrides the scheme's built-in palette.</description>
+    </key>
+    <key name="palette" type="as">
+      <default>[]</default>
+      <summary>Custom 16-color palette</summary>
+      <description>16 colors as hex strings (#rrggbb), only used when palette-customized is true.</description>
+    </key>
+    <key name="use-system-colors" type="b">
+      <default>false</default>
+      <summary>Use GTK theme colors</summary>
+      <description>If true, default foreground/background are read from the active GTK theme instead of the scheme or custom default colors.</description>
+    </key>
+    <key name="bold-is-bright" type="b">
+      <default>true</default>
+      <summary>Show bold text in bright colors</summary>
+    </key>
+    <key name="custom-default-colors-enabled" type="b">
+      <default>false</default>
+      <summary>Whether a custom default foreground/background color is set</summary>
+    </key>
+    <key name="custom-default-fg" type="s">
+      <default>'#e6e6e6'</default>
+      <summary>Custom default foreground color (hex)</summary>
+    </key>
+    <key name="custom-default-bg" type="s">
+      <default>'#050505'</default>
+      <summary>Custom default background color (hex)</summary>
+    </key>
+    <key name="custom-bold-color-enabled" type="b">
+      <default>false</default>
+      <summary>Whether a custom bold text color is set</summary>
+    </key>
+    <key name="custom-bold-color" type="s">
+      <default>'#ffffff'</default>
+      <summary>Custom bold text color (hex)</summary>
+    </key>
+    <key name="custom-cursor-colors-enabled" type="b">
+      <default>false</default>
+      <summary>Whether custom cursor colors are set</summary>
+    </key>
+    <key name="custom-cursor-fg" type="s">
+      <default>'#000000'</default>
+      <summary>Custom cursor text color (hex)</summary>
+    </key>
+    <key name="custom-cursor-bg" type="s">
+      <default>'#d9d9d9'</default>
+      <summary>Custom cursor shape color (hex)</summary>
+    </key>
+    <key name="custom-highlight-colors-enabled" type="b">
+      <default>false</default>
+      <summary>Whether custom selection colors are set</summary>
+    </key>
+    <key name="custom-highlight-fg" type="s">
+      <default>'#e6e6e6'</default>
+      <summary>Custom selection text color (hex)</summary>
+    </key>
+    <key name="custom-highlight-bg" type="s">
+      <default>'#4073bf'</default>
+      <summary>Custom selection background color (hex)</summary>
+    </key>
+    <key name="backspace-binding" type="i">
+      <default>0</default>
+      <summary>Backspace key binding</summary>
+      <description>0=auto, 1=ASCII backspace, 2=ASCII delete, 3=escape sequence, 4=tty.</description>
+    </key>
+    <key name="delete-binding" type="i">
+      <default>3</default>
+      <summary>Delete key binding</summary>
+      <description>0=auto, 1=ASCII backspace, 2=ASCII delete, 3=escape sequence, 4=tty.</description>
+    </key>
+    <key name="ambiguous-width-wide" type="b">
+      <default>false</default>
+      <summary>Treat CJK-ambiguous-width characters as wide</summary>
+    </key>
+    <key name="cell-width-scale" type="d">
+      <default>1.0</default>
+      <summary>Cell width scale</summary>
+    </key>
+    <key name="cell-height-scale" type="d">
+      <default>1.0</default>
+      <summary>Cell height scale</summary>
+    </key>
+    <key name="scrollback-lines" type="i">
+      <default>10000</default>
+      <summary>Scrollback line limit</summary>
+    </key>
+    <key name="scroll-on-output" type="b">
+      <default>false</default>
+      <summary>Scroll to bottom on output</summary>
+    </key>
+    <key name="scroll-on-keystroke" type="b">
+      <default>true</default>
+      <summary>Scroll to bottom on keystroke</summary>
+    </key>
+    <key name="scroll-on-paste" type="b">
+      <default>true</default>
+      <summary>Scroll to bottom on paste</summary>
+    </key>
+    <key name="show-scrollbar" type="b">
+      <default>true</default>
+      <summary>Show the terminal scrollbar</summary>
+    </key>
+    <key name="login-shell" type="b">
+      <default>false</default>
+      <summary>Run the shell as a login shell</summary>
+    </key>
+    <key name="use-custom-command" type="b">
+      <default>false</default>
+      <summary>Run a custom command instead of the shell</summary>
+    </key>
+    <key name="custom-command" type="s">
+      <default>''</default>
+      <summary>Custom command to run</summary>
+    </key>
+    <key name="text-blink-enabled" type="b">
+      <default>false</default>
+      <summary>Allow blinking text (SGR 5/25)</summary>
+    </key>
+    <key name="bell-enabled" type="b">
+      <default>false</default>
+      <summary>Enable the audible terminal bell</summary>
+    </key>
+    <key name="follow-location" type="b">
+      <default>true</default>
+      <summary>Follow the file manager's current folder</summary>
+    </key>
+    <key name="exit-action" type="i">
+      <default>0</default>
+      <summary>Action to take when the command exits</summary>
+      <description>0 = hold (keep last screen contents), 1 = restart the command.</description>
+    </key>
+    <key name="initial-columns" type="i">
+      <default>80</default>
+      <summary>Initial terminal column count</summary>
+    </key>
+    <key name="initial-rows" type="i">
+      <default>24</default>
+      <summary>Initial terminal row count</summary>
+    </key>
+    <key name="menubar-default-visible" type="b">
+      <default>true</default>
+      <summary>Show the menu bar in new terminals by default</summary>
+    </key>
+    <key name="menu-mnemonics-enabled" type="b">
+      <default>false</default>
+      <summary>Enable menu mnemonic letters (e.g. Alt+F for File)</summary>
+    </key>
+    <key name="menu-accel-enabled" type="b">
+      <default>true</default>
+      <summary>Enable the menu accelerator key (default: F10)</summary>
+    </key>
+    <key name="check-default-terminal" type="b">
+      <default>true</default>
+      <summary>Always check whether this is the default terminal application</summary>
+    </key>
+    <key name="keybindings-enabled" type="b">
+      <default>true</default>
+      <summary>Enable terminal keyboard shortcuts</summary>
+    </key>
   </schema>
 
   <schema id="org.nolphin.preferences" path="/org/nolphin/preferences/" gettext-domain="nolphin">
