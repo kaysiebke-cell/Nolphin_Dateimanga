@@ -125,3 +125,12 @@ test('Saved selections test',
   ),
   args: []
 )
+
+test('Metadata/Tags registration test',
+  executable('test-nolphin-metadata-tags',
+    [ 'test-nolphin-metadata-tags.c' ],
+    include_directories: [ rootInclude, ],
+    dependencies: [ gtk, nolphin_private ],
+  ),
+  args: []
+)
