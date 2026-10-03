@@ -110,6 +110,8 @@ nolphin_desktop_window_constructed (GObject *obj)
 
 	gtk_widget_hide (nwindow->details->statusbar);
 	gtk_widget_hide (nwindow->details->menubar);
+	gtk_widget_hide (nwindow->details->nolphin_status_bar);
+	gtk_widget_hide (nwindow->details->statusbar_separator);
 
 	action_group = nolphin_window_get_main_action_group (nwindow);
 

@@ -127,6 +127,13 @@ void             nolphin_window_restore_closed_tab   (NolphinWindow    *window);
 
 GtkUIManager *   nolphin_window_get_ui_manager       (NolphinWindow    *window);
 GtkActionGroup * nolphin_window_get_main_action_group (NolphinWindow   *window);
+
+/* Die rechte Arbeitsbereich-Leiste (§30) - GtkStack mit "preview" als
+ * Ruhelage; siehe nolphin-workspace-panel.h für die nolphin_workspace_
+ * panel_show_*()-Funktionen, mit denen einzelne Funktionen (Eigenschaften,
+ * Archiv, Git, .deb-Paket) sie bei Bedarf aktivieren. */
+GtkWidget      * nolphin_window_get_workspace_panel   (NolphinWindow   *window);
+GtkWidget      * nolphin_window_get_terminal          (NolphinWindow   *window);
 NolphinNavigationState * 
                  nolphin_window_get_navigation_state (NolphinWindow    *window);
 

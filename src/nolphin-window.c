@@ -47,6 +47,7 @@
 #include "nolphin-window-menus.h"
 #include "nolphin-terminal.h"
 #include "nolphin-preview.h"
+#include "nolphin-workspace-panel.h"
 #include "nolphin-icon-view.h"
 #include "nolphin-list-view.h"
 #include "nolphin-statusbar.h"
@@ -462,55 +463,7 @@ save_sidebar_width_cb (gpointer user_data)
 	return FALSE;
 }
 
-static gboolean
-save_terminal_height_cb (gpointer user_data)
-{
-	NolphinWindow *window = user_data;
-	gint height, total, position;
-
-	window->details->terminal_height_handler_id = 0;
-
-	/* "position" is the height GTK gives the TOP child (the file
-	 * view); the terminal is pack2 (bottom), so its actual height is
-	 * total - position. Store the terminal's own height, since that's
-	 * the size-independent quantity worth remembering across window
-	 * sizes and sessions. */
-	total = gtk_widget_get_allocated_height (window->details->terminal_vpaned);
-	position = gtk_paned_get_position (GTK_PANED (window->details->terminal_vpaned));
-	height = total - position;
-
-	if (height <= 1 || total <= 1) {
-		return FALSE;
-	}
-
-	DEBUG ("Saving terminal height: %d", height);
-
-	g_settings_set_int (nolphin_window_state,
-			    NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT,
-			    height);
-
-	return FALSE;
-}
-
-static void
-terminal_size_allocate_callback (GtkWidget *widget,
-				 GtkAllocation *allocation,
-				 gpointer user_data)
-{
-	NolphinWindow *window = user_data;
-
-	if (!gtk_widget_get_visible (widget)) {
-		return;
-	}
-
-	if (window->details->terminal_height_handler_id != 0) {
-		g_source_remove (window->details->terminal_height_handler_id);
-		window->details->terminal_height_handler_id = 0;
-	}
-
-	window->details->terminal_height_handler_id =
-		g_timeout_add (100, save_terminal_height_cb, window);
-}
+#define NOLPHIN_PREVIEW_MIN_WIDTH 300
 
 static gboolean
 save_preview_width_cb (gpointer user_data)
@@ -527,7 +480,9 @@ save_preview_width_cb (gpointer user_data)
 	position = gtk_paned_get_position (GTK_PANED (window->details->preview_hpaned));
 	width = total - position;
 
-	if (width <= 1 || total <= 1) {
+	/* Zu schmale Werte stammen von noch nicht fertigem Layout beim
+	 * Start und dürfen den gespeicherten Wert nicht überschreiben. */
+	if (width < NOLPHIN_PREVIEW_MIN_WIDTH || total <= 1) {
 		return FALSE;
 	}
 
@@ -558,6 +513,36 @@ preview_size_allocate_callback (GtkWidget *widget,
 
 	window->details->preview_width_handler_id =
 		g_timeout_add (100, save_preview_width_cb, window);
+}
+
+/* Beim Start ist die Fensterbreite noch unbekannt, die gespeicherte
+ * Breite des rechten Bereichs wird daher bei der ersten echten
+ * Zuteilung angewendet. */
+static void
+preview_hpaned_first_allocate_callback (GtkWidget     *widget,
+					GtkAllocation *allocation,
+					gpointer       user_data)
+{
+	NolphinWindow *window = user_data;
+	gint wanted_width;
+
+	if (allocation->width <= 1) {
+		return;
+	}
+
+	g_signal_handlers_disconnect_by_func (widget,
+					      preview_hpaned_first_allocate_callback,
+					      user_data);
+
+	if (!window->details->show_preview) {
+		return;
+	}
+
+	wanted_width = MAX (g_settings_get_int (nolphin_window_state,
+						NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH),
+			    NOLPHIN_PREVIEW_MIN_WIDTH);
+	gtk_paned_set_position (GTK_PANED (widget),
+				MAX (allocation->width - wanted_width, 1));
 }
 
 /* side pane helpers */
@@ -880,42 +865,31 @@ nolphin_window_constructed (GObject *self)
 	gtk_widget_show (hpaned);
 	window->details->split_view_hpane = hpaned;
 
-	/* integrated terminal (F4): file view on top, terminal on the
-	 * bottom, height adjustable via the paned handle. The terminal
-	 * child starts hidden; nolphin_window_set_show_terminal() is
-	 * called once construction is far enough along to reveal it if
-	 * the user's default is to start with it open. */
-	window->details->terminal_vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
-	gtk_box_pack_start (GTK_BOX (vbox), window->details->terminal_vpaned, TRUE, TRUE, 0);
-	gtk_widget_show (window->details->terminal_vpaned);
-
 	/* info/preview panel (F11): file view (incl. split view) on the
-	 * left, panel on the right. This whole thing becomes pack1 of
-	 * terminal_vpaned, so the terminal spans beneath both. */
+	 * left, Arbeitsbereich-Leiste (Vorschau/Eigenschaften/Archiv/
+	 * Terminal/Git/.deb-Paket) auf der rechten Seite. Das integrierte
+	 * Terminal (F4) lebt als Seite in dieser Leiste (siehe
+	 * nolphin-workspace-panel.c) statt in einem eigenen unteren
+	 * Bereich - spart Bildschirmplatz gegenüber einer zusätzlichen
+	 * horizontalen Teilung. */
 	window->details->preview_hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+	gtk_box_pack_start (GTK_BOX (vbox), window->details->preview_hpaned, TRUE, TRUE, 0);
 	gtk_widget_show (window->details->preview_hpaned);
 	gtk_paned_pack1 (GTK_PANED (window->details->preview_hpaned), hpaned, TRUE, FALSE);
 
 	window->details->preview = nolphin_preview_new ();
-	gtk_paned_pack2 (GTK_PANED (window->details->preview_hpaned), window->details->preview, FALSE, TRUE);
-	window->details->show_preview = FALSE;
-
-	g_signal_connect (window->details->preview, "size-allocate",
-			  G_CALLBACK (preview_size_allocate_callback), window);
-
-	gtk_paned_pack1 (GTK_PANED (window->details->terminal_vpaned), window->details->preview_hpaned, TRUE, FALSE);
-
 	window->details->terminal = nolphin_terminal_new ();
-	gtk_paned_pack2 (GTK_PANED (window->details->terminal_vpaned), window->details->terminal, FALSE, TRUE);
+	window->details->workspace_panel = nolphin_workspace_panel_new (window,
+									 window->details->preview,
+									 window->details->terminal);
+	gtk_paned_pack2 (GTK_PANED (window->details->preview_hpaned), window->details->workspace_panel, FALSE, TRUE);
+	window->details->show_preview = FALSE;
 	window->details->show_terminal = FALSE;
-	/* The paned "position" (= height of the file-view area above it)
-	 * can only be set meaningfully once the window has a real
-	 * allocation, so it's computed from the stored terminal height in
-	 * nolphin_window_set_show_terminal() at the moment the terminal
-	 * is actually revealed, not here. */
 
-	g_signal_connect (window->details->terminal, "size-allocate",
-			  G_CALLBACK (terminal_size_allocate_callback), window);
+	g_signal_connect (window->details->workspace_panel, "size-allocate",
+			  G_CALLBACK (preview_size_allocate_callback), window);
+	g_signal_connect (window->details->preview_hpaned, "size-allocate",
+			  G_CALLBACK (preview_hpaned_first_allocate_callback), window);
 
 	pane = nolphin_window_pane_new (window);
 	window->details->panes = g_list_prepend (window->details->panes, pane);
@@ -929,6 +903,7 @@ nolphin_window_constructed (GObject *self)
     GtkWidget *sep = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
     gtk_container_add (GTK_CONTAINER (grid), sep);
     gtk_widget_show (sep);
+    window->details->statusbar_separator = sep;
 
     GtkWidget *eb;
 
@@ -962,13 +937,20 @@ nolphin_window_constructed (GObject *self)
 	 * but before menu stuff is being called */
 	nolphin_window_set_active_pane (window, pane);
 
-	nolphin_window_set_show_terminal (window,
-					  g_settings_get_boolean (nolphin_window_state,
-								   NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL));
+	/* Das Terminal startet bewusst NIE automatisch mit - anders als bei
+	 * der Vorschau (unten) gibt es dafuer keinen "Merk dir das"-Nutzen:
+	 * die Vorschau ist immer die Ruhelage des Arbeitsbereichs (§30), das
+	 * Terminal ist eine bewusst ausgeloeste Funktion (F4/Menue). */
 
-	nolphin_window_set_show_preview (window,
-					 g_settings_get_boolean (nolphin_window_state,
-								  NOLPHIN_WINDOW_STATE_START_WITH_PREVIEW));
+	/* Die Arbeitsbereich-Leiste gehört nur ins normale Datei-Fenster -
+	 * das Desktop-Fenster (NolphinDesktopWindow erbt von NolphinWindow)
+	 * zeigt sonst Vorschau/Eigenschaften eines "x-nolphin-desktop"-
+	 * Objekts über den eigentlichen Desktop-Icons an. */
+	if (!NOLPHIN_IS_DESKTOP_WINDOW (window)) {
+		nolphin_window_set_show_preview (window,
+						 g_settings_get_boolean (nolphin_window_state,
+									  NOLPHIN_WINDOW_STATE_START_WITH_PREVIEW));
+	}
 
 	side_pane_id_changed (window);
 
@@ -1448,6 +1430,24 @@ nolphin_window_key_press_event (GtkWidget *widget,
                return FALSE;
 	}
 
+	/* F4 wird VOR der Weiterleitung an ein fokussiertes GtkEditable
+	 * behandelt: ein fokussiertes GtkEntry (Adressleiste, Suchfeld, …)
+	 * markiert in GTK praktisch jeden Tastendruck als "verarbeitet" -
+	 * auch Tasten, mit denen es gar nichts anfängt - wodurch F4 sonst
+	 * lautlos verschluckt würde, sobald irgendein Eingabefeld den Fokus
+	 * hat. Ob das Terminal gerade sichtbar ist, wird direkt an der
+	 * tatsächlich sichtbaren Stack-Seite abgelesen statt am
+	 * show_terminal-Flag, das durch andere Panel-Seiten (Archiv, Suche, …)
+	 * veralten kann, ohne zurückgesetzt zu werden. */
+	if (event->keyval == GDK_KEY_F4 && (event->state & gtk_accelerator_get_default_mod_mask ()) == 0) {
+		const gchar *visible_page = gtk_stack_get_visible_child_name (GTK_STACK (window->details->workspace_panel));
+		gboolean terminal_currently_shown = window->details->show_preview &&
+			g_strcmp0 (visible_page, "terminal") == 0;
+
+		nolphin_window_set_show_terminal (window, !terminal_currently_shown);
+		return TRUE;
+	}
+
 	focus_widget = gtk_window_get_focus (GTK_WINDOW (window));
 	if (view != NULL && focus_widget != NULL &&
 	    GTK_IS_EDITABLE (focus_widget)) {
@@ -1885,6 +1885,22 @@ nolphin_window_get_main_action_group (NolphinWindow *window)
 	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), NULL);
 
 	return window->details->main_action_group;
+}
+
+GtkWidget *
+nolphin_window_get_workspace_panel (NolphinWindow *window)
+{
+	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), NULL);
+
+	return window->details->workspace_panel;
+}
+
+GtkWidget *
+nolphin_window_get_terminal (NolphinWindow *window)
+{
+	g_return_val_if_fail (NOLPHIN_IS_WINDOW (window), NULL);
+
+	return window->details->terminal;
 }
 
 NolphinNavigationState *
@@ -2819,37 +2835,24 @@ nolphin_window_set_show_terminal (NolphinWindow *window,
 {
 	g_return_if_fail (NOLPHIN_IS_WINDOW (window));
 
-	if (show == window->details->show_terminal) {
-		return;
-	}
+	/* Bewusst KEIN frühes "return" bei show == show_terminal: das Flag
+	 * bildet nur den Terminal/nicht-Terminal-Zustand ab, aber der rechte
+	 * Arbeitsbereich hat noch weitere Seiten (Archiv, Suche, Eigenschaften,
+	 * Git, …), die über ihre jeweiligen eigenen show_*()-Funktionen direkt
+	 * angezeigt werden, OHNE dieses Flag zurückzusetzen. Dadurch kann
+	 * show_terminal noch TRUE sein, obwohl gerade eine andere Seite sichtbar
+	 * ist - ein frühes "return" würde dann faelschlich gar nichts tun,
+	 * wenn man versucht, das Terminal (wieder) zu zeigen. */
 
 	window->details->show_terminal = show;
 
 	if (show) {
-		gint total, wanted_height;
-
-		/* By now the window is realized (this is only reachable
-		 * via construction-time startup or the F4 action on an
-		 * already-shown window), so the paned has a real
-		 * allocation to compute the split from. */
-		total = gtk_widget_get_allocated_height (window->details->terminal_vpaned);
-		if (total > 1) {
-			wanted_height = g_settings_get_int (nolphin_window_state,
-							    NOLPHIN_WINDOW_STATE_TERMINAL_HEIGHT);
-			gtk_paned_set_position (GTK_PANED (window->details->terminal_vpaned),
-						MAX (total - wanted_height, 1));
-		}
-
-		gtk_widget_show (window->details->terminal);
+		nolphin_workspace_panel_show_terminal (window->details->workspace_panel, window);
 		nolphin_window_sync_terminal_location (window);
 		nolphin_terminal_grab_focus (NOLPHIN_TERMINAL (window->details->terminal));
 	} else {
-		gtk_widget_hide (window->details->terminal);
+		nolphin_workspace_panel_show_preview (window->details->workspace_panel);
 	}
-
-	g_settings_set_boolean (nolphin_window_state,
-				NOLPHIN_WINDOW_STATE_START_WITH_TERMINAL,
-				show);
 }
 
 gboolean
@@ -2903,16 +2906,17 @@ nolphin_window_set_show_preview (NolphinWindow *window,
 
 		total = gtk_widget_get_allocated_width (window->details->preview_hpaned);
 		if (total > 1) {
-			wanted_width = g_settings_get_int (nolphin_window_state,
-							   NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH);
+			wanted_width = MAX (g_settings_get_int (nolphin_window_state,
+								NOLPHIN_WINDOW_STATE_PREVIEW_WIDTH),
+					    NOLPHIN_PREVIEW_MIN_WIDTH);
 			gtk_paned_set_position (GTK_PANED (window->details->preview_hpaned),
 						MAX (total - wanted_width, 1));
 		}
 
-		gtk_widget_show (window->details->preview);
+		gtk_widget_show (window->details->workspace_panel);
 		nolphin_window_sync_preview_selection (window);
 	} else {
-		gtk_widget_hide (window->details->preview);
+		gtk_widget_hide (window->details->workspace_panel);
 		nolphin_preview_clear (NOLPHIN_PREVIEW (window->details->preview));
 	}
 

@@ -1567,7 +1567,16 @@ eel_editable_label_draw (GtkWidget *widget,
           state = gtk_widget_get_state_flags (widget);
 	  state |= GTK_STATE_FLAG_SELECTED;
 
-          gtk_style_context_get_background_color (style, state, &background_color);
+          /* Modern GTK themes style text selection via a "selection" CSS
+           * node rather than a ":selected" state on the entry/label itself,
+           * so gtk_style_context_get_background_color() often comes back
+           * with the normal (unhighlighted) background here. Prefer the
+           * theme's named selection color, which every theme still
+           * defines, and only fall back to the state-based lookup if a
+           * theme happens not to provide it. */
+          if (!gtk_style_context_lookup_color (style, "theme_selected_bg_color", &background_color)) {
+                  gtk_style_context_get_background_color (style, state, &background_color);
+          }
 	  gdk_cairo_set_source_rgba (cr, &background_color);
 	  cairo_paint (cr);
 

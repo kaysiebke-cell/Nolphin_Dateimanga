@@ -121,6 +121,23 @@ void     nolphin_git_remote_add_async   (GFile *repo_root, const gchar *name, co
                                          GAsyncReadyCallback callback, gpointer user_data);
 gboolean nolphin_git_remote_add_finish  (GAsyncResult *result, GError **error);
 
+/* Abgleichen (@apply = FALSE): `git fetch`, danach Vergleich mit dem
+ * Server ("x lokal neu, y auf dem Server neu"), ohne etwas zu verändern.
+ * Synchronisieren (@apply = TRUE): fetch, Pull und anschließend Push.
+ * Liefert in beiden Fällen einen verständlichen Ergebnistext. */
+void     nolphin_git_sync_async    (GFile *repo_root, gboolean apply,
+                                    GCancellable *cancellable,
+                                    GAsyncReadyCallback callback, gpointer user_data);
+gchar   *nolphin_git_sync_finish   (GAsyncResult *result, GError **error);
+
+/* `git clone <url>` in @parent_dir; git legt den Zielordner selbst nach
+ * dem Repository-Namen an. Fragt nie nach Zugangsdaten (siehe spawn_git()),
+ * private Repositories brauchen daher hinterlegte Zugangsdaten oder SSH. */
+void     nolphin_git_clone_async   (GFile *parent_dir, const gchar *url,
+                                    GCancellable *cancellable,
+                                    GAsyncReadyCallback callback, gpointer user_data);
+gboolean nolphin_git_clone_finish  (GAsyncResult *result, GError **error);
+
 /* @path: NULL for the whole repository, or a single file/folder to
  * restrict to. Returns the formatted log text. */
 void   nolphin_git_log_async   (GFile *repo_root, GFile *path, guint max_count,

@@ -77,6 +77,7 @@
 			<menuitem name="Duplicate" action="Duplicate"/>
 			<menuitem name="Create Link" action="Create Link"/>
 			<menuitem name="Rename" action="Rename"/>
+			<menuitem name="Massenumbenennung" action="Massenumbenennung"/>
 			<menu action="CopyToMenu">
 				<menuitem name="Copy to next pane" action="Copy to next pane"/>
 				<menuitem name="Copy to Home" action="Copy to Home"/>
@@ -232,12 +233,15 @@
 		<menuitem name="GitAdd" action="GitAdd"/>
 		<menuitem name="GitCommit" action="GitCommit"/>
 		<separator/>
+		<menuitem name="GitCompare" action="GitCompare"/>
+		<menuitem name="GitSync" action="GitSync"/>
 		<menuitem name="GitPull" action="GitPull"/>
 		<menuitem name="GitPush" action="GitPush"/>
 		<separator/>
 		<menuitem name="GitLog" action="GitLog"/>
 		<menuitem name="GitDiff" action="GitDiff"/>
 		<separator/>
+		<menuitem name="GitClone" action="GitClone"/>
 		<menuitem name="GitRemoteAdd" action="GitRemoteAdd"/>
 	</menu>
 	<separator name="Dangerous separator"/>

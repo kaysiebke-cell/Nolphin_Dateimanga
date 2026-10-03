@@ -36,7 +36,9 @@
 #include "nolphin-actions.h"
 #include "nolphin-tree-sidebar-model.h"
 #include "nolphin-properties-window.h"
+#include "nolphin-window.h"
 #include "nolphin-window-slot.h"
+#include "nolphin-workspace-panel.h"
 
 #include <libnolphin-private/nolphin-clipboard.h>
 #include <libnolphin-private/nolphin-clipboard-monitor.h>
@@ -910,12 +912,20 @@ new_folder_done (GFile *new_folder,
 {
 	GList *list;
 
-	/* show the properties window for the newly created
-	 * folder so the user can change its name
+	/* show the properties panel for the newly created
+	 * folder so the user can change its name (§58.1: Panel statt Dialog)
 	 */
+	GtkWidget *toplevel;
+
 	list = g_list_prepend (NULL, nolphin_file_get (new_folder));
 
-	nolphin_properties_window_present (list, GTK_WIDGET (data), NULL);
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (data));
+	if (NOLPHIN_IS_WINDOW (toplevel)) {
+		nolphin_workspace_panel_show_properties (nolphin_window_get_workspace_panel (NOLPHIN_WINDOW (toplevel)),
+							 NOLPHIN_WINDOW (toplevel), list);
+	} else {
+		nolphin_properties_window_present (list, GTK_WIDGET (data), NULL);
+	}
 
         nolphin_file_list_free (list);
 }
@@ -1121,9 +1131,17 @@ fm_tree_view_properties_cb (GtkAction *action,
 {
 	GList *list;
         
+	GtkWidget *toplevel;
+
 	list = g_list_prepend (NULL, nolphin_file_ref (view->details->popup_file));
 
-	nolphin_properties_window_present (list, GTK_WIDGET (view->details->tree_widget), NULL);
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view->details->tree_widget));
+	if (NOLPHIN_IS_WINDOW (toplevel)) {
+		nolphin_workspace_panel_show_properties (nolphin_window_get_workspace_panel (NOLPHIN_WINDOW (toplevel)),
+							 NOLPHIN_WINDOW (toplevel), list);
+	} else {
+		nolphin_properties_window_present (list, GTK_WIDGET (view->details->tree_widget), NULL);
+	}
 
         nolphin_file_list_free (list);
 }

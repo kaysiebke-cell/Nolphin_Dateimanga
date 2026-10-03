@@ -40,6 +40,8 @@
 #include "nolphin-mime-actions.h"
 #include "nolphin-previewer.h"
 #include "nolphin-properties-window.h"
+#include "nolphin-terminal.h"
+#include "nolphin-workspace-panel.h"
 #include "nolphin-bookmark-list.h"
 #include "nolphin-directory-private.h"
 
@@ -2503,10 +2505,15 @@ action_properties_callback (GtkAction *action,
         NolphinView *view;
         GList *selection;
 	GList *files;
+	NolphinWindow *window;
+	GtkWidget *workspace_panel;
 
         g_assert (NOLPHIN_IS_VIEW (callback_data));
 
         view = NOLPHIN_VIEW (callback_data);
+	window = NOLPHIN_WINDOW (nolphin_view_get_containing_window (view));
+	workspace_panel = nolphin_window_get_workspace_panel (window);
+
 	selection = nolphin_view_get_selection (view);
 	if (g_list_length (selection) == 0) {
 		if (view->details->directory_as_file != NULL) {
@@ -2516,12 +2523,12 @@ action_properties_callback (GtkAction *action,
                 files = g_list_append (NULL, nolphin_file_ref (view->details->directory_as_file));
             }
 
-			nolphin_properties_window_present (files, GTK_WIDGET (view), NULL);
+			nolphin_workspace_panel_show_properties (workspace_panel, window, files);
 
 			nolphin_file_list_free (files);
 		}
 	} else {
-		nolphin_properties_window_present (selection, GTK_WIDGET (view), NULL);
+		nolphin_workspace_panel_show_properties (workspace_panel, window, selection);
 	}
         nolphin_file_list_free (selection);
 }
@@ -3017,26 +3024,6 @@ nolphin_view_set_selection (NolphinView *nolphin_view,
 		view->details->pending_selection =
 			eel_g_object_list_copy (selection);
 	}
-}
-
-static char *
-get_bulk_rename_tool (void)
-{
-	char *bulk_rename_tool;
-	g_settings_get (nolphin_preferences, NOLPHIN_PREFERENCES_BULK_RENAME_TOOL, "^ay", &bulk_rename_tool);
-	return g_strstrip (bulk_rename_tool);
-}
-
-static gboolean
-have_bulk_rename_tool (void)
-{
-	char *bulk_rename_tool;
-	gboolean have_tool;
-
-	bulk_rename_tool = get_bulk_rename_tool ();
-	have_tool = ((bulk_rename_tool != NULL) && (*bulk_rename_tool != '\0'));
-	g_free (bulk_rename_tool);
-	return have_tool;
 }
 
 static void
@@ -7540,31 +7527,6 @@ open_as_root (NolphinView *view, const gchar *path)
 }
 
 static void
-open_in_terminal (const gchar *path)
-{
-    gchar *gsetting_terminal;
-    gchar **token;
-    gchar **argv;
-    gint i;
-
-    gsetting_terminal = g_settings_get_string (gnome_terminal_preferences,
-                                               GNOME_DESKTOP_TERMINAL_EXEC);
-
-    token = g_strsplit (gsetting_terminal, " ", 0);
-    argv = g_new (gchar *, g_strv_length (token) + 1);
-    for (i = 0; token[i] != NULL; i++) {
-        argv[i] = token[i];
-    }
-    argv[i] = NULL;
-
-    g_spawn_async (path, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
-
-    g_free (gsetting_terminal);
-    g_strfreev (token);
-    g_free (argv);
-}
-
-static void
 action_paste_files_into_callback (GtkAction *action,
 				  gpointer callback_data)
 {
@@ -7719,29 +7681,17 @@ send_archive_notification (const gchar *title, gboolean success, const gchar *de
     g_object_unref (notification);
 }
 
-static void
-compress_finished_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GError *error = NULL;
-    gboolean success = nolphin_archive_compress_finish (result, &error);
-
-    send_archive_notification (_("Komprimieren"), success, error ? error->message : NULL);
-    g_clear_error (&error);
-}
-
+/* Zeigt die Archiv-Seite der rechten Arbeitsbereich-Leiste, in der Format,
+ * Dateiname und Zielordner gewählt werden können, statt im Hintergrund
+ * stillschweigend immer ein ZIP mit automatischem Namen anzulegen (siehe
+ * nolphin-workspace-panel.c, build_archive_tab()). */
 static void
 action_compress_callback (GtkAction *action,
                           gpointer callback_data)
 {
     NolphinView *view;
     GList *selection;
-    GList *sources = NULL;
-    GList *l;
-    NolphinFile *dir_file;
-    GFile *dir_location;
-    gchar *first_name;
-    gchar *base_name;
-    GFile *destination;
+    NolphinWindow *window;
 
     view = NOLPHIN_VIEW (callback_data);
     selection = nolphin_view_get_selection (view);
@@ -7749,40 +7699,10 @@ action_compress_callback (GtkAction *action,
     if (selection == NULL) {
         return;
     }
-
-    dir_file = nolphin_view_get_directory_as_file (view);
-    if (dir_file == NULL) {
-        nolphin_file_list_free (selection);
-        return;
-    }
-    dir_location = nolphin_file_get_location (dir_file);
-
-    first_name = nolphin_file_get_display_name (NOLPHIN_FILE (selection->data));
-    base_name = g_strconcat (first_name, g_list_length (selection) > 1 ? " et al" : "", NULL);
-    g_free (first_name);
-
-    destination = find_unique_destination (dir_location, base_name, ".zip");
-    g_free (base_name);
-    g_object_unref (dir_location);
-
-    if (destination == NULL) {
-        nolphin_file_list_free (selection);
-        return;
-    }
-
-    for (l = selection; l != NULL; l = l->next) {
-        sources = g_list_prepend (sources, nolphin_file_get_location (NOLPHIN_FILE (l->data)));
-    }
-    sources = g_list_reverse (sources);
-
-    /* Always ZIP in this first pass - no format-picker dialog yet,
-     * see the archive feature's commit message for what's deferred. */
-    nolphin_archive_compress_async (sources, destination, NOLPHIN_ARCHIVE_FORMAT_ZIP,
-                                    NULL, compress_finished_cb, NULL);
-
-    g_list_free_full (sources, g_object_unref);
-    g_object_unref (destination);
     nolphin_file_list_free (selection);
+
+    window = NOLPHIN_WINDOW (nolphin_view_get_containing_window (view));
+    nolphin_workspace_panel_show_archive (nolphin_window_get_workspace_panel (window), window);
 }
 
 static void
@@ -8284,7 +8204,7 @@ action_encrypt_callback (GtkAction *action,
             data->passphrase = g_strdup (passphrase);
 
             nolphin_archive_compress_async (sources, archive_file, NOLPHIN_ARCHIVE_FORMAT_TAR_GZ,
-                                            NULL, encrypt_folder_compressed_cb, data);
+                                            NULL, 0, NULL, encrypt_folder_compressed_cb, data);
             g_list_free (sources);
         }
     } else {
@@ -8610,7 +8530,7 @@ action_edit_acl_callback (GtkAction *action,
     data->is_dir = nolphin_file_is_directory (NOLPHIN_FILE (selection->data));
     nolphin_file_list_free (selection);
 
-    dialog = gtk_dialog_new_with_buttons (_("ACL bearbeiten"),
+    dialog = gtk_dialog_new_with_buttons (_("Zugriffsrechte"),
                                           nolphin_view_get_containing_window (view),
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
@@ -8719,57 +8639,6 @@ action_edit_acl_callback (GtkAction *action,
 /* §40: Git - Status, Hinzufügen, Commit, Pull, Push, Log, Diff über
  * das Systemwerkzeug git. */
 
-static void
-show_git_text_dialog (GtkWindow *parent, const gchar *title, const gchar *text)
-{
-    GtkWidget *dialog, *scrolled, *text_view;
-    GtkTextBuffer *buffer;
-
-    dialog = gtk_dialog_new_with_buttons (title, parent,
-                                          GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE,
-                                          NULL);
-    gtk_window_set_default_size (GTK_WINDOW (dialog), 640, 440);
-
-    text_view = gtk_text_view_new ();
-    gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), FALSE);
-    gtk_text_view_set_monospace (GTK_TEXT_VIEW (text_view), TRUE);
-    gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD_CHAR);
-    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
-    gtk_text_buffer_set_text (buffer, (text != NULL && text[0] != '\0') ? text : _("(keine Ausgabe)"), -1);
-
-    scrolled = gtk_scrolled_window_new (NULL, NULL);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_container_add (GTK_CONTAINER (scrolled), text_view);
-    g_object_set (scrolled, "border-width", 6, NULL);
-
-    gtk_widget_show_all (scrolled);
-    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), scrolled);
-    g_signal_connect (dialog, "response", G_CALLBACK (gtk_widget_destroy), NULL);
-    gtk_widget_show (dialog);
-}
-
-typedef struct {
-    GtkWindow *parent_window;
-    gchar     *title;
-} GitSimpleContext;
-
-static GitSimpleContext *
-git_simple_context_new (GtkWindow *parent_window, const gchar *title)
-{
-    GitSimpleContext *ctx = g_new0 (GitSimpleContext, 1);
-    ctx->parent_window = parent_window;
-    ctx->title = g_strdup (title);
-    return ctx;
-}
-
-static void
-git_simple_context_free (GitSimpleContext *ctx)
-{
-    g_free (ctx->title);
-    g_free (ctx);
-}
-
 /* Finds the git repository root for the view's current selection (or
  * its directory if nothing is selected), then calls @found_cb with
  * it - or shows an error dialog and calls nothing if it's not inside
@@ -8782,8 +8651,52 @@ typedef struct {
     GitRootFoundCallback found_cb;
     gpointer             found_cb_data;
     GFile               *selected_file;
+    GFile               *start_file;
     GtkWindow            *parent_window;
 } GitRootLookup;
+
+/* Legt per "git init" ein neues Repository an. Läuft synchron: das ist
+ * eine Sache von Millisekunden und braucht keinen Netzwerkzugriff. */
+static gboolean
+git_init_repository (GFile *start_file, GFile **out_root, GError **error)
+{
+    GFile *dir;
+    gchar *path;
+    gchar *argv[] = { "git", "init", NULL };
+    gchar *std_err = NULL;
+    gint status = 0;
+    gboolean ok;
+
+    if (g_file_query_file_type (start_file, G_FILE_QUERY_INFO_NONE, NULL) == G_FILE_TYPE_DIRECTORY) {
+        dir = g_object_ref (start_file);
+    } else {
+        dir = g_file_get_parent (start_file);
+    }
+    path = (dir != NULL) ? g_file_get_path (dir) : NULL;
+
+    if (path == NULL) {
+        g_set_error_literal (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+                             _("Für diesen Ort kann kein Git-Repository angelegt werden."));
+        g_clear_object (&dir);
+        return FALSE;
+    }
+
+    ok = g_spawn_sync (path, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &std_err, &status, error)
+         && g_spawn_check_exit_status (status, NULL);
+    if (!ok && error != NULL && *error == NULL) {
+        g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED, "%s",
+                     (std_err != NULL && *std_err != '\0') ? std_err : _("git init ist fehlgeschlagen."));
+    }
+
+    if (ok) {
+        *out_root = g_object_ref (dir);
+    }
+
+    g_free (std_err);
+    g_free (path);
+    g_object_unref (dir);
+    return ok;
+}
 
 static void
 git_root_lookup_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
@@ -8801,9 +8714,29 @@ git_root_lookup_ready_cb (GObject *source, GAsyncResult *result, gpointer user_d
         g_clear_error (&error);
     } else if (root == NULL) {
         GtkWidget *dialog = gtk_message_dialog_new (lookup->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                     GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-                                                     "%s", _("Dieser Ort befindet sich nicht in einem Git-Repository."));
-        gtk_dialog_run (GTK_DIALOG (dialog));
+                                                     GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
+                                                     "%s", _("Dieser Ort ist noch kein Git-Repository."));
+        GFile *new_root = NULL;
+
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s",
+                                                  _("Soll hier ein neues Repository angelegt werden? Danach kannst du Dateien hinzufügen, committen und mit „Remote hinzufügen“ zu GitHub hochladen."));
+        gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                                _("Abbrechen"), GTK_RESPONSE_CANCEL,
+                                _("Repository anlegen"), GTK_RESPONSE_ACCEPT, NULL);
+
+        if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
+            if (git_init_repository (lookup->start_file, &new_root, &error)) {
+                lookup->found_cb (new_root, lookup->selected_file, lookup->found_cb_data);
+                g_object_unref (new_root);
+            } else {
+                GtkWidget *err = gtk_message_dialog_new (lookup->parent_window, GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                          GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                                                          "%s", error != NULL ? error->message : "");
+                gtk_dialog_run (GTK_DIALOG (err));
+                gtk_widget_destroy (err);
+                g_clear_error (&error);
+            }
+        }
         gtk_widget_destroy (dialog);
     } else {
         lookup->found_cb (root, lookup->selected_file, lookup->found_cb_data);
@@ -8811,6 +8744,7 @@ git_root_lookup_ready_cb (GObject *source, GAsyncResult *result, gpointer user_d
     }
 
     g_clear_object (&lookup->selected_file);
+    g_clear_object (&lookup->start_file);
     g_free (lookup);
 }
 
@@ -8836,267 +8770,165 @@ git_resolve_repo_root (NolphinView *view, GitRootFoundCallback found_cb, gpointe
     lookup->found_cb_data = found_cb_data;
     lookup->selected_file = selected_file;
     lookup->parent_window = nolphin_view_get_containing_window (view);
+    lookup->start_file = g_object_ref (start_file);
 
     nolphin_git_find_repository_root_async (start_file, NULL, git_root_lookup_ready_cb, lookup);
     g_object_unref (start_file);
 }
 
+/* Status, Hinzufügen, Commit, Pull, Push, Log und Diff zeigen alle
+ * denselben Git-Reiter der rechten Arbeitsbereich-Leiste - dort stehen
+ * eigene Knöpfe für jede dieser Aktionen (siehe nolphin-workspace-panel.c,
+ * build_git_tab()), statt dass jede Aktion hier ihr eigenes Dialogfenster
+ * öffnet. Nur "Remote hinzufügen" (unten) braucht weiterhin einen eigenen
+ * kleinen Eingabedialog, da der Reiter dafür keine Felder hat. */
 static void
-git_status_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+git_menu_action_show_tab (NolphinView *view)
 {
-    GitSimpleContext *ctx = user_data;
-    GError *error = NULL;
-    GHashTable *table = nolphin_git_get_status_finish (result, &error);
-    GString *text = g_string_new (NULL);
+    NolphinWindow *window = NOLPHIN_WINDOW (nolphin_view_get_containing_window (view));
 
-    if (table == NULL) {
-        g_string_assign (text, error ? error->message : _("Unbekannter Fehler"));
-        g_clear_error (&error);
-    } else if (g_hash_table_size (table) == 0) {
-        g_string_assign (text, _("Arbeitsverzeichnis ist sauber - keine Änderungen."));
-    } else {
-        GHashTableIter iter;
-        gpointer key, value;
-        g_hash_table_iter_init (&iter, table);
-        while (g_hash_table_iter_next (&iter, &key, &value)) {
-            NolphinGitFileStatus st = (NolphinGitFileStatus) GPOINTER_TO_INT (value);
-            g_string_append_printf (text, "%-14s %s\n", nolphin_git_status_get_label (st), (const gchar *) key);
-        }
-    }
-    if (table != NULL) {
-        g_hash_table_unref (table);
-    }
-
-    show_git_text_dialog (ctx->parent_window, ctx->title, text->str);
-    g_string_free (text, TRUE);
-    git_simple_context_free (ctx);
-}
-
-static void
-git_status_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    nolphin_git_get_status_async (repo_root, NULL, git_status_ready_cb, ctx);
+    nolphin_workspace_panel_show_git (nolphin_window_get_workspace_panel (window), window);
 }
 
 static void
 action_git_status_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GitSimpleContext *ctx = git_simple_context_new (nolphin_view_get_containing_window (view), _("Git-Status"));
-    git_resolve_repo_root (view, git_status_root_found_cb, ctx);
-}
-
-static void
-git_add_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GError *error = NULL;
-    gboolean success = nolphin_git_add_finish (result, &error);
-
-    send_archive_notification (_("Git: Hinzufügen"), success, error ? error->message : NULL);
-    g_clear_error (&error);
-}
-
-static void
-git_add_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GList *files = NULL;
-
-    if (selected_file != NULL) {
-        files = g_list_prepend (files, selected_file);
-    } else {
-        files = g_list_prepend (files, repo_root);
-    }
-    nolphin_git_add_async (repo_root, files, NULL, git_add_ready_cb, NULL);
-    g_list_free (files);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_add_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    git_resolve_repo_root (view, git_add_root_found_cb, NULL);
-}
-
-static void
-git_commit_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GError *error = NULL;
-    gboolean success = nolphin_git_commit_finish (result, &error);
-
-    send_archive_notification (_("Git: Commit"), success, error ? error->message : NULL);
-    g_clear_error (&error);
-}
-
-typedef struct {
-    gchar *message;
-} GitCommitContext;
-
-static void
-git_commit_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitCommitContext *ctx = user_data;
-    nolphin_git_commit_async (repo_root, ctx->message, NULL, git_commit_ready_cb, NULL);
-    g_free (ctx->message);
-    g_free (ctx);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_commit_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GtkWidget *dialog, *grid, *label, *entry;
-    int response;
-
-    dialog = gtk_dialog_new_with_buttons (_("Commit"),
-                                          nolphin_view_get_containing_window (view),
-                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
-                                          NULL);
-    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
-
-    grid = gtk_grid_new ();
-    g_object_set (grid, "border-width", 12, "row-spacing", 8, "column-spacing", 12, NULL);
-    label = gtk_label_new (_("Commit-Nachricht:"));
-    gtk_widget_set_halign (label, GTK_ALIGN_START);
-    gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-    entry = gtk_entry_new ();
-    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
-    gtk_widget_set_hexpand (entry, TRUE);
-    gtk_widget_set_size_request (entry, 360, -1);
-    gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
-    gtk_widget_show_all (grid);
-    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), grid);
-
-    response = gtk_dialog_run (GTK_DIALOG (dialog));
-    if (response == GTK_RESPONSE_OK) {
-        const gchar *msg = gtk_entry_get_text (GTK_ENTRY (entry));
-        if (msg[0] != '\0') {
-            GitCommitContext *ctx = g_new0 (GitCommitContext, 1);
-            ctx->message = g_strdup (msg);
-            gtk_widget_destroy (dialog);
-            git_resolve_repo_root (view, git_commit_root_found_cb, ctx);
-            return;
-        }
-    }
-    gtk_widget_destroy (dialog);
-}
-
-static void
-git_pull_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    GError *error = NULL;
-    gchar *output = nolphin_git_pull_finish (result, &error);
-
-    show_git_text_dialog (ctx->parent_window, ctx->title,
-                          output != NULL ? output : (error ? error->message : _("Unbekannter Fehler")));
-    g_free (output);
-    g_clear_error (&error);
-    git_simple_context_free (ctx);
-}
-
-static void
-git_pull_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    nolphin_git_pull_async (repo_root, NULL, git_pull_ready_cb, ctx);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_pull_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GitSimpleContext *ctx = git_simple_context_new (nolphin_view_get_containing_window (view), _("Git Pull"));
-    git_resolve_repo_root (view, git_pull_root_found_cb, ctx);
-}
-
-static void
-git_push_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    GError *error = NULL;
-    gchar *output = nolphin_git_push_finish (result, &error);
-
-    show_git_text_dialog (ctx->parent_window, ctx->title,
-                          output != NULL ? output : (error ? error->message : _("Unbekannter Fehler")));
-    g_free (output);
-    g_clear_error (&error);
-    git_simple_context_free (ctx);
-}
-
-static void
-git_push_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    nolphin_git_push_async (repo_root, NULL, git_push_ready_cb, ctx);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_push_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GitSimpleContext *ctx = git_simple_context_new (nolphin_view_get_containing_window (view), _("Git Push"));
-    git_resolve_repo_root (view, git_push_root_found_cb, ctx);
-}
-
-static void
-git_log_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    GError *error = NULL;
-    gchar *output = nolphin_git_log_finish (result, &error);
-
-    show_git_text_dialog (ctx->parent_window, ctx->title,
-                          output != NULL ? output : (error ? error->message : _("Unbekannter Fehler")));
-    g_free (output);
-    g_clear_error (&error);
-    git_simple_context_free (ctx);
-}
-
-static void
-git_log_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    nolphin_git_log_async (repo_root, selected_file, 100, NULL, git_log_ready_cb, ctx);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_log_callback (GtkAction *action, gpointer callback_data)
 {
-    NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GitSimpleContext *ctx = git_simple_context_new (nolphin_view_get_containing_window (view), _("Git-Log"));
-    git_resolve_repo_root (view, git_log_root_found_cb, ctx);
-}
-
-static void
-git_diff_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    GError *error = NULL;
-    gchar *output = nolphin_git_diff_finish (result, &error);
-
-    show_git_text_dialog (ctx->parent_window, ctx->title,
-                          output != NULL ? output : (error ? error->message : _("Unbekannter Fehler")));
-    g_free (output);
-    g_clear_error (&error);
-    git_simple_context_free (ctx);
-}
-
-static void
-git_diff_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
-{
-    GitSimpleContext *ctx = user_data;
-    nolphin_git_diff_async (repo_root, selected_file, NULL, git_diff_ready_cb, ctx);
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
 static void
 action_git_diff_callback (GtkAction *action, gpointer callback_data)
 {
+    git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
+}
+
+static void
+git_sync_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    gboolean apply = GPOINTER_TO_INT (user_data);
+    GError *error = NULL;
+    gchar *text = nolphin_git_sync_finish (result, &error);
+    GNotification *notification = g_notification_new (apply ? _("Git: Synchronisieren") : _("Git: Abgleich"));
+
+    if (text != NULL) {
+        g_notification_set_body (notification, text);
+    } else {
+        gchar *body = g_strdup_printf (_("Fehlgeschlagen: %s"), error != NULL ? error->message : "");
+        g_notification_set_body (notification, body);
+        g_free (body);
+    }
+    g_application_send_notification (G_APPLICATION (nolphin_application_get_singleton ()), NULL, notification);
+    g_object_unref (notification);
+    g_free (text);
+    g_clear_error (&error);
+}
+
+static void
+git_sync_root_found_cb (GFile *repo_root, GFile *selected_file, gpointer user_data)
+{
+    nolphin_git_sync_async (repo_root, GPOINTER_TO_INT (user_data), NULL, git_sync_ready_cb, user_data);
+}
+
+static void
+action_git_compare_callback (GtkAction *action, gpointer callback_data)
+{
+    git_resolve_repo_root (NOLPHIN_VIEW (callback_data), git_sync_root_found_cb, GINT_TO_POINTER (FALSE));
+}
+
+static void
+action_git_sync_callback (GtkAction *action, gpointer callback_data)
+{
+    git_resolve_repo_root (NOLPHIN_VIEW (callback_data), git_sync_root_found_cb, GINT_TO_POINTER (TRUE));
+}
+
+static void
+git_clone_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    GError *error = NULL;
+    gboolean success = nolphin_git_clone_finish (result, &error);
+
+    send_archive_notification (_("Git: Repository klonen"), success, error ? error->message : NULL);
+    g_clear_error (&error);
+}
+
+/* Lädt ein Repository per URL in den aktuell geöffneten Ordner. Braucht
+ * keinen bestehenden Repository-Kontext - deshalb ohne
+ * git_resolve_repo_root(). */
+static void
+action_git_clone_callback (GtkAction *action, gpointer callback_data)
+{
     NolphinView *view = NOLPHIN_VIEW (callback_data);
-    GitSimpleContext *ctx = git_simple_context_new (nolphin_view_get_containing_window (view), _("Git-Diff"));
-    git_resolve_repo_root (view, git_diff_root_found_cb, ctx);
+    GtkWidget *dialog, *label, *url_entry, *box;
+    int response;
+
+    dialog = gtk_dialog_new_with_buttons (_("Repository klonen"),
+                                          nolphin_view_get_containing_window (view),
+                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          _("Abbrechen"), GTK_RESPONSE_CANCEL,
+                                          _("Klonen"), GTK_RESPONSE_OK,
+                                          NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+    box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
+    gtk_container_set_border_width (GTK_CONTAINER (box), 12);
+
+    label = gtk_label_new (_("Adresse des Repositorys (wird in den aktuellen Ordner heruntergeladen):"));
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+
+    url_entry = gtk_entry_new ();
+    gtk_entry_set_placeholder_text (GTK_ENTRY (url_entry), "https://github.com/user/repo.git");
+    gtk_entry_set_activates_default (GTK_ENTRY (url_entry), TRUE);
+    gtk_widget_set_size_request (url_entry, 420, -1);
+    gtk_box_pack_start (GTK_BOX (box), url_entry, FALSE, FALSE, 0);
+
+    gtk_widget_show_all (box);
+    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), box);
+    gtk_widget_grab_focus (url_entry);
+
+    response = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (response == GTK_RESPONSE_OK) {
+        gchar *url = g_strstrip (g_strdup (gtk_entry_get_text (GTK_ENTRY (url_entry))));
+
+        if (url[0] != '\0') {
+            GFile *dir = nolphin_file_get_location (nolphin_view_get_directory_as_file (view));
+
+            nolphin_git_clone_async (dir, url, NULL, git_clone_ready_cb, NULL);
+            g_object_unref (dir);
+        }
+        g_free (url);
+    }
+    gtk_widget_destroy (dialog);
 }
 
 static void
@@ -9213,6 +9045,34 @@ action_open_containing_folder_callback (GtkAction *action,
     g_object_unref (activation_location);
 }
 
+/* §58.1: "Im Terminal öffnen" zeigt das eingebettete Terminal im rechten
+ * Arbeitsbereich (wie F4), navigiert zum gewünschten Ordner - statt wie
+ * bisher ein externes Terminalfenster zu starten (verbotenes eigenständiges
+ * Fenster). */
+static void
+open_embedded_terminal_at_path (NolphinView *view, const gchar *path)
+{
+	GtkWidget *toplevel;
+	NolphinWindow *window;
+	GFile *location;
+
+	if (path == NULL) {
+		return;
+	}
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	if (!NOLPHIN_IS_WINDOW (toplevel)) {
+		return;
+	}
+	window = NOLPHIN_WINDOW (toplevel);
+
+	nolphin_window_set_show_terminal (window, TRUE);
+
+	location = g_file_new_for_path (path);
+	nolphin_terminal_set_location (NOLPHIN_TERMINAL (nolphin_window_get_terminal (window)), location);
+	g_object_unref (location);
+}
+
 static void
 action_open_in_terminal_callback(GtkAction *action,
 				  gpointer callback_data)
@@ -9231,7 +9091,7 @@ action_open_in_terminal_callback(GtkAction *action,
             path = nolphin_file_get_path (location);
             nolphin_file_unref (location);
         }
-        open_in_terminal (path);
+        open_embedded_terminal_at_path (view, path);
         g_free (path);
 		nolphin_file_list_free (selection);
 	} else {
@@ -9243,51 +9103,11 @@ action_open_in_terminal_callback(GtkAction *action,
         } else {
             path = g_file_get_path (gfile);
         }
-        open_in_terminal (path);
+        open_embedded_terminal_at_path (view, path);
         g_free (uri);
         g_free (path);
         g_object_unref (gfile);
     }
-}
-
-static void
-invoke_external_bulk_rename_utility (NolphinView *view,
-				     GList *selection)
-{
-	GString *cmd;
-	char *parameter;
-	char *quoted_parameter;
-	char *bulk_rename_tool;
-	GList *walk;
-	NolphinFile *file;
-
-	/* assemble command line */
-	bulk_rename_tool = get_bulk_rename_tool ();
-	cmd = g_string_new (bulk_rename_tool);
-	g_free (bulk_rename_tool);
-	for (walk = selection; walk; walk = walk->next) {
-		file = walk->data;
-		parameter = nolphin_file_get_uri (file);
-		quoted_parameter = g_shell_quote (parameter);
-		g_free (parameter);
-		cmd = g_string_append (cmd, " ");
-		cmd = g_string_append (cmd, quoted_parameter);
-		g_free (quoted_parameter);
-	}
-
-        guint i = 0;
-
-	// Escape percents
-	for (i = 0; i < strlen(cmd->str); i++) {
-		if (cmd->str[i] == '%') {
-			g_string_insert_c(cmd, i++, '%');
-		}
-	}
-
-	/* spawning and error handling */
-	nolphin_launch_application_from_command (gtk_widget_get_screen (GTK_WIDGET (view)),
-						  cmd->str, FALSE, NULL);
-	g_string_free (cmd, TRUE);
 }
 
 static void
@@ -9322,6 +9142,37 @@ action_redo_callback (GtkAction *action,
 	real_action_redo (NOLPHIN_VIEW (callback_data));
 }
 
+/* §36 (Massenumbenennung): oeffnet die native Massenumbenennung-Seite im
+ * rechten Arbeitsbereich fuer @selection - der Aufrufer behaelt das
+ * Eigentum an @selection. */
+static void
+open_batch_rename_panel (NolphinView *view, GList *selection)
+{
+	GtkWidget *toplevel;
+
+	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (view));
+	if (!NOLPHIN_IS_WINDOW (toplevel)) {
+		return;
+	}
+
+	nolphin_workspace_panel_show_batch_rename (nolphin_window_get_workspace_panel (NOLPHIN_WINDOW (toplevel)),
+						   NOLPHIN_WINDOW (toplevel), selection);
+}
+
+static void
+action_batch_rename_callback (GtkAction *action,
+			      gpointer callback_data)
+{
+	NolphinView *view = NOLPHIN_VIEW (callback_data);
+	GList *selection = nolphin_view_get_selection (view);
+
+	if (selection_not_empty_in_menu_callback (view, selection)) {
+		open_batch_rename_panel (view, selection);
+	}
+
+	nolphin_file_list_free (selection);
+}
+
 static void
 real_action_rename (NolphinView *view,
 		    gboolean select_all)
@@ -9334,11 +9185,10 @@ real_action_rename (NolphinView *view,
 	selection = nolphin_view_get_selection (view);
 
 	if (selection_not_empty_in_menu_callback (view, selection)) {
-		/* If there is more than one file selected, invoke a batch renamer */
+		/* If there is more than one file selected, invoke the native
+		 * Massenumbenennung-Panel (§36) statt eines externen Werkzeugs. */
 		if (selection->next != NULL) {
-			if (have_bulk_rename_tool ()) {
-				invoke_external_bulk_rename_utility (view, selection);
-			}
+			open_batch_rename_panel (view, selection);
 		} else {
 			file = NOLPHIN_FILE (selection->data);
 			if (!select_all) {
@@ -10224,8 +10074,8 @@ static const GtkActionEntry directory_view_entries[] = {
   /* tooltip */                  N_("Eine mit gpg verschlüsselte Datei entschlüsseln"),
                  G_CALLBACK (action_decrypt_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_EDIT_ACL, NULL,
-  /* label, accelerator */       N_("_ACL bearbeiten …"), NULL,
-  /* tooltip */                  N_("Zugriffsrechte-Liste (ACL) anzeigen und bearbeiten"),
+  /* label, accelerator */       N_("_Zugriffsrechte …"), NULL,
+  /* tooltip */                  N_("Zugriffsrechte für weitere Benutzer und Gruppen festlegen (ACL)"),
                  G_CALLBACK (action_edit_acl_callback) },
   /* name, stock id, label */  { NOLPHIN_ACTION_GIT_MENU, NULL, N_("_Git") },
   /* name, stock id */         { NOLPHIN_ACTION_GIT_STATUS, NULL,
@@ -10256,6 +10106,18 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("_Diff anzeigen"), NULL,
   /* tooltip */                  N_("Nicht committete Änderungen anzeigen"),
                  G_CALLBACK (action_git_diff_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_GIT_COMPARE, NULL,
+  /* label, accelerator */       N_("Mit Server _abgleichen"), NULL,
+  /* tooltip */                  N_("Prüfen, was lokal und auf dem Server (z. B. GitHub) unterschiedlich ist"),
+                 G_CALLBACK (action_git_compare_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_GIT_SYNC, NULL,
+  /* label, accelerator */       N_("_Synchronisieren"), NULL,
+  /* tooltip */                  N_("Änderungen vom Server holen und eigene Änderungen hochladen"),
+                 G_CALLBACK (action_git_sync_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_GIT_CLONE, NULL,
+  /* label, accelerator */       N_("Repository _klonen …"), NULL,
+  /* tooltip */                  N_("Ein Repository (z. B. von GitHub) in den aktuellen Ordner herunterladen"),
+                 G_CALLBACK (action_git_clone_callback) },
   /* name, stock id */         { NOLPHIN_ACTION_GIT_REMOTE_ADD, NULL,
   /* label, accelerator */       N_("_Remote hinzufügen …"), NULL,
   /* tooltip */                  N_("Ein entferntes Repository (z. B. auf GitHub) für Pull/Push eintragen"),
@@ -10332,6 +10194,11 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       "RenameSelectAll", "<shift>F2",
   /* tooltip */                  NULL,
 				 G_CALLBACK (action_rename_select_all_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_BATCH_RENAME, NULL,
+  /* label, accelerator */       N_("_Massenumbenennung …"), NULL,
+  /* tooltip */                  N_("Mehrere ausgewählte Objekte über Suchen/Ersetzen, Nummerierung und "
+				     "Groß-/Kleinschreibung auf einmal umbenennen"),
+				 G_CALLBACK (action_batch_rename_callback) },
   /* name, stock id */         { "Trash", NULL,
   /* label, accelerator */       N_("In den _Papierkorb verschieben"), NULL,
   /* tooltip */                  N_("Jedes gewählte Objekt in den Papierkorb verschieben"),
@@ -11707,7 +11574,10 @@ real_update_menus (NolphinView *view)
 
     action = gtk_action_group_get_action (view->details->dir_action_group,
                                          NOLPHIN_ACTION_OPEN_IN_TERMINAL);
-    gtk_action_set_visible (action, no_selection_or_one_dir);
+    /* Anders als no_selection_or_one_dir: auch bei genau einer ausgewaehlten
+     * Datei (nicht nur einem Ordner) sichtbar - der Callback oeffnet dann
+     * im Elternordner der Datei, das unterstuetzt er laengst. */
+    gtk_action_set_visible (action, selection_count <= 1);
 
 	action = gtk_action_group_get_action (view->details->dir_action_group,
 					      NOLPHIN_ACTION_NEW_FOLDER);
@@ -12060,23 +11930,10 @@ real_update_menus (NolphinView *view)
     gtk_action_set_visible (action, selection_count == 1);
 
     {
-        /* §40: only offer git actions when git is actually installed
-         * and the current location plausibly is (or is inside) a git
-         * repository - a fast, synchronous, filesystem-only check;
-         * the real, authoritative check happens again (async) when
-         * an action is actually invoked. */
+        /* §40: Git-Menü überall anbieten, sobald git installiert ist. Liegt
+         * der Ort in keinem Repository, bietet die Aktion beim Aufruf an,
+         * eines anzulegen (siehe git_root_lookup_ready_cb()). */
         gboolean show_git = nolphin_git_is_available ();
-
-        if (show_git) {
-            GFile *probe;
-            if (selection_count == 1) {
-                probe = nolphin_file_get_location (NOLPHIN_FILE (selection->data));
-            } else {
-                probe = nolphin_file_get_location (nolphin_view_get_directory_as_file (view));
-            }
-            show_git = (probe != NULL) && nolphin_git_directory_looks_like_repository (probe);
-            g_clear_object (&probe);
-        }
 
         action = gtk_action_group_get_action (view->details->dir_action_group, NOLPHIN_ACTION_GIT_MENU);
         gtk_action_set_visible (action, show_git);

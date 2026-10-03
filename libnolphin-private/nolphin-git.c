@@ -24,6 +24,7 @@
 
 #include <glib/gi18n.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
 
 GQuark
@@ -778,6 +779,197 @@ nolphin_git_remote_add_async (GFile *repo_root, const gchar *name, const gchar *
 
 gboolean
 nolphin_git_remote_add_finish (GAsyncResult *result, GError **error)
+{
+    return g_task_propagate_boolean (G_TASK (result), error);
+}
+
+/* Führt git synchron aus (nur aus einem Worker-Thread aufrufen). */
+static gboolean
+git_run_blocking (const gchar *repo_path, gchar **out, gchar **err_text, ...)
+{
+    GPtrArray *argv = g_ptr_array_new_with_free_func (g_free);
+    gchar **envp = g_get_environ ();
+    gchar *std_out = NULL, *std_err = NULL;
+    gint status = 0;
+    gboolean ok;
+    va_list ap;
+    const gchar *arg;
+
+    g_ptr_array_add (argv, g_strdup ("git"));
+    g_ptr_array_add (argv, g_strdup ("-C"));
+    g_ptr_array_add (argv, g_strdup (repo_path));
+    va_start (ap, err_text);
+    while ((arg = va_arg (ap, const gchar *)) != NULL) {
+        g_ptr_array_add (argv, g_strdup (arg));
+    }
+    va_end (ap);
+    g_ptr_array_add (argv, NULL);
+
+    envp = g_environ_setenv (envp, "GIT_TERMINAL_PROMPT", "0", TRUE);
+    envp = g_environ_setenv (envp, "GIT_ASKPASS", "", TRUE);
+
+    ok = g_spawn_sync (NULL, (gchar **) argv->pdata, envp, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                       &std_out, &std_err, &status, NULL)
+         && g_spawn_check_exit_status (status, NULL);
+
+    if (out != NULL) {
+        *out = std_out;
+    } else {
+        g_free (std_out);
+    }
+    if (err_text != NULL) {
+        *err_text = g_strstrip (std_err != NULL ? std_err : g_strdup (""));
+    } else {
+        g_free (std_err);
+    }
+
+    g_strfreev (envp);
+    g_ptr_array_free (argv, TRUE);
+    return ok;
+}
+
+static void
+git_sync_thread (GTask *task, gpointer source, gpointer task_data, GCancellable *cancellable)
+{
+    gchar *repo_path = g_object_get_data (G_OBJECT (task), "repo-path");
+    gboolean apply = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (task), "apply"));
+    gchar *out = NULL, *err = NULL;
+    GString *report = g_string_new (NULL);
+    gint ahead = 0, behind = 0;
+
+    if (!git_run_blocking (repo_path, NULL, &err, "fetch", NULL)) {
+        g_task_return_new_error (task, NOLPHIN_GIT_ERROR, NOLPHIN_GIT_ERROR_TOOL_FAILED,
+                                 "%s%s%s", _("Abgleich mit dem Server fehlgeschlagen."),
+                                 err[0] != '\0' ? "\n" : "", err);
+        g_free (err);
+        g_string_free (report, TRUE);
+        return;
+    }
+    g_free (err);
+
+    if (!git_run_blocking (repo_path, &out, &err, "rev-list", "--left-right", "--count", "HEAD...@{u}", NULL)) {
+        g_task_return_new_error (task, NOLPHIN_GIT_ERROR, NOLPHIN_GIT_ERROR_TOOL_FAILED, "%s",
+                                 _("Dieser Zweig ist noch mit keinem Server-Zweig verbunden. Trage zuerst über „Remote hinzufügen“ einen Server ein und führe einmal „Push“ aus."));
+        g_free (out);
+        g_free (err);
+        g_string_free (report, TRUE);
+        return;
+    }
+    sscanf (out, "%d %d", &ahead, &behind);
+    g_free (out);
+    g_free (err);
+
+    if (!apply) {
+        if (ahead == 0 && behind == 0) {
+            g_string_append (report, _("Alles ist auf dem gleichen Stand wie auf dem Server."));
+        } else {
+            g_string_append_printf (report, _("%d lokal neu (noch nicht hochgeladen), %d auf dem Server neu (noch nicht heruntergeladen)."),
+                                    ahead, behind);
+        }
+        g_task_return_pointer (task, g_string_free (report, FALSE), g_free);
+        return;
+    }
+
+    if (behind > 0) {
+        if (!git_run_blocking (repo_path, NULL, &err, "pull", "--no-rebase", "--no-edit", NULL)) {
+            g_task_return_new_error (task, NOLPHIN_GIT_ERROR, NOLPHIN_GIT_ERROR_TOOL_FAILED,
+                                     "%s%s%s", _("Herunterladen fehlgeschlagen (evtl. Konflikte)."),
+                                     err[0] != '\0' ? "\n" : "", err);
+            g_free (err);
+            g_string_free (report, TRUE);
+            return;
+        }
+        g_free (err);
+        g_string_append_printf (report, _("%d Änderung(en) heruntergeladen. "), behind);
+    }
+
+    /* Nach dem Pull kann durch einen Merge ein Commit dazugekommen sein. */
+    if (ahead > 0 || behind > 0) {
+        if (!git_run_blocking (repo_path, NULL, &err, "push", NULL)) {
+            g_task_return_new_error (task, NOLPHIN_GIT_ERROR, NOLPHIN_GIT_ERROR_TOOL_FAILED,
+                                     "%s%s%s", _("Hochladen fehlgeschlagen."),
+                                     err[0] != '\0' ? "\n" : "", err);
+            g_free (err);
+            g_string_free (report, TRUE);
+            return;
+        }
+        g_free (err);
+        g_string_append (report, _("Lokale Änderungen hochgeladen."));
+    } else {
+        g_string_append (report, _("Alles ist bereits auf dem gleichen Stand."));
+    }
+
+    g_task_return_pointer (task, g_string_free (report, FALSE), g_free);
+}
+
+void
+nolphin_git_sync_async (GFile *repo_root, gboolean apply,
+                        GCancellable *cancellable,
+                        GAsyncReadyCallback callback, gpointer user_data)
+{
+    GTask *task;
+    gchar *repo_path;
+
+    g_return_if_fail (G_IS_FILE (repo_root));
+
+    task = g_task_new (NULL, cancellable, callback, user_data);
+    g_task_set_source_tag (task, nolphin_git_sync_async);
+
+    repo_path = require_repo_path (repo_root, task);
+    if (repo_path == NULL) {
+        return;
+    }
+
+    g_object_set_data_full (G_OBJECT (task), "repo-path", repo_path, g_free);
+    g_object_set_data (G_OBJECT (task), "apply", GINT_TO_POINTER (apply));
+    g_task_run_in_thread (task, git_sync_thread);
+    g_object_unref (task);
+}
+
+gchar *
+nolphin_git_sync_finish (GAsyncResult *result, GError **error)
+{
+    return g_task_propagate_pointer (G_TASK (result), error);
+}
+
+void
+nolphin_git_clone_async (GFile *parent_dir, const gchar *url,
+                         GCancellable *cancellable,
+                         GAsyncReadyCallback callback, gpointer user_data)
+{
+    GTask *task;
+    gchar *dir_path;
+    GSubprocess *subprocess;
+    GError *error = NULL;
+
+    g_return_if_fail (G_IS_FILE (parent_dir));
+    g_return_if_fail (url != NULL && url[0] != '\0');
+
+    task = g_task_new (NULL, cancellable, callback, user_data);
+    g_task_set_source_tag (task, nolphin_git_clone_async);
+
+    dir_path = require_repo_path (parent_dir, task);
+    if (dir_path == NULL) {
+        return;
+    }
+
+    /* "--" verhindert, dass eine URL, die mit "-" beginnt, als Option gilt. */
+    subprocess = spawn_git (dir_path, G_SUBPROCESS_FLAGS_STDERR_PIPE | G_SUBPROCESS_FLAGS_STDOUT_SILENCE,
+                            &error, "clone", "--", url, NULL);
+    g_free (dir_path);
+
+    if (subprocess == NULL) {
+        g_task_return_error (task, error);
+        g_object_unref (task);
+        return;
+    }
+
+    g_subprocess_communicate_utf8_async (subprocess, NULL, cancellable, simple_bool_communicate_cb, task);
+    g_object_unref (subprocess);
+}
+
+gboolean
+nolphin_git_clone_finish (GAsyncResult *result, GError **error)
 {
     return g_task_propagate_boolean (G_TASK (result), error);
 }

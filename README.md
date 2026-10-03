@@ -1,706 +1,271 @@
 # Nolphin
 
-**Ein nativer Linux-Dateimanager für Linux Mint Cinnamon – als eigenständiger Nemo-Fork mit erweiterten Datei-, Vorschau-, CAD-, Git- und Sicherheitsfunktionen.**
+**Ein nativer Linux-Dateimanager für Linux Mint Cinnamon – mit einem festen rechten Arbeitsbereich für Vorschau, Eigenschaften, Archive, Terminal, Git und Paketbau.**
 
-Nolphin ist ein eigenständiger Dateimanager für die Cinnamon-Desktopumgebung. Das Projekt basiert ursprünglich auf Nemo und wurde anschließend vollständig in **Nolphin** umbenannt und schrittweise um eigene Funktionen erweitert.
-
-Der Schwerpunkt liegt auf einem leistungsfähigen Dateimanager, der klassische Dateiverwaltung mit **Dateivorschau, technischen Metadaten, CAD-Dateierkennung, Git-Unterstützung, Prüfsummen und weiteren Werkzeugen** verbindet.
+Nolphin ist ein eigenständiger Dateimanager auf Basis von Nemo 6.7.7 (GTK3, C11). Er wurde vollständig in **Nolphin** umbenannt und um eigene Funktionen erweitert. Die Hauptansicht bleibt sichtbar, während rechts daneben die jeweils gewählte Funktion bedient wird – ohne zusätzliche Fenster.
 
 > **Hinweis:** Nolphin ist ein unabhängiges Open-Source-Projekt und kein offizielles Projekt von Linux Mint.
 
 ---
 
-## Warum Nolphin?
+## Projektphilosophie
 
-Klassische Dateimanager sind hervorragend für alltägliche Dateioperationen geeignet. Bei technischen Dateien, Entwicklungsprojekten und größeren Dateisammlungen benötigt man jedoch häufig zusätzliche Werkzeuge.
+**Die Funktion kommt zur Datei – nicht umgekehrt.**
 
-Nolphin versucht, einige dieser Funktionen direkt in den Dateimanager zu integrieren.
+Wer mit technischen Dateien arbeitet, wechselt sonst ständig zwischen Dateimanager, Terminal und Zusatzprogrammen. Nolphin holt diese Werkzeuge in das Hauptfenster.
 
-Statt beispielsweise für verschiedene Aufgaben zwischen Dateimanager, Terminal und zusätzlichen Programmen zu wechseln, sollen wichtige Informationen und Aktionen direkt in Nolphin verfügbar sein.
-
-### Schwerpunkte
-
-* Dateivorschau und technische Informationen
-* 3D-/CAD-Dateierkennung
-* Git-Integration
-* Prüfsummen
-* Verschlüsselungsfunktionen
-* ACL-Verwaltung
-* automatisierte Papierkorbbereinigung
-* gespeicherte Dateiauswahlen
-* klassische Nemo-Dateiverwaltung
+* **Ehrlich statt vorgetäuscht:** Fehlt ein Hilfsprogramm oder ein Vorschau-Backend, zeigt Nolphin das an, statt eine Funktion zu simulieren.
+* **Kein Systembruch:** Klassische Nemo-Bedienung bleibt erhalten. Oberfläche und Menüs sind deutschsprachig.
+* **Nur Dokumentiertes ist fertig:** Diese README beschreibt den lokalen Stand des Codes. Als „fertig“ gilt nur, was implementiert **und** getestet ist.
 
 ---
 
-# Funktionen
+## Schnellstart
 
-## Dateiverwaltung
-
-Die bewährten Funktionen aus Nemo bleiben erhalten.
-
-Unter anderem:
-
-* Tabs
-* geteilte Ansicht / Split View
-* integriertes Terminal über VTE
-* Symbolansicht
-* Listenansicht
-* Kompaktansicht
-* Galerieansicht mit großen Vorschaubildern
-* Kopieren und Verschieben
-* Fortschrittsanzeige
-* Pause / Fortsetzen von Dateioperationen
-* Abbrechen von Dateioperationen
-* Rückgängig / Wiederholen
-* Papierkorb
-* Drag & Drop
-* Eigenschaften-Dialog
-* Dateiberechtigungen
-* Netzwerkzugriff über GVfs
-
-Unterstützte Netzwerkprotokolle umfassen unter anderem:
-
-* SMB
-* NFS
-* HTTP
-* HTTPS
-
----
-
-# Vorschau- und Info-Panel
-
-Eine der zentralen Erweiterungen von Nolphin ist das integrierte **Vorschau-/Info-Panel**.
-
-Mit **F11** kann das Panel geöffnet werden.
-
-Bei der Auswahl einer Datei können dort abhängig vom Dateityp Informationen wie:
-
-* Vorschau
-* Dateiinformationen
-* technische Metadaten
-* Textinhalt
-* Dateiformat
-* weitere formatabhängige Informationen
-
-angezeigt werden.
-
-Das Ziel ist, Informationen über eine Datei möglichst direkt im Dateimanager bereitzustellen.
-
----
-
-# 3D- und CAD-Dateien
-
-Nolphin enthält eine spezielle Erkennung für technische und CAD-Dateien.
-
-## STL
-
-STL-Dateien werden erkannt und analysiert.
-
-Nolphin kann unter anderem unterscheiden zwischen:
-
-* ASCII-STL
-* Binär-STL
-
-Bei Binär-STL kann beispielsweise die Anzahl der Dreiecke ausgelesen werden.
-
----
-
-## STEP / STP
-
-Bei STEP-Dateien werden Header-Informationen ausgewertet.
-
-Unter anderem können folgende Informationen vorhanden sein:
-
-* Beschreibung
-* Dateiname
-* Zeitstempel
-* Autor
-* Schema
-
----
-
-## FreeCAD FCStd
-
-FreeCAD-Dateien (`.FCStd`) werden ebenfalls erkannt.
-
-Nolphin kann vorhandene Dokumentinformationen auswerten, beispielsweise:
-
-* Kommentar
-* Autor
-* Firma
-* Erstellungsdatum
-* Änderungsdatum
-
-Falls ein Vorschaubild innerhalb des FreeCAD-Dokuments vorhanden ist, kann dieses ebenfalls verwendet werden.
-
----
-
-## Weitere technische Dateiformate
-
-Weitere Formate werden erkannt, darunter:
-
-* IGES
-* OBJ
-* 3MF
-* DXF
-* DWG
-
-Wenn für ein Format noch kein echtes Vorschau-Backend vorhanden ist, zeigt Nolphin dies ausdrücklich an, anstatt eine nicht vorhandene Vorschau vorzutäuschen.
-
----
-
-# Git-Integration
-
-Nolphin integriert wichtige Git-Funktionen direkt in den Dateimanager.
-
-Dadurch können Git-Aktionen über das Kontextmenü ausgeführt werden, ohne für jede Operation zuerst ein Terminal öffnen zu müssen.
-
-Unterstützt werden unter anderem:
-
-* Status
-* Add
-* Commit
-* Pull
-* Push
-* Log
-* Diff
-* Remote hinzufügen
-
-Damit eignet sich Nolphin insbesondere auch für die Arbeit mit lokalen Entwicklungsprojekten.
-
----
-
-# Prüfsummen
-
-Nolphin unterstützt verschiedene Prüfsummenverfahren.
-
-Aktuell vorgesehen bzw. implementiert sind:
-
-* MD5
-* SHA-1
-* SHA-256
-* SHA-512
-* BLAKE2
-
-Damit können Dateien direkt aus dem Dateimanager heraus überprüft werden.
-
----
-
-# Verschlüsselung
-
-Für bestimmte Datei- und Ordneroperationen stehen Verschlüsselungsfunktionen über **GPG** zur Verfügung.
-
-Das Ziel ist, Verschlüsselung möglichst direkt in die normale Dateiverwaltung einzubinden.
-
----
-
-# ACL-Verwaltung
-
-Nolphin unterstützt die Verwaltung von Access Control Lists (ACLs).
-
-Dafür werden unter anderem die Linux-Werkzeuge
-
-```text
-getfacl
-setfacl
-```
-
-verwendet.
-
-Damit können detailliertere Zugriffsrechte direkt aus dem Dateimanager heraus verwaltet werden.
-
----
-
-# Papierkorb-Automatik
-
-Nolphin kann den Papierkorb automatisch verwalten.
-
-Vorgesehen sind unter anderem:
-
-* automatische Bereinigung nach einer konfigurierbaren Aufbewahrungsdauer
-* Warnung bei Überschreitung eines Größenlimits
-
-Damit kann verhindert werden, dass sich über längere Zeit große Mengen gelöschter Dateien ansammeln.
-
----
-
-# Gespeicherte Dateiauswahl
-
-Nolphin kann benannte Dateiauswahlen speichern.
-
-Eine Auswahl kann später wiederhergestellt werden.
-
-Das ist insbesondere bei Ordnern mit vielen Dateien interessant, wenn regelmäßig mit denselben Dateien gearbeitet wird.
-
----
-
-# Eigene Symbole
-
-Nolphin verwendet eigene, in die Anwendung eingebettete Symbole.
-
-Dadurch ist für diese Symbole kein externes Icon-Theme erforderlich.
-
----
-
-# Entwicklungsstand
-
-Nolphin befindet sich in aktiver Entwicklung.
-
-Ein Teil der geplanten Funktionen ist bereits implementiert, während weitere Funktionen noch entwickelt werden.
-
-## Bereits vorhanden
-
-* [x] Dateiverwaltung auf Nemo-Basis
-* [x] Tabs
-* [x] Split View
-* [x] integriertes Terminal
-* [x] verschiedene Ansichten
-* [x] Vorschau-/Info-Panel
-* [x] STL-Erkennung
-* [x] STEP/STP-Erkennung
-* [x] FreeCAD-FCStd-Unterstützung
-* [x] Erkennung weiterer CAD-/3D-Formate
-* [x] Git-Integration
-* [x] Prüfsummen
-* [x] GPG-Unterstützung
-* [x] ACL-Verwaltung
-* [x] Papierkorb-Automatik
-* [x] gespeicherte Dateiauswahlen
-* [x] eigene eingebettete Symbole
-
----
-
-# Roadmap
-
-Folgende Funktionen sind geplant bzw. befinden sich noch in der Entwicklung.
-
-## Suche
-
-* [ ] Erweiterte Suchoperatoren
-* [ ] UND
-* [ ] ODER
-* [ ] NICHT
-* [ ] kombinierbare Filter
-
-Die grundlegende Filterung ist bereits vorhanden.
-
----
-
-## Erweiterte Vorschau
-
-* [ ] PDF-Vorschau
-* [ ] Video-Informationen
-* [ ] Audio-Informationen
-
-Für die geplante PDF- und Medienunterstützung sollen unter anderem Poppler-GLib bzw. GStreamer verwendet werden.
-
----
-
-## Metadaten und Tags
-
-* [ ] Tags
-* [ ] Bewertungen
-* [ ] Kommentare
-* [ ] eigenes Metadaten-Bedienfeld
-
----
-
-## Arbeitsbereiche
-
-* [ ] Tabs speichern
-* [ ] Split-View-Zustand speichern
-* [ ] Layout speichern
-* [ ] Terminalzustand speichern
-* [ ] Arbeitsbereiche benennen
-* [ ] Arbeitsbereiche wiederherstellen
-
----
-
-## Massenumbenennung
-
-Geplant ist ein eigener Dialog für umfangreiche Umbenennungen.
-
-Geplante Funktionen:
-
-* [ ] Suchen und Ersetzen
-* [ ] Nummerierung
-* [ ] Vorschau der Änderungen
-* [ ] mehrere Dateien gleichzeitig umbenennen
-
----
-
-## Automatische Regeln
-
-Geplant ist ein Regelsystem für automatische Dateioperationen.
-
-Beispielsweise:
-
-```text
-Wenn Dateityp = PDF
-und Größe > 100 MB
-→ Aktion vorbereiten
-```
-
-Mögliche Kriterien:
-
-* Dateityp
-* Dateiname
-* Dateigröße
-* Datum
-
-Vor der eigentlichen Ausführung soll eine Vorschau der Aktionen angezeigt werden.
-
----
-
-## Synchronisation
-
-Geplant ist eine Integration von `rsync`.
-
-Vorgesehen sind:
-
-* [ ] Ordner vergleichen
-* [ ] einseitige Synchronisation
-* [ ] Konflikterkennung
-* [ ] Konfliktbehandlung
-* [ ] Vorschau der Änderungen
-
----
-
-## Versionierung
-
-* [ ] eigene Dateiversionen speichern
-* [ ] vorhandene Versionen anzeigen
-* [ ] Version wiederherstellen
-
----
-
-## Duplikaterkennung
-
-* [ ] doppelte Dateien finden
-* [ ] Dateien anhand von Prüfsummen vergleichen
-* [ ] Duplikate übersichtlich anzeigen
-
----
-
-## Diagnose
-
-Geplant ist ein eigener Diagnosebereich.
-
-* [ ] Diagnose-Dialog
-* [ ] Fehlerbericht exportieren
-* [ ] Systeminformationen anzeigen
-* [ ] Konfiguration überprüfen
-
----
-
-## Netzwerk
-
-Weitere Netzwerkfunktionen sollen überprüft und gegebenenfalls erweitert werden:
-
-* [ ] SFTP
-* [ ] FTP
-* [ ] WebDAV
-
-SMB, NFS, HTTP und HTTPS sind bereits bestätigt.
-
----
-
-# Technische Basis
-
-Nolphin wird in **C11** entwickelt und verwendet unter anderem:
-
-* GTK3
-* GLib
-* GIO
-* GVfs
-* VTE 2.91
-* XApp
-* cinnamon-desktop
-
-Optionale Abhängigkeiten:
-
-* libexif
-* exempi
-
-Weitere technische Details und verbindliche Anforderungen befinden sich in:
-
-`docs/NOLPHIN_SPEC.md`
-
----
-
-# Voraussetzungen
-
-Nolphin ist primär für:
-
-* Linux
-* Linux Mint
-* Cinnamon
-
-ausgelegt.
-
-Für den Entwicklungsstand können je nach Distribution zusätzliche Entwicklungsbibliotheken erforderlich sein.
-
----
-
-# Aus dem Quellcode bauen
-
-## Repository klonen
-
-```bash
-git clone https://github.com/kaysiebke-cell/Nolphin_Dateimanga.git
-cd Nolphin_Dateimanga
-```
-
-## Build-Verzeichnis erstellen
+Aus dem Quellcode bauen und direkt aus dem Build-Verzeichnis starten:
 
 ```bash
 meson setup build
-```
-
-## Kompilieren
-
-```bash
 ninja -C build
-```
-
-## Tests ausführen
-
-```bash
-meson test -C build
-```
-
----
-
-# Nolphin ohne Installation starten
-
-Für einen Testlauf kann Nolphin direkt aus dem Build-Verzeichnis gestartet werden:
-
-```bash
 env GSETTINGS_SCHEMA_DIR="$(pwd)/build/libnolphin-private" \
     LD_LIBRARY_PATH="$(pwd)/build/libnolphin-extension" \
     ./build/src/nolphin
 ```
 
-Dadurch muss Nolphin nicht zunächst systemweit installiert werden.
+Danach mit **F11** den rechten Arbeitsbereich einblenden.
+
+> Abhängigkeiten, Installation und Tests: siehe [Bauen und Installieren](#bauen-und-installieren).
 
 ---
 
-# Installation
+## Highlights
 
-Eine systemweite Installation kann nach einem erfolgreichen Build mit dem Meson-Installationsmechanismus durchgeführt werden.
+* **Rechter Arbeitsbereich (F11):** ein fester Bereich mit Vorschau als Ruhelage. Eigenschaften, Archiv, Terminal, Git, DEB-Ersteller und Massenumbenennung blenden sich dort ein, sobald sie ausgelöst werden.
+* **Archive:** Komprimieren und Entpacken über die installierten Systemwerkzeuge (zip, tar, 7z, zstd, lz4, xz), Argumente nie über eine Shell.
+* **DEB-Pakete erstellen:** Nolphin baut ein `.deb` selbst als `ar`-Archiv, ohne `dpkg-deb`.
+* **Massenumbenennung:** Suchen/Ersetzen, Nummerierung, Groß-/Kleinschreibung mit Vorschau der neuen Namen.
+* **CAD-/3D-Erkennung:** STL, STEP/STP, FreeCAD `.FCStd` und weitere Formate.
+* **Git im Kontextmenü und im Panel:** Status, Add, Commit, Pull, Push, Log, Diff, Remote.
+* **Sicherheit:** Prüfsummen, GPG-Verschlüsselung, ACL-Verwaltung (`getfacl`/`setfacl`).
+* **Papierkorb-Automatik:** Bereinigung nach Aufbewahrungsdauer und Warnung bei Größenlimit.
+* **Gespeicherte Dateiauswahlen:** benannte Auswahlen speichern und wiederherstellen.
+* **Nemo-Grundlagen:** Tabs, Split View, Symbol-/Listen-/Kompaktansicht, Fortschritt, Rückgängig, Papierkorb, Netzwerk über GVfs.
+
+---
+
+## Der rechte Arbeitsbereich
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ Menü / Werkzeugleiste / Adresse                              │
+├────────────┬────────────────────────────┬────────────────────┤
+│ Seitenleiste│ Hauptansicht              │ Arbeitsbereich     │
+│ Orte / Baum │ Dateien und Ordner        │ Vorschau (Ruhelage)│
+│            │                            │ Eigenschaften      │
+│            │                            │ Archiv             │
+│            │                            │ Terminal (F4)      │
+│            │                            │ Suche              │
+│            │                            │ Git                │
+│            │                            │ DEB-Ersteller      │
+│            │                            │ Massenumbenennung  │
+├────────────┴────────────────────────────┴────────────────────┤
+│ Statusleiste                                                 │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| Panel | Aufruf | Inhalt |
+| ----- | ------ | ------ |
+| Vorschau / Information | **F11** | Vorschau und Dateiinformationen, Rückkehrzustand für alle anderen Panels |
+| Eigenschaften | Alt+Enter, Kontextmenü | Eigenschaften und Berechtigungen |
+| Archiv | Menü, Kontextmenü | Komprimieren, Entpacken |
+| Terminal | **F4** | VTE-Terminal im aktuellen Ordner |
+| Suche | Suchaktion | Such- und Filterleiste |
+| Git | Menü, Kontextmenü | Git-Status und -Aktionen |
+| DEB-Ersteller | Menü, Kontextmenü | `.deb`-Paket aus ausgewählten Dateien |
+| Massenumbenennung | Menü | Umbenennen mit Live-Vorschau |
+
+Ein Panel wird im Arbeitsbereich wiederverwendet, es öffnet kein zusätzliches Top-Level-Fenster. Klassische Dialoge gibt es weiterhin für Dateiauswahl, Lösch-/Überschreibbestätigung, Fehlermeldungen, Mount-Zugangsdaten und „Über Nolphin“.
+
+---
+
+## Funktionen im Überblick
+
+### Dateiverwaltung
+
+Tabs, Split View (F3), Symbol-, Listen- und Kompaktansicht, Kopieren/Verschieben mit Pause und Abbruch, Rückgängig/Wiederholen, Papierkorb, Drag & Drop, Berechtigungen, Netzwerkzugriff über GVfs (SMB, NFS, HTTP, HTTPS).
+
+### Archive
+
+| Erstellen und Entpacken | Nur Entpacken/Auslesen (über `7z`) |
+| ----------------------- | ---------------------------------- |
+| ZIP, TAR, TAR.GZ, TAR.BZ2, TAR.XZ, TAR.ZST, TAR.LZ4, 7Z | CAB, ARJ, LZH, ISO, CPIO, RPM, DEB |
+| Einzeldateien: XZ, ZST, LZ4 | |
+
+Ist das benötigte Werkzeug nicht installiert, wird das erkannt und angezeigt.
+
+### DEB-Paket erstellen
+
+Der Ersteller (`src/nolphin-deb-builder.c`) schreibt das Paket (`debian-binary`, `control.tar.gz`, `data.tar.gz`) direkt als `ar`-Archiv. Pflichtfelder sind Paketname, Version, Architektur, Maintainer und Beschreibung; Sektion, Priorität, Abhängigkeiten und Homepage sind optional.
+
+
+### CAD- und 3D-Dateien
+
+* **STL:** ASCII oder binär, bei Binär-STL Dreiecksanzahl
+* **STEP/STP:** Header-Informationen (Beschreibung, Dateiname, Zeitstempel, Autor, Schema)
+* **FreeCAD `.FCStd`:** Dokumentinformationen und eingebettetes Vorschaubild
+* **IGES, OBJ, 3MF, DXF, DWG:** Erkennung. Gibt es für ein Format noch keine echte Vorschau, steht das ausdrücklich da.
+
+### Git, Prüfsummen, Verschlüsselung, ACL
+
+* **Git:** Status, Add, Commit, Pull, Push, Log, Diff, Remote hinzufügen
+* **Prüfsummen:** MD5, SHA-1, SHA-256, SHA-512, BLAKE2
+* **Verschlüsselung:** GPG
+* **ACL:** Verwaltung über `getfacl`/`setfacl`
+
+### Papierkorb und Auswahlen
+
+Papierkorb-Bereinigung nach Aufbewahrungsdauer (`trash-retention-days`) und Warnung bei Größenlimit (`trash-size-limit-mb`). Benannte Dateiauswahlen lassen sich speichern und wiederherstellen.
+
+---
+
+## Entwicklungsstand
+
+Nolphin ist Entwicklungssoftware. „Umgesetzt“ heißt hier: im Code vorhanden. „Getestet“ bezieht sich auf die Meson-Tests.
+
+### Umgesetzt
+
+* [x] Dateiverwaltung auf Nemo-Basis, Tabs, Split View, Ansichten
+* [x] Integriertes Terminal (F4)
+* [x] Rechter Arbeitsbereich mit Panel-Wechsel (`nolphin-workspace-panel`)
+* [x] Vorschau-/Info-Panel
+* [x] Eigenschaften im Arbeitsbereich
+* [x] Archiv-Backend (ZIP/TAR-Familie/7Z, Entpacken weiterer Formate)
+* [x] DEB-Paket-Ersteller
+* [x] Massenumbenennung
+* [x] CAD-/3D-Erkennung (STL, STEP, FCStd u. a.)
+* [x] Git-Aktionen
+* [x] Prüfsummen, GPG, ACL
+* [x] Papierkorb-Automatik
+* [x] Gespeicherte Dateiauswahlen
+* [x] Eingebettete eigene Symbole
+
+### Geplant
+
+* [ ] **Erweiterte Suche:** UND/ODER/NICHT, kombinierbare Filter
+* [ ] **Erweiterte Vorschau:** PDF (Poppler-GLib), Video/Audio (GStreamer)
+* [ ] **Metadaten:** Tags, Bewertungen, Kommentare
+* [ ] **Arbeitsbereiche:** Layout, Tabs und Terminal speichern und benennen
+* [ ] **Netzwerk:** SFTP, FTP, WebDAV prüfen
+* [ ] **Automatische Regeln**, **Synchronisation** über `rsync`, **Versionierung**, **Duplikaterkennung**
+* [ ] **Diagnose-Dialog** mit Fehlerbericht-Export
+
+### Teststand
+
+`meson test -C build` (Stand dieser README-Aktualisierung): **12 von 15 Tests bestanden.** Nicht bestanden sind *Copy test* (Fehler) sowie *Search Engine test* und *Directory Async test* (Timeout nach 30 s). Diese Punkte sind offen und nicht als erledigt zu betrachten.
+
+---
+
+## Nolphin und Nemo
+
+| Bereich | Nemo | Nolphin |
+| ------- | ---- | ------- |
+| Klassische Dateiverwaltung, Tabs, Split View | ✓ | ✓ |
+| Integriertes Terminal | ✓ | ✓ (im Arbeitsbereich) |
+| Rechter Arbeitsbereich mit Panels | – | ✓ |
+| Archive komprimieren/entpacken im Panel | – | ✓ |
+| DEB-Paket-Ersteller | – | ✓ |
+| Massenumbenennung mit Vorschau | – | ✓ |
+| STL / STEP / FCStd-Informationen | – | ✓ |
+| Git-Aktionen | – | ✓ |
+| Prüfsummen, GPG, ACL | – | ✓ |
+| Papierkorb-Automatik | – | ✓ |
+| Gespeicherte Dateiauswahl | – | ✓ |
+
+---
+
+## Bauen und Installieren
+
+### Voraussetzungen
+
+Nolphin läuft ausschließlich unter Linux, optimiert für Linux Mint mit Cinnamon.
+
+* Meson (≥ 0.64), Ninja, C-Compiler (C11)
+* GTK3, GLib, GIO, GVfs, VTE 2.91, XApp, cinnamon-desktop
+* optional: libexif, exempi
+* Laufzeitwerkzeuge, je nach Funktion: `zip`/`unzip`, `tar`, `7z`, `zstd`, `lz4`, `xz`, `git`, `gpg`, `getfacl`/`setfacl`
+
+### Bauen und testen
+
+```bash
+meson setup build
+ninja -C build
+meson test -C build
+```
+
+### Installieren
 
 ```bash
 sudo ninja -C build install
 ```
 
-Anschließend kann Nolphin über das System bzw. das Cinnamon-Anwendungsmenü gestartet werden.
-
-> Die genaue Installationsmethode und Paketierung können sich während der Entwicklung noch ändern.
+> Installationsweg und Paketierung (`debian/`) können sich während der Entwicklung ändern.
 
 ---
 
-# Tests
-
-Vor einer Installation empfiehlt es sich, die vorhandenen Tests auszuführen:
-
-```bash
-meson test -C build
-```
-
-Bei Fehlern bitte möglichst folgende Informationen zusammen mit einem Bugreport angeben:
-
-* Linux-Mint-Version
-* Cinnamon-Version
-* Nolphin-Version bzw. Commit
-* verwendete Hardware, falls relevant
-* genaue Fehlermeldung
-* Schritte zur Reproduktion
-
----
-
-# Sprache
-
-Die sichtbare Benutzeroberfläche von Nolphin ist derzeit **deutschsprachig**.
-
-Menüs, Dialoge und Meldungen sind aktuell unabhängig von der Systemsprache auf Deutsch ausgelegt.
-
-Weitere Übersetzungen sind für die Zukunft möglich.
-
----
-
-# Herkunft
-
-Nolphin begann als Quellstand von **Nemo 6.7.7**.
-
-Seitdem wurde das Projekt schrittweise:
-
-1. umbenannt,
-2. strukturell angepasst,
-3. dokumentiert,
-4. um eigene Funktionen erweitert,
-5. um zusätzliche Datei- und Metadatenfunktionen ergänzt.
-
-Die Entwicklung ist über die Git-Historie nachvollziehbar.
-
-Die verbindliche Funktionsspezifikation befindet sich in:
+## Projektstruktur
 
 ```text
-docs/NOLPHIN_SPEC.md
+src/                    Hauptquellcode (Fenster, Ansichten, Panels)
+libnolphin-private/     interne Bibliothek (Archiv, Checksum, ACL, GPG, Schemas)
+libnolphin-extension/   Erweiterungs-Schnittstelle
+gresources/             UI-Beschreibungen
+test/                   Tests
+docs/                   Referenzdokumente
+debian/                 Debian-Paketierung
+po/                     Übersetzungsdateien
 ```
 
----
-
-# Nolphin und Nemo
-
-Nolphin basiert auf Nemo, verfolgt aber ein eigenes Entwicklungsziel.
-
-| Bereich                     | Nemo                           | Nolphin |
-| --------------------------- | ------------------------------ | ------- |
-| Klassische Dateiverwaltung  | ✓                              | ✓       |
-| Tabs                        | ✓                              | ✓       |
-| Split View                  | ✓                              | ✓       |
-| Integriertes Terminal       | ✓                              | ✓       |
-| Vorschau-/Info-Panel        | nicht standardmäßig integriert | ✓       |
-| STL-Analyse                 | –                              | ✓       |
-| STEP/STP-Metadaten          | –                              | ✓       |
-| FreeCAD-FCStd-Informationen | –                              | ✓       |
-| Git-Aktionen im Kontextmenü | –                              | ✓       |
-| Prüfsummen                  | –                              | ✓       |
-| GPG-Integration             | –                              | ✓       |
-| ACL-Verwaltung              | –                              | ✓       |
-| Papierkorb-Automatik        | –                              | ✓       |
-| Gespeicherte Dateiauswahl   | –                              | ✓       |
-
-Nolphin soll dabei **nicht einfach ein optisch veränderter Dateimanager** sein. Der Fokus liegt darauf, zusätzliche Funktionen direkt in die Dateiverwaltung zu integrieren.
+Einstellungen liegen im GSettings-Schema `org.nolphin` (`libnolphin-private/org.nolphin.gschema.xml`).
 
 ---
 
-# Für wen ist Nolphin gedacht?
+## Dokumentation
 
-Nolphin richtet sich insbesondere an Anwender, die:
-
-* Linux Mint mit Cinnamon verwenden
-* einen erweiterten Dateimanager ausprobieren möchten
-* häufig mit technischen Dateien arbeiten
-* CAD- oder 3D-Dateien verwalten
-* Git-Repositories über den Dateimanager bearbeiten möchten
-* Prüfsummen direkt aus dem Dateimanager verwenden möchten
-* Datei- und Ordnerberechtigungen verwalten
-* zusätzliche Dateiwerkzeuge möglichst zentral verfügbar haben möchten
+| Thema | Dokument |
+| ----- | -------- |
+| Drag & Drop | [docs/dnd.txt](docs/dnd.txt) |
+| Tastatur und Maus | [docs/key_mouse_navigation.txt](docs/key_mouse_navigation.txt) |
+| Ein-/Ausgabe | [docs/nolphin-io.txt](docs/nolphin-io.txt) |
 
 ---
 
-# Mitmachen
+## Herkunft
 
-Nolphin ist ein Open-Source-Projekt und Beiträge sind willkommen.
-
-Mögliche Beiträge sind:
-
-* Fehlerberichte
-* Verbesserungsvorschläge
-* Code
-* Dokumentation
-* Übersetzungen
-* Tests
-* Verbesserung der Benutzeroberfläche
-* neue Vorschau-Backends
-* Unterstützung zusätzlicher Dateiformate
-
-Wenn du einen Fehler findest oder eine Funktion vermisst, erstelle bitte ein GitHub Issue.
+Nolphin begann als Quellstand von **Nemo 6.7.7**, wurde umbenannt, strukturell angepasst und schrittweise um eigene Funktionen erweitert. Der Verlauf steht in der Git-Historie.
 
 ---
 
-# Fehler melden
+## Fehler melden
 
-Bitte überprüfe vor dem Erstellen eines Issues, ob das Problem bereits bekannt ist.
-
-Ein hilfreicher Bugreport sollte möglichst enthalten:
+Hilfreich sind:
 
 ```text
-Nolphin-Version:
+Nolphin-Version bzw. Commit:
 Linux-Mint-Version:
 Cinnamon-Version:
 
 Problem:
-...
-
 Schritte zur Reproduktion:
-1.
-2.
-3.
-
 Erwartetes Verhalten:
-...
-
 Tatsächliches Verhalten:
-...
-
 Fehlermeldungen:
-...
-```
-
-Bei Problemen mit bestimmten Dateien können – sofern sie keine vertraulichen Informationen enthalten – auch Beispieldateien oder anonymisierte Informationen hilfreich sein.
-
----
-
-# Entwicklungsdokumentation
-
-Weitere technische Informationen befinden sich im Repository.
-
-Wichtige Dateien:
-
-```text
-docs/
-├── NOLPHIN_SPEC.md
-```
-
-Weitere Bereiche:
-
-```text
-src/                    Hauptquellcode
-libnolphin-extension/   Erweiterungen
-libnolphin-private/     interne Komponenten
-test/                   Tests
-debian/                 Debian-Paketierung
-data/                   Daten und Ressourcen
-po/                     Übersetzungsdateien
 ```
 
 ---
 
-# Lizenz
+## Lizenz
 
-Nolphin steht unter:
-
-**GPL-2.0-or-later**
-
-Siehe:
-
-```text
-COPYING
-```
-
-Weitere Lizenzinformationen befinden sich in den entsprechenden Lizenzdateien des Projekts.
-
----
-
-# Projekt
-
-**Nolphin – Linux-Dateimanager für Cinnamon**
-
-GitHub:
-
-https://github.com/kaysiebke-cell/Nolphin_Dateimanga
-
----
-
-## Status
-
-Nolphin befindet sich in Entwicklung.
-
-Die aktuelle Version sollte daher als Entwicklungssoftware betrachtet werden. Funktionen können sich ändern, ergänzt oder neu strukturiert werden.
-
-Feedback, Fehlerberichte und Verbesserungsvorschläge sind willkommen.
+**GPL-2.0-or-later**, siehe [COPYING](COPYING).
 
 ---
 
