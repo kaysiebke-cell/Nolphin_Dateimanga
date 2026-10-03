@@ -2956,6 +2956,8 @@ nolphin_window_sync_preview_selection (NolphinWindow *window)
 	selection = nolphin_view_get_selection (view);
 	nolphin_preview_set_selection (NOLPHIN_PREVIEW (window->details->preview),
 				       selection, nolphin_view_get_directory_as_file (view));
+	nolphin_workspace_panel_sync_properties (nolphin_window_get_workspace_panel (window),
+						 selection, nolphin_view_get_directory_as_file (view));
 	nolphin_file_list_free (selection);
 }
 

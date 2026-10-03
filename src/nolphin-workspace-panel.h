@@ -35,6 +35,11 @@ void       nolphin_workspace_panel_show_properties   (GtkWidget *workspace_panel
 						       NolphinWindow *window,
 						       GList *files);
 
+/* Aktualisiert die Eigenschaften-Seite bei Änderung der Auswahl (nur wenn sichtbar). */
+void       nolphin_workspace_panel_sync_properties   (GtkWidget *workspace_panel,
+						       GList *selection,
+						       NolphinFile *directory_as_file);
+
 /* Zeigt die Archiv-Seite (Komprimieren) und blendet das Panel ein. */
 void       nolphin_workspace_panel_show_archive      (GtkWidget *workspace_panel,
 						       NolphinWindow *window);

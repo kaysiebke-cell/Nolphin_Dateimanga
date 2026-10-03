@@ -21,6 +21,7 @@
 #include <libnolphin-private/nolphin-git.h>
 
 #include "nolphin-actions.h"
+#include "nolphin-properties-panel.h"
 #include "nolphin-deb-builder.h"
 #include "nolphin-properties-window.h"
 #include "nolphin-terminal.h"
@@ -59,11 +60,34 @@ on_back_to_preview_clicked (GtkButton *button, gpointer user_data)
 	gtk_stack_set_visible_child_name (GTK_STACK (workspace_panel), "preview");
 }
 
+/* Einheitlicher Stil für Knöpfe in den Panel-Seiten: Symbol links vom Text,
+ * Hauptaktion in der Akzentfarbe (siehe auch build_git_tab()). */
+static void
+panel_decorate_button (GtkWidget *button, const gchar *icon_name, gboolean primary)
+{
+	if (icon_name != NULL) {
+		gtk_button_set_image (GTK_BUTTON (button),
+				      gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON));
+		gtk_button_set_always_show_image (GTK_BUTTON (button), TRUE);
+	}
+	if (primary) {
+		gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
+	}
+}
+
+/* Beschreibungstexte dezent grau, damit die Bedienelemente im Vordergrund stehen. */
+static void
+panel_dim_label (GtkWidget *label)
+{
+	gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+}
+
 static GtkWidget *
 build_back_to_preview_button (NolphinWindow *window)
 {
-	GtkWidget *button = gtk_button_new_with_label (_("← Zur Vorschau"));
+	GtkWidget *button = gtk_button_new_with_label (_("Zur Vorschau"));
 
+	panel_decorate_button (button, "go-previous-symbolic", FALSE);
 	gtk_widget_set_halign (button, GTK_ALIGN_START);
 	g_signal_connect (button, "clicked", G_CALLBACK (on_back_to_preview_clicked), window);
 
@@ -71,59 +95,13 @@ build_back_to_preview_button (NolphinWindow *window)
 }
 
 /* --- Eigenschaften -------------------------------------------------------
- * Nutzt nolphin_properties_window_build_embedded() (siehe
- * nolphin-properties-window.c): baut denselben Eigenschaften-Inhalt wie
- * der frühere Dialog, aber als einbaubares Widget statt als eigenes
- * Fenster. */
+ * Eigenes Panel (nolphin-properties-panel.c) im Layout der Vorschau, statt
+ * den früheren Eigenschaften-Dialog einzubetten. */
 
 typedef struct {
 	NolphinWindow *window;
-	GtkWidget     *content_holder;
+	GtkWidget     *panel;
 } PropertiesTabData;
-
-static void
-properties_tab_content_ready (GtkWidget *content, gpointer user_data)
-{
-	PropertiesTabData *d = user_data;
-	GList *children, *l;
-
-	children = gtk_container_get_children (GTK_CONTAINER (d->content_holder));
-	for (l = children; l != NULL; l = l->next) {
-		gtk_widget_destroy (GTK_WIDGET (l->data));
-	}
-	g_list_free (children);
-
-	gtk_widget_show_all (content);
-	gtk_box_pack_start (GTK_BOX (d->content_holder), content, TRUE, TRUE, 0);
-}
-
-static void
-on_properties_refresh_clicked (GtkButton *button, gpointer user_data)
-{
-	PropertiesTabData *d = user_data;
-	NolphinView *view = workspace_active_view (d->window);
-	GList *selection;
-
-	if (view == NULL) {
-		return;
-	}
-
-	selection = nolphin_view_get_selection (view);
-	if (selection == NULL) {
-		NolphinFile *dir_file = nolphin_view_get_directory_as_file (view);
-
-		if (dir_file != NULL) {
-			selection = g_list_prepend (NULL, nolphin_file_ref (dir_file));
-		}
-	}
-
-	if (selection == NULL) {
-		return;
-	}
-
-	nolphin_properties_window_build_embedded (selection, properties_tab_content_ready, d);
-	nolphin_file_list_free (selection);
-}
 
 typedef struct {
 	NolphinWindow *window;
@@ -140,6 +118,7 @@ typedef struct {
 	GtkWidget     *split_check;
 	GtkWidget     *split_spin;
 	GtkWidget     *status_label;
+	GtkWidget     *summary_label;
 } ArchiveTabData;
 
 static NolphinArchiveFormat
@@ -920,39 +899,75 @@ static GtkWidget *
 build_properties_tab (NolphinWindow *window)
 {
 	GtkWidget *box;
-	GtkWidget *desc_label;
-	GtkWidget *refresh_button;
-	GtkWidget *scroller;
+	GtkWidget *back;
 	PropertiesTabData *d;
 
 	d = g_new0 (PropertiesTabData, 1);
 	d->window = window;
 
-	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
-	gtk_container_set_border_width (GTK_CONTAINER (box), 12);
-	gtk_box_pack_start (GTK_BOX (box), build_back_to_preview_button (window), FALSE, FALSE, 0);
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
-	desc_label = gtk_label_new (_("Eigenschaften der im Hauptfenster ausgewählten Objekte "
-				     "(ohne Auswahl: des aktuellen Ordners)."));
-	gtk_label_set_line_wrap (GTK_LABEL (desc_label), TRUE);
-	gtk_label_set_xalign (GTK_LABEL (desc_label), 0.0);
-	gtk_box_pack_start (GTK_BOX (box), desc_label, FALSE, FALSE, 0);
+	back = build_back_to_preview_button (window);
+	gtk_widget_set_margin_start (back, 12);
+	gtk_widget_set_margin_top (back, 12);
+	gtk_box_pack_start (GTK_BOX (box), back, FALSE, FALSE, 0);
 
-	refresh_button = gtk_button_new_with_label (_("Eigenschaften anzeigen (Alt+Eingabe)"));
-	gtk_widget_set_halign (refresh_button, GTK_ALIGN_START);
-	g_signal_connect (refresh_button, "clicked", G_CALLBACK (on_properties_refresh_clicked), d);
-	gtk_box_pack_start (GTK_BOX (box), refresh_button, FALSE, FALSE, 0);
-
-	scroller = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (box), scroller, TRUE, TRUE, 0);
-
-	d->content_holder = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_container_add (GTK_CONTAINER (scroller), d->content_holder);
+	d->panel = nolphin_properties_panel_new ();
+	gtk_box_pack_start (GTK_BOX (box), d->panel, TRUE, TRUE, 0);
 
 	g_object_set_data_full (G_OBJECT (box), "properties-tab-data", d, g_free);
 
 	return box;
+}
+
+/* Zeigt, was gepackt wird, und schlägt einen passenden Dateinamen vor
+ * (Name des einzelnen Objekts, sonst Name des aktuellen Ordners). Wird
+ * aufgerufen, wenn die Archiv-Seite angezeigt wird. */
+static void
+archive_tab_refresh_from_selection (ArchiveTabData *data)
+{
+	NolphinView *view = workspace_active_view (data->window);
+	GList *selection;
+	guint count;
+	gchar *summary = NULL;
+	gchar *suggestion = NULL;
+
+	if (view == NULL) {
+		return;
+	}
+
+	selection = nolphin_view_get_selection (view);
+	count = g_list_length (selection);
+
+	if (count == 0) {
+		summary = g_strdup (_("Nichts ausgewählt – markiere im Hauptfenster Dateien oder Ordner."));
+	} else {
+		gchar *first = nolphin_file_get_display_name (NOLPHIN_FILE (selection->data));
+
+		if (count == 1) {
+			summary = g_strdup_printf (_("Wird gepackt: %s"), first);
+			suggestion = g_strdup (first);
+			if (!nolphin_file_is_directory (NOLPHIN_FILE (selection->data))) {
+				gchar *dot = strrchr (suggestion, '.');
+
+				if (dot != NULL && dot != suggestion) {
+					*dot = '\0';
+				}
+			}
+		} else {
+			summary = g_strdup_printf (_("Wird gepackt: %s und %u weitere Objekte"), first, count - 1);
+			suggestion = nolphin_file_get_display_name (nolphin_view_get_directory_as_file (view));
+		}
+		g_free (first);
+	}
+	nolphin_file_list_free (selection);
+
+	gtk_label_set_text (GTK_LABEL (data->summary_label), summary);
+	if (suggestion != NULL && *suggestion != '\0') {
+		gtk_entry_set_text (GTK_ENTRY (data->filename_entry), suggestion);
+	}
+	g_free (summary);
+	g_free (suggestion);
 }
 
 static GtkWidget *
@@ -984,12 +999,19 @@ build_archive_tab (NolphinWindow *window)
 	desc_label = gtk_label_new (_("Ein Archiv aus den im Hauptfenster ausgewählten "
 				     "Dateien und Ordnern erstellen."));
 	gtk_label_set_line_wrap (GTK_LABEL (desc_label), TRUE);
+	panel_dim_label (desc_label);
 	gtk_label_set_max_width_chars (GTK_LABEL (desc_label), 30);
 	gtk_label_set_xalign (GTK_LABEL (desc_label), 0.0);
 	gtk_box_pack_start (GTK_BOX (box), desc_label, FALSE, FALSE, 0);
 
 	data = g_new0 (ArchiveTabData, 1);
 	data->window = window;
+
+	data->summary_label = gtk_label_new ("");
+	gtk_label_set_xalign (GTK_LABEL (data->summary_label), 0.0);
+	gtk_label_set_line_wrap (GTK_LABEL (data->summary_label), TRUE);
+	gtk_label_set_max_width_chars (GTK_LABEL (data->summary_label), 30);
+	gtk_box_pack_start (GTK_BOX (box), data->summary_label, FALSE, FALSE, 0);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 8);
@@ -1046,22 +1068,30 @@ build_archive_tab (NolphinWindow *window)
 		GtkWidget *split_label;
 		GtkWidget *split_box;
 		GtkAdjustment *split_adjustment;
+		GtkWidget *adv_expander = gtk_expander_new (_("Erweiterte Optionen (Passwort, Teilarchive)"));
+		GtkWidget *adv_grid = gtk_grid_new ();
+
+		gtk_grid_set_row_spacing (GTK_GRID (adv_grid), 8);
+		gtk_grid_set_column_spacing (GTK_GRID (adv_grid), 10);
+		gtk_widget_set_margin_top (adv_grid, 8);
+		gtk_container_add (GTK_CONTAINER (adv_expander), adv_grid);
+		gtk_box_pack_start (GTK_BOX (box), adv_expander, FALSE, FALSE, 0);
 
 		password_label = gtk_label_new (_("Passwort:"));
 		gtk_label_set_xalign (GTK_LABEL (password_label), 0.0);
-		gtk_grid_attach (GTK_GRID (grid), password_label, 0, 3, 1, 1);
+		gtk_grid_attach (GTK_GRID (adv_grid), password_label, 0, 0, 1, 1);
 
 		data->password_entry = gtk_entry_new ();
 		gtk_entry_set_visibility (GTK_ENTRY (data->password_entry), FALSE);
 		gtk_widget_set_hexpand (data->password_entry, TRUE);
-		gtk_grid_attach (GTK_GRID (grid), data->password_entry, 1, 3, 1, 1);
+		gtk_grid_attach (GTK_GRID (adv_grid), data->password_entry, 1, 0, 1, 1);
 
 		split_label = gtk_label_new (_("Teilarchive:"));
 		gtk_label_set_xalign (GTK_LABEL (split_label), 0.0);
-		gtk_grid_attach (GTK_GRID (grid), split_label, 0, 4, 1, 1);
+		gtk_grid_attach (GTK_GRID (adv_grid), split_label, 0, 1, 1, 1);
 
 		split_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-		gtk_grid_attach (GTK_GRID (grid), split_box, 1, 4, 1, 1);
+		gtk_grid_attach (GTK_GRID (adv_grid), split_box, 1, 1, 1, 1);
 
 		data->split_check = gtk_check_button_new_with_label (_("Aufteilen zu je"));
 		gtk_box_pack_start (GTK_BOX (split_box), data->split_check, FALSE, FALSE, 0);
@@ -1079,7 +1109,8 @@ build_archive_tab (NolphinWindow *window)
 		g_signal_connect (data->format_combo, "changed", G_CALLBACK (on_archive_format_changed), data);
 	}
 
-	create_button = gtk_button_new_with_label (_("Anlegen"));
+	create_button = gtk_button_new_with_label (_("Archiv erstellen"));
+	panel_decorate_button (create_button, "document-save-symbolic", TRUE);
 	gtk_widget_set_halign (create_button, GTK_ALIGN_START);
 	g_signal_connect (create_button, "clicked", G_CALLBACK (on_archive_create_clicked), data);
 	gtk_box_pack_start (GTK_BOX (box), create_button, FALSE, FALSE, 0);
@@ -1090,8 +1121,73 @@ build_archive_tab (NolphinWindow *window)
 	gtk_box_pack_start (GTK_BOX (box), data->status_label, FALSE, FALSE, 0);
 
 	g_object_set_data_full (G_OBJECT (box), "archive-tab-data", data, g_free);
+	/* Zeiger ohne Eigentum: der Scroller lebt genau so lange wie sein Inhalt. */
+	g_object_set_data (G_OBJECT (scroller), "archive-tab-ptr", data);
 
 	return scroller;
+}
+
+/* Knopf einer Git-Aktion der Ansicht (Synchronisieren, Klonen, ...): löst
+ * dieselbe Aktion aus wie der Eintrag im Rechtsklick-Menü. */
+static void
+on_git_view_action_clicked (GtkButton *button, gpointer user_data)
+{
+	GitTabData *d = user_data;
+	NolphinView *view = workspace_active_view (d->window);
+	const gchar *action_name = g_object_get_data (G_OBJECT (button), "view-action");
+
+	if (view != NULL && action_name != NULL) {
+		nolphin_view_activate_action_by_name (view, action_name);
+	}
+}
+
+static GtkWidget *
+git_tab_new_section (GtkWidget *box, const gchar *caption)
+{
+	GtkWidget *label = gtk_label_new (NULL);
+	GtkWidget *flow;
+	gchar *markup = g_markup_printf_escaped ("<small><b>%s</b></small>", caption);
+
+	gtk_label_set_markup (GTK_LABEL (label), markup);
+	g_free (markup);
+	gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+	gtk_widget_set_margin_top (label, 10);
+	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+
+	/* GtkFlowBox: bricht Knöpfe bei schmalem Panel in die nächste Zeile um. */
+	flow = gtk_flow_box_new ();
+	gtk_flow_box_set_selection_mode (GTK_FLOW_BOX (flow), GTK_SELECTION_NONE);
+	gtk_flow_box_set_homogeneous (GTK_FLOW_BOX (flow), FALSE);
+	gtk_flow_box_set_row_spacing (GTK_FLOW_BOX (flow), 6);
+	gtk_flow_box_set_column_spacing (GTK_FLOW_BOX (flow), 6);
+	gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (flow), 1);
+	gtk_box_pack_start (GTK_BOX (box), flow, FALSE, FALSE, 0);
+
+	return flow;
+}
+
+static GtkWidget *
+git_tab_add_button (GtkWidget *flow, const gchar *icon_name, const gchar *label, const gchar *tooltip,
+		    GCallback callback, gpointer data, const gchar *view_action)
+{
+	GtkWidget *button = gtk_button_new_with_label (label);
+
+	/* Symbol links vom Text, damit man Aktionen auf einen Blick erkennt. */
+	if (icon_name != NULL) {
+		gtk_button_set_image (GTK_BUTTON (button),
+				      gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_BUTTON));
+		gtk_button_set_always_show_image (GTK_BUTTON (button), TRUE);
+	}
+
+	gtk_widget_set_tooltip_text (button, tooltip);
+	if (view_action != NULL) {
+		g_object_set_data (G_OBJECT (button), "view-action", (gpointer) view_action);
+	}
+	g_signal_connect (button, "clicked", callback, data);
+	gtk_container_add (GTK_CONTAINER (flow), button);
+
+	return button;
 }
 
 static GtkWidget *
@@ -1099,33 +1195,90 @@ build_git_tab (NolphinWindow *window)
 {
 	GtkWidget *scroller;
 	GtkWidget *box;
-	GtkWidget *desc_label;
+	GtkWidget *flow;
 	GtkWidget *output_scroller;
-	GtkWidget *button_box;
 	GtkWidget *commit_box;
-	GtkWidget *status_button, *add_button, *pull_button, *push_button, *log_button, *diff_button, *commit_button;
+	GtkWidget *commit_button;
+	GtkWidget *sync_button;
 	GitTabData *d;
 
 	d = g_new0 (GitTabData, 1);
 	d->window = window;
 
-	/* Die Knopfreihe (Aktualisieren/Hinzufuegen/Pull/Push/Log/Diff) fordert
-	 * in der Summe mehr Breite, als das Panel schmal gezogen noch hat -
-	 * ohne Scroller ragt sie sonst unerreichbar ueber den rechten Rand. */
+	/* Ohne Scroller ragt der Inhalt beim Schmaler-Ziehen des Panels
+	 * unerreichbar über den rechten Rand hinaus. */
 	scroller = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (box), 12);
 	gtk_container_add (GTK_CONTAINER (scroller), box);
 	gtk_box_pack_start (GTK_BOX (box), build_back_to_preview_button (window), FALSE, FALSE, 0);
 
-	desc_label = gtk_label_new (_("Git-Status des Ordners der aktiven Ansicht. "
-				     "Hinzufügen/Log/Diff wirken auf die dort ausgewählten "
-				     "Objekte, sonst auf das ganze Repository."));
-	gtk_label_set_line_wrap (GTK_LABEL (desc_label), TRUE);
-	gtk_label_set_xalign (GTK_LABEL (desc_label), 0.0);
-	gtk_box_pack_start (GTK_BOX (box), desc_label, FALSE, FALSE, 0);
+	/* Reihenfolge entspricht dem Arbeitsablauf: ansehen, speichern,
+	 * mit dem Server abgleichen. */
+	flow = git_tab_new_section (box, _("1. Änderungen"));
+	git_tab_add_button (flow, "view-refresh-symbolic", _("Status anzeigen"),
+			    _("Zeigt, welche Dateien geändert, neu oder gelöscht sind"),
+			    G_CALLBACK (on_git_status_clicked), d, NULL);
+	git_tab_add_button (flow, "list-add-symbolic", _("Hinzufügen"),
+			    _("Merkt die im Hauptfenster markierten Dateien (ohne Markierung: alle) für den nächsten Commit vor"),
+			    G_CALLBACK (on_git_add_clicked), d, NULL);
+
+	{
+		GtkWidget *caption = gtk_label_new (NULL);
+
+		gtk_label_set_markup (GTK_LABEL (caption), "<small><b>2. Speichern</b></small>");
+		gtk_style_context_add_class (gtk_widget_get_style_context (caption), "dim-label");
+		gtk_label_set_xalign (GTK_LABEL (caption), 0.0);
+		gtk_widget_set_margin_top (caption, 10);
+		gtk_box_pack_start (GTK_BOX (box), caption, FALSE, FALSE, 0);
+	}
+	commit_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_box_pack_start (GTK_BOX (box), commit_box, FALSE, FALSE, 0);
+
+	d->commit_entry = gtk_entry_new ();
+	gtk_entry_set_placeholder_text (GTK_ENTRY (d->commit_entry), _("Kurze Beschreibung der Änderungen …"));
+	gtk_widget_set_hexpand (d->commit_entry, TRUE);
+	gtk_box_pack_start (GTK_BOX (commit_box), d->commit_entry, TRUE, TRUE, 0);
+
+	commit_button = gtk_button_new_with_label (_("Speichern"));
+	gtk_button_set_image (GTK_BUTTON (commit_button),
+			      gtk_image_new_from_icon_name ("document-save-symbolic", GTK_ICON_SIZE_BUTTON));
+	gtk_button_set_always_show_image (GTK_BUTTON (commit_button), TRUE);
+	gtk_style_context_add_class (gtk_widget_get_style_context (commit_button), "suggested-action");
+	gtk_widget_set_tooltip_text (commit_button, _("Legt die vorgemerkten Änderungen als neuen Stand ab (Commit)"));
+	g_signal_connect (commit_button, "clicked", G_CALLBACK (on_git_commit_clicked), d);
+	gtk_box_pack_start (GTK_BOX (commit_box), commit_button, FALSE, FALSE, 0);
+
+	flow = git_tab_new_section (box, _("3. Mit dem Server (z. B. GitHub)"));
+	sync_button = git_tab_add_button (flow, "emblem-synchronizing-symbolic", _("Synchronisieren"),
+			    _("Holt Neues vom Server und lädt deine Änderungen hoch"),
+			    G_CALLBACK (on_git_view_action_clicked), d, NOLPHIN_ACTION_GIT_SYNC);
+	gtk_style_context_add_class (gtk_widget_get_style_context (sync_button), "suggested-action");
+	git_tab_add_button (flow, "edit-find-symbolic", _("Abgleichen"),
+			    _("Zeigt, was lokal und auf dem Server unterschiedlich ist, ohne etwas zu ändern"),
+			    G_CALLBACK (on_git_view_action_clicked), d, NOLPHIN_ACTION_GIT_COMPARE);
+	git_tab_add_button (flow, "go-down-symbolic", _("Herunterladen"),
+			    _("Holt Änderungen vom Server (Pull)"),
+			    G_CALLBACK (on_git_pull_clicked), d, NULL);
+	git_tab_add_button (flow, "go-up-symbolic", _("Hochladen"),
+			    _("Sendet deine gespeicherten Änderungen zum Server (Push)"),
+			    G_CALLBACK (on_git_push_clicked), d, NULL);
+	git_tab_add_button (flow, "network-server-symbolic", _("Server eintragen …"),
+			    _("Trägt die Adresse eines Servers ein, z. B. https://github.com/name/projekt.git (Remote)"),
+			    G_CALLBACK (on_git_view_action_clicked), d, NOLPHIN_ACTION_GIT_REMOTE_ADD);
+	git_tab_add_button (flow, "folder-download-symbolic", _("Repository klonen …"),
+			    _("Lädt ein Repository vom Server in den aktuellen Ordner herunter"),
+			    G_CALLBACK (on_git_view_action_clicked), d, NOLPHIN_ACTION_GIT_CLONE);
+
+	flow = git_tab_new_section (box, _("Ansehen"));
+	git_tab_add_button (flow, "document-open-recent-symbolic", _("Verlauf"),
+			    _("Zeigt die bisherigen Commits (Log)"),
+			    G_CALLBACK (on_git_log_clicked), d, NULL);
+	git_tab_add_button (flow, "view-dual-symbolic", _("Unterschiede"),
+			    _("Zeigt die noch nicht gespeicherten Änderungen im Detail (Diff)"),
+			    G_CALLBACK (on_git_diff_clicked), d, NULL);
 
 	d->output_view = gtk_text_view_new ();
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (d->output_view), FALSE);
@@ -1137,56 +1290,10 @@ build_git_tab (NolphinWindow *window)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (output_scroller),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (output_scroller), GTK_SHADOW_IN);
-	gtk_widget_set_size_request (output_scroller, -1, 220);
+	gtk_widget_set_size_request (output_scroller, -1, 180);
+	gtk_widget_set_margin_top (output_scroller, 8);
 	gtk_container_add (GTK_CONTAINER (output_scroller), d->output_view);
 	gtk_box_pack_start (GTK_BOX (box), output_scroller, TRUE, TRUE, 0);
-
-	/* GtkFlowBox statt GtkButtonBox: bricht die Knoepfe automatisch in
-	 * eine neue Zeile um, wenn der Platz nicht fuer alle auf einmal
-	 * reicht, statt sie ueber den Rand hinausragen zu lassen. */
-	button_box = gtk_flow_box_new ();
-	gtk_flow_box_set_selection_mode (GTK_FLOW_BOX (button_box), GTK_SELECTION_NONE);
-	gtk_flow_box_set_homogeneous (GTK_FLOW_BOX (button_box), FALSE);
-	gtk_flow_box_set_row_spacing (GTK_FLOW_BOX (button_box), 6);
-	gtk_flow_box_set_column_spacing (GTK_FLOW_BOX (button_box), 6);
-	gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (button_box), 1);
-	gtk_box_pack_start (GTK_BOX (box), button_box, FALSE, FALSE, 0);
-
-	status_button = gtk_button_new_with_label (_("Aktualisieren"));
-	g_signal_connect (status_button, "clicked", G_CALLBACK (on_git_status_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), status_button);
-
-	add_button = gtk_button_new_with_label (_("Hinzufügen"));
-	g_signal_connect (add_button, "clicked", G_CALLBACK (on_git_add_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), add_button);
-
-	pull_button = gtk_button_new_with_label (_("Pull"));
-	g_signal_connect (pull_button, "clicked", G_CALLBACK (on_git_pull_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), pull_button);
-
-	push_button = gtk_button_new_with_label (_("Push"));
-	g_signal_connect (push_button, "clicked", G_CALLBACK (on_git_push_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), push_button);
-
-	log_button = gtk_button_new_with_label (_("Log"));
-	g_signal_connect (log_button, "clicked", G_CALLBACK (on_git_log_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), log_button);
-
-	diff_button = gtk_button_new_with_label (_("Diff"));
-	g_signal_connect (diff_button, "clicked", G_CALLBACK (on_git_diff_clicked), d);
-	gtk_container_add (GTK_CONTAINER (button_box), diff_button);
-
-	commit_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	gtk_box_pack_start (GTK_BOX (box), commit_box, FALSE, FALSE, 0);
-
-	d->commit_entry = gtk_entry_new ();
-	gtk_entry_set_placeholder_text (GTK_ENTRY (d->commit_entry), _("Commit-Nachricht …"));
-	gtk_widget_set_hexpand (d->commit_entry, TRUE);
-	gtk_box_pack_start (GTK_BOX (commit_box), d->commit_entry, TRUE, TRUE, 0);
-
-	commit_button = gtk_button_new_with_label (_("Commit"));
-	g_signal_connect (commit_button, "clicked", G_CALLBACK (on_git_commit_clicked), d);
-	gtk_box_pack_start (GTK_BOX (commit_box), commit_button, FALSE, FALSE, 0);
 
 	g_object_set_data_full (G_OBJECT (scroller), "git-tab-data", d, g_free);
 
@@ -1256,16 +1363,19 @@ build_search_tab (NolphinWindow *window)
 				     "oder die Ansicht sofort nach Namen filtern. Die "
 				     "Ergebnisse erscheinen in der Hauptansicht."));
 	gtk_label_set_line_wrap (GTK_LABEL (desc_label), TRUE);
+	panel_dim_label (desc_label);
 	gtk_label_set_max_width_chars (GTK_LABEL (desc_label), 30);
 	gtk_label_set_xalign (GTK_LABEL (desc_label), 0.0);
 	gtk_box_pack_start (GTK_BOX (box), desc_label, FALSE, FALSE, 0);
 
 	search_button = gtk_button_new_with_label (_("Suchen … (Strg+F)"));
+	panel_decorate_button (search_button, "edit-find-symbolic", TRUE);
 	gtk_widget_set_halign (search_button, GTK_ALIGN_START);
 	g_signal_connect (search_button, "clicked", G_CALLBACK (on_search_trigger_clicked), window);
 	gtk_box_pack_start (GTK_BOX (box), search_button, FALSE, FALSE, 0);
 
 	filter_button = gtk_button_new_with_label (_("Filterleiste (Strg+I)"));
+	panel_decorate_button (filter_button, "view-list-symbolic", FALSE);
 	gtk_widget_set_halign (filter_button, GTK_ALIGN_START);
 	g_signal_connect (filter_button, "clicked", G_CALLBACK (on_filter_trigger_clicked), window);
 	gtk_box_pack_start (GTK_BOX (box), filter_button, FALSE, FALSE, 0);
@@ -1641,6 +1751,7 @@ build_batch_rename_tab (NolphinWindow *window)
 	gtk_box_pack_start (GTK_BOX (box), scroller, TRUE, TRUE, 0);
 
 	d->apply_button = gtk_button_new_with_label (_("Anwenden"));
+	panel_decorate_button (d->apply_button, "object-select-symbolic", TRUE);
 	gtk_widget_set_halign (d->apply_button, GTK_ALIGN_START);
 	g_signal_connect (d->apply_button, "clicked", G_CALLBACK (on_batch_rename_apply_clicked), d);
 	gtk_box_pack_start (GTK_BOX (box), d->apply_button, FALSE, FALSE, 0);
@@ -1697,51 +1808,14 @@ build_deb_builder_tab (NolphinWindow *window)
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 10);
 	gtk_box_pack_start (GTK_BOX (outer_box), grid, FALSE, FALSE, 0);
 
+	/* Oben nur das, was jedes Paket braucht; Seltenes steckt eingeklappt
+	 * unter "Weitere Angaben", damit die Dateiliste und der Knopf zum
+	 * Erstellen ohne Scrollen sichtbar bleiben. */
 	d->package_entry = deb_builder_add_row (grid, row++, _("Name des Programms:"));
 	d->version_entry = deb_builder_add_row (grid, row++, _("Versionsnummer:"));
 	gtk_entry_set_text (GTK_ENTRY (d->version_entry), "1.0.0");
-
-	{
-		GtkWidget *label = gtk_label_new (_("Computertyp:"));
-		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-		gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-
-		d->arch_combo = gtk_combo_box_text_new ();
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "amd64");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "arm64");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "armhf");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "i386");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "all");
-		gtk_combo_box_set_active (GTK_COMBO_BOX (d->arch_combo), 0);
-		gtk_grid_attach (GTK_GRID (grid), d->arch_combo, 1, row, 1, 1);
-		row++;
-	}
-
-	d->maintainer_entry = deb_builder_add_row (grid, row++, _("Ersteller (Name):"));
-	d->email_entry = deb_builder_add_row (grid, row++, _("E-Mail des Erstellers:"));
 	d->description_entry = deb_builder_add_row (grid, row++, _("Kurzbeschreibung:"));
-	d->section_entry = deb_builder_add_row (grid, row++, _("Kategorie:"));
-	gtk_entry_set_text (GTK_ENTRY (d->section_entry), "utils");
-
-	{
-		GtkWidget *label = gtk_label_new (_("Wichtigkeit:"));
-		gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-		gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
-
-		d->priority_combo = gtk_combo_box_text_new ();
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "optional");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "standard");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "important");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "required");
-		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "extra");
-		gtk_combo_box_set_active (GTK_COMBO_BOX (d->priority_combo), 0);
-		gtk_grid_attach (GTK_GRID (grid), d->priority_combo, 1, row, 1, 1);
-		row++;
-	}
-
-	d->depends_entry = deb_builder_add_row (grid, row++, _("Benötigte Programme:"));
-	d->homepage_entry = deb_builder_add_row (grid, row++, _("Webseite:"));
-	d->output_name_entry = deb_builder_add_row (grid, row++, _("Dateiname (optional):"));
+	d->maintainer_entry = deb_builder_add_row (grid, row++, _("Ersteller (Name):"));
 
 	{
 		GtkWidget *label = gtk_label_new (_("Speichern in:"));
@@ -1756,8 +1830,64 @@ build_deb_builder_tab (NolphinWindow *window)
 		row++;
 	}
 
-	files_label = gtk_label_new (_("Inhalt des Pakets:"));
+	{
+		GtkWidget *more_expander = gtk_expander_new (_("Weitere Angaben"));
+		GtkWidget *more_grid = gtk_grid_new ();
+		gint mrow = 0;
+
+		gtk_grid_set_row_spacing (GTK_GRID (more_grid), 8);
+		gtk_grid_set_column_spacing (GTK_GRID (more_grid), 10);
+		gtk_widget_set_margin_top (more_grid, 8);
+		gtk_container_add (GTK_CONTAINER (more_expander), more_grid);
+		gtk_box_pack_start (GTK_BOX (outer_box), more_expander, FALSE, FALSE, 0);
+
+		{
+			GtkWidget *label = gtk_label_new (_("Computertyp:"));
+			gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+			gtk_grid_attach (GTK_GRID (more_grid), label, 0, mrow, 1, 1);
+
+			d->arch_combo = gtk_combo_box_text_new ();
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "amd64");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "arm64");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "armhf");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "i386");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->arch_combo), "all");
+			gtk_combo_box_set_active (GTK_COMBO_BOX (d->arch_combo), 0);
+			gtk_widget_set_hexpand (d->arch_combo, TRUE);
+			gtk_grid_attach (GTK_GRID (more_grid), d->arch_combo, 1, mrow, 1, 1);
+			mrow++;
+		}
+
+		d->email_entry = deb_builder_add_row (more_grid, mrow++, _("E-Mail des Erstellers:"));
+		d->section_entry = deb_builder_add_row (more_grid, mrow++, _("Kategorie:"));
+		gtk_entry_set_text (GTK_ENTRY (d->section_entry), "utils");
+
+		{
+			GtkWidget *label = gtk_label_new (_("Wichtigkeit:"));
+			gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+			gtk_grid_attach (GTK_GRID (more_grid), label, 0, mrow, 1, 1);
+
+			d->priority_combo = gtk_combo_box_text_new ();
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "optional");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "standard");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "important");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "required");
+			gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (d->priority_combo), "extra");
+			gtk_combo_box_set_active (GTK_COMBO_BOX (d->priority_combo), 0);
+			gtk_widget_set_hexpand (d->priority_combo, TRUE);
+			gtk_grid_attach (GTK_GRID (more_grid), d->priority_combo, 1, mrow, 1, 1);
+			mrow++;
+		}
+
+		d->depends_entry = deb_builder_add_row (more_grid, mrow++, _("Benötigte Programme:"));
+		d->homepage_entry = deb_builder_add_row (more_grid, mrow++, _("Webseite:"));
+		d->output_name_entry = deb_builder_add_row (more_grid, mrow++, _("Dateiname (optional):"));
+	}
+
+	files_label = gtk_label_new (NULL);
+	gtk_label_set_markup (GTK_LABEL (files_label), _("<b>Inhalt des Pakets</b>"));
 	gtk_label_set_xalign (GTK_LABEL (files_label), 0.0);
+	gtk_widget_set_margin_top (files_label, 6);
 	gtk_box_pack_start (GTK_BOX (outer_box), files_label, FALSE, FALSE, 0);
 
 	d->files_store = gtk_list_store_new (DEB_FILES_N_COLS,
@@ -1808,19 +1938,23 @@ build_deb_builder_tab (NolphinWindow *window)
 	gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (files_button_box), 1);
 	gtk_box_pack_start (GTK_BOX (outer_box), files_button_box, FALSE, FALSE, 0);
 
-	add_files_button = gtk_button_new_with_label (_("+ Datei"));
+	add_files_button = gtk_button_new_with_label (_("Datei hinzufügen"));
+	panel_decorate_button (add_files_button, "list-add-symbolic", FALSE);
 	g_signal_connect (add_files_button, "clicked", G_CALLBACK (deb_builder_add_files_clicked), d);
 	gtk_container_add (GTK_CONTAINER (files_button_box), add_files_button);
 
-	add_folder_button = gtk_button_new_with_label (_("+ Ordner"));
+	add_folder_button = gtk_button_new_with_label (_("Ordner hinzufügen"));
+	panel_decorate_button (add_folder_button, "folder-new-symbolic", FALSE);
 	g_signal_connect (add_folder_button, "clicked", G_CALLBACK (deb_builder_add_folder_clicked), d);
 	gtk_container_add (GTK_CONTAINER (files_button_box), add_folder_button);
 
 	remove_button = gtk_button_new_with_label (_("Entfernen"));
+	panel_decorate_button (remove_button, "list-remove-symbolic", FALSE);
 	g_signal_connect (remove_button, "clicked", G_CALLBACK (deb_builder_remove_file_clicked), d);
 	gtk_container_add (GTK_CONTAINER (files_button_box), remove_button);
 
 	build_button = gtk_button_new_with_label (_("DEB erstellen"));
+	panel_decorate_button (build_button, "document-save-symbolic", TRUE);
 	g_signal_connect (build_button, "clicked", G_CALLBACK (on_deb_build_clicked), d);
 	gtk_container_add (GTK_CONTAINER (files_button_box), build_button);
 
@@ -3884,7 +4018,7 @@ nolphin_workspace_panel_show_properties (GtkWidget *workspace_panel, NolphinWind
 	d = g_object_get_data (G_OBJECT (properties_tab), "properties-tab-data");
 
 	if (d != NULL) {
-		nolphin_properties_window_build_embedded (files, properties_tab_content_ready, d);
+		nolphin_properties_panel_set_files (NOLPHIN_PROPERTIES_PANEL (d->panel), files);
 	}
 
 	workspace_panel_show_page (workspace_panel, window, "properties");
@@ -3902,7 +4036,13 @@ nolphin_workspace_panel_show_archive (GtkWidget *workspace_panel, NolphinWindow 
 	archive_inner_stack = g_object_get_data (G_OBJECT (workspace_panel), "archive-inner-stack");
 
 	if (archive_inner_stack != NULL) {
+		GtkWidget *page = gtk_stack_get_child_by_name (GTK_STACK (archive_inner_stack), "compress");
+		ArchiveTabData *data = (page != NULL) ? g_object_get_data (G_OBJECT (page), "archive-tab-ptr") : NULL;
+
 		gtk_stack_set_visible_child_name (GTK_STACK (archive_inner_stack), "compress");
+		if (data != NULL) {
+			archive_tab_refresh_from_selection (data);
+		}
 	}
 
 	workspace_panel_show_page (workspace_panel, window, "archive");
@@ -4006,4 +4146,33 @@ nolphin_workspace_panel_show_deb_builder (GtkWidget *workspace_panel, NolphinWin
 	}
 
 	workspace_panel_show_page (workspace_panel, window, "archive");
+}
+
+/* Hält die Eigenschaften-Seite synchron mit der Auswahl im Hauptfenster,
+ * solange sie sichtbar ist (ohne Auswahl: der aktuelle Ordner). */
+void
+nolphin_workspace_panel_sync_properties (GtkWidget *workspace_panel, GList *selection, NolphinFile *directory_as_file)
+{
+	GtkWidget *properties_tab;
+	PropertiesTabData *d;
+	GList *single = NULL;
+
+	g_return_if_fail (GTK_IS_STACK (workspace_panel));
+
+	if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (workspace_panel)), "properties") != 0) {
+		return;
+	}
+
+	properties_tab = gtk_stack_get_child_by_name (GTK_STACK (workspace_panel), "properties");
+	d = (properties_tab != NULL) ? g_object_get_data (G_OBJECT (properties_tab), "properties-tab-data") : NULL;
+	if (d == NULL) {
+		return;
+	}
+
+	if (selection == NULL && directory_as_file != NULL) {
+		single = g_list_prepend (NULL, directory_as_file);
+		selection = single;
+	}
+	nolphin_properties_panel_set_files (NOLPHIN_PROPERTIES_PANEL (d->panel), selection);
+	g_list_free (single);
 }

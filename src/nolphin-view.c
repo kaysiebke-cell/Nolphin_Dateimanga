@@ -8833,6 +8833,20 @@ action_git_diff_callback (GtkAction *action, gpointer callback_data)
     git_menu_action_show_tab (NOLPHIN_VIEW (callback_data));
 }
 
+void
+nolphin_view_activate_action_by_name (NolphinView *view, const gchar *action_name)
+{
+    GtkAction *action;
+
+    g_return_if_fail (NOLPHIN_IS_VIEW (view));
+    g_return_if_fail (action_name != NULL);
+
+    action = gtk_action_group_get_action (view->details->dir_action_group, action_name);
+    if (action != NULL && gtk_action_is_sensitive (action)) {
+        gtk_action_activate (action);
+    }
+}
+
 static void
 git_sync_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
 {

@@ -425,6 +425,10 @@ void              nolphin_view_new_file_with_initial_contents (NolphinView *view
 
 /* selection handling */
 int               nolphin_view_get_selection_count        (NolphinView      *view);
+/* Löst eine Aktion der Ansicht (z. B. "GitSync") per Name aus, wie ein
+ * Klick im Kontextmenü - für Knöpfe in der rechten Arbeitsleiste. */
+void              nolphin_view_activate_action_by_name    (NolphinView      *view,
+                                                           const gchar      *action_name);
 GList *           nolphin_view_get_selection              (NolphinView      *view);
 GList *           nolphin_view_peek_selection             (NolphinView      *view);
 gint              nolphin_view_get_selection_count        (NolphinView      *view);
