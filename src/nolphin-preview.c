@@ -28,6 +28,11 @@
 
 #define PREVIEW_IMAGE_SIZE 256
 
+/* Obergrenze für den Textinhalt, den die Vorschau-Leiste lädt und
+ * anzeigt - größere Textdateien bekommen weiterhin Icon/Metadaten,
+ * aber keinen eingebetteten Inhalt (dafür "Öffnen mit" nutzen). */
+#define TEXT_PREVIEW_MAX_SIZE (256 * 1024)
+
 struct _NolphinPreview
 {
     GtkBox parent_instance;
@@ -36,6 +41,14 @@ struct _NolphinPreview
     GtkWidget *name_label;
     GtkWidget *info_grid;
     GtkWidget *fallback_label;
+
+    /* Echter, markier- und kopierbarer Dateiinhalt für Textdateien
+     * (siehe TEXT_PREVIEW_MAX_SIZE) - anders als die restliche
+     * Vorschau (Icon/Metadaten-Raster) kein reines Abbild. */
+    GtkWidget *text_scrolled;
+    GtkWidget *text_view;
+    GCancellable *text_cancellable;
+    NolphinFile *text_info_file;
 
     /* The single file this panel is currently tracking for async
      * refresh (late thumbnails, in-progress folder size, live
@@ -74,6 +87,18 @@ clear_cad_state (NolphinPreview *preview)
 }
 
 static void
+clear_text_state (NolphinPreview *preview)
+{
+    if (preview->text_cancellable != NULL) {
+        g_cancellable_cancel (preview->text_cancellable);
+        g_clear_object (&preview->text_cancellable);
+    }
+    g_clear_pointer (&preview->text_info_file, nolphin_file_unref);
+    gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (preview->text_view)), "", -1);
+    gtk_widget_hide (preview->text_scrolled);
+}
+
+static void
 stop_watching_file (NolphinPreview *preview)
 {
     if (preview->watched_file == NULL) {
@@ -90,6 +115,7 @@ stop_watching_file (NolphinPreview *preview)
     }
 
     clear_cad_state (preview);
+    clear_text_state (preview);
 
     nolphin_file_unref (preview->watched_file);
     preview->watched_file = NULL;
@@ -223,6 +249,51 @@ add_cad_info_rows (GtkGrid *grid, gint *row, NolphinCadInfo *info)
         default:
             break;
     }
+}
+
+typedef struct {
+    NolphinPreview *preview; /* reffed */
+    NolphinFile *file;       /* reffed - the subject this load is for */
+} TextRequest;
+
+static void
+text_request_free (TextRequest *req)
+{
+    g_object_unref (req->preview);
+    nolphin_file_unref (req->file);
+    g_free (req);
+}
+
+static void
+text_load_ready_cb (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    TextRequest *req = user_data;
+    gchar *contents = NULL;
+    gsize length = 0;
+    GError *error = NULL;
+
+    g_file_load_contents_finish (G_FILE (source), result, &contents, &length, NULL, &error);
+
+    /* Nur anwenden, wenn der Nutzer in der Zwischenzeit nicht schon
+     * eine andere Datei ausgewählt hat (sonst stiller, verworfener
+     * Treffer - wie beim CAD-Pendant oben). */
+    if (req->file == req->preview->watched_file) {
+        if (error == NULL && length > 0 && g_utf8_validate (contents, length, NULL)) {
+            gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (req->preview->text_view)),
+                                      contents, length);
+            gtk_widget_show (req->preview->text_scrolled);
+        } else {
+            /* Kein gültiger UTF-8-Text (z. B. andere Kodierung) - keine
+             * vorgetäuschte Anzeige, Leiste bleibt beim Icon/den
+             * Metadaten; der Inhalt ist weiterhin per "Öffnen mit"
+             * erreichbar. */
+            gtk_widget_hide (req->preview->text_scrolled);
+        }
+    }
+
+    g_free (contents);
+    g_clear_error (&error);
+    text_request_free (req);
 }
 
 static void
@@ -370,6 +441,38 @@ display_single_file (NolphinPreview *preview, NolphinFile *file)
         }
     }
 
+    /* Echter Dateiinhalt für Textdateien - markier- und kopierbar,
+     * anders als das reine Icon/die Metadaten oben. §-los auf
+     * ausdrücklichen Nutzerwunsch: Text lesen/kopieren können ist eine
+     * Grundvoraussetzung in einem Dateimanager, nicht nur ein "nice
+     * to have". Läuft asynchron und nur innerhalb von
+     * TEXT_PREVIEW_MAX_SIZE, damit die Leiste bei großen Dateien nicht
+     * blockiert oder unbrauchbar wird. */
+    if (!is_dir && size >= 0 && size <= TEXT_PREVIEW_MAX_SIZE && nolphin_file_contains_text (file)) {
+        if (preview->text_info_file != file) {
+            GFile *location = nolphin_file_get_location (file);
+            TextRequest *req;
+
+            if (preview->text_cancellable != NULL) {
+                g_cancellable_cancel (preview->text_cancellable);
+                g_object_unref (preview->text_cancellable);
+            }
+            preview->text_cancellable = g_cancellable_new ();
+
+            g_clear_pointer (&preview->text_info_file, nolphin_file_unref);
+            preview->text_info_file = nolphin_file_ref (file);
+
+            req = g_new0 (TextRequest, 1);
+            req->preview = g_object_ref (preview);
+            req->file = nolphin_file_ref (file);
+
+            g_file_load_contents_async (location, preview->text_cancellable, text_load_ready_cb, req);
+            g_object_unref (location);
+        }
+    } else {
+        clear_text_state (preview);
+    }
+
     if (is_dir) {
         nolphin_file_recompute_deep_counts (file);
     }
@@ -505,6 +608,43 @@ nolphin_preview_init (NolphinPreview *preview)
     gtk_grid_set_column_spacing (GTK_GRID (preview->info_grid), 8);
     gtk_box_pack_start (GTK_BOX (content_box), preview->info_grid, FALSE, FALSE, 0);
 
+    preview->text_view = gtk_text_view_new ();
+    gtk_text_view_set_editable (GTK_TEXT_VIEW (preview->text_view), TRUE);
+    gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (preview->text_view), TRUE);
+    gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (preview->text_view), GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_left_margin (GTK_TEXT_VIEW (preview->text_view), 4);
+    gtk_text_view_set_right_margin (GTK_TEXT_VIEW (preview->text_view), 4);
+
+    /* Eigene, vom Rest des Panels unabhängige Markierungsfarbe - das
+     * dunkle Panel-Hintergrund-CSS (apply_workspace_panel_background())
+     * reicht zwar nicht bis hierher runter, aber die System-Vorgabe für
+     * "selected text" war in der Praxis kaum vom unmarkierten Text zu
+     * unterscheiden. Deutlich sichtbares Blau statt Theme-Raten. */
+    {
+        GtkCssProvider *provider = gtk_css_provider_new ();
+
+        gtk_css_provider_load_from_data (provider,
+                                         "textview.nolphin-preview-text text selection {"
+                                         "  background-color: #3584e4;"
+                                         "  color: #ffffff;"
+                                         "}",
+                                         -1, NULL);
+        gtk_style_context_add_provider (gtk_widget_get_style_context (preview->text_view),
+                                        GTK_STYLE_PROVIDER (provider),
+                                        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        g_object_unref (provider);
+    }
+    gtk_style_context_add_class (gtk_widget_get_style_context (preview->text_view), "nolphin-preview-text");
+    gtk_style_context_add_class (gtk_widget_get_style_context (preview->text_view), "view");
+
+    preview->text_scrolled = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (preview->text_scrolled),
+                                    GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_vexpand (preview->text_scrolled, TRUE);
+    gtk_widget_set_size_request (preview->text_scrolled, -1, 200);
+    gtk_container_add (GTK_CONTAINER (preview->text_scrolled), preview->text_view);
+    gtk_box_pack_start (GTK_BOX (content_box), preview->text_scrolled, TRUE, TRUE, 0);
+
     scrolled = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
                                     GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -520,6 +660,7 @@ nolphin_preview_init (NolphinPreview *preview)
     gtk_box_pack_start (GTK_BOX (preview), stack, TRUE, TRUE, 0);
 
     gtk_widget_show_all (stack);
+    gtk_widget_hide (preview->text_scrolled);
 }
 
 GtkWidget *

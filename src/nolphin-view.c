@@ -47,6 +47,7 @@
 
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
