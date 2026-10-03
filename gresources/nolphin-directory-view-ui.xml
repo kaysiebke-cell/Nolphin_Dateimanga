@@ -103,6 +103,20 @@
 			<menuitem name="Trash" action="Trash"/>
 			<menuitem name="Delete" action="Delete"/>
 		</placeholder>
+		<separator name="Metadata separator"/>
+		<menu action="MetadataMenu">
+			<menuitem name="EditTags" action="EditTags"/>
+			<menu action="RatingMenu">
+				<menuitem name="Rating0" action="Rating0"/>
+				<menuitem name="Rating1" action="Rating1"/>
+				<menuitem name="Rating2" action="Rating2"/>
+				<menuitem name="Rating3" action="Rating3"/>
+				<menuitem name="Rating4" action="Rating4"/>
+				<menuitem name="Rating5" action="Rating5"/>
+			</menu>
+			<menuitem name="EditComment" action="EditComment"/>
+			<menuitem name="EditEmblem" action="EditEmblem"/>
+		</menu>
 		<placeholder name="Extension Actions"/>
 	</menu>
 	<menu action="View">
@@ -243,6 +257,20 @@
 		<separator/>
 		<menuitem name="GitClone" action="GitClone"/>
 		<menuitem name="GitRemoteAdd" action="GitRemoteAdd"/>
+	</menu>
+	<separator name="Metadata separator"/>
+	<menu action="MetadataMenu">
+		<menuitem name="EditTags" action="EditTags"/>
+		<menu action="RatingMenu">
+			<menuitem name="Rating0" action="Rating0"/>
+			<menuitem name="Rating1" action="Rating1"/>
+			<menuitem name="Rating2" action="Rating2"/>
+			<menuitem name="Rating3" action="Rating3"/>
+			<menuitem name="Rating4" action="Rating4"/>
+			<menuitem name="Rating5" action="Rating5"/>
+		</menu>
+		<menuitem name="EditComment" action="EditComment"/>
+		<menuitem name="EditEmblem" action="EditEmblem"/>
 	</menu>
 	<separator name="Dangerous separator"/>
 	<placeholder name="Dangerous File Actions">

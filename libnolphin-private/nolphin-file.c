@@ -7778,6 +7778,116 @@ nolphin_file_get_keywords (NolphinFile *file)
 }
 
 /**
+ * nolphin_file_set_keywords
+ *
+ * §35: Tags/Emblems vergeben. Ersetzt die benutzerdefinierten Tags der
+ * Datei vollständig durch @keywords (als metadata::emblems über GVFS
+ * gespeichert, siehe vfs_file_set_metadata_as_list()). Automatisch
+ * erzeugte Schlüsselwörter (schreibgeschützt, unlesbar, symbolische
+ * Verknüpfung, Notiz, Favorit - siehe prepend_automatic_keywords())
+ * gehören nicht dazu und werden hier nicht berührt.
+ * @file: NolphinFile representing the file in question.
+ * @keywords: Liste der neuen Tags (list of char *, wird von dieser
+ * Funktion nicht übernommen/freigegeben).
+ **/
+void
+nolphin_file_set_keywords (NolphinFile *file,
+			    GList *keywords)
+{
+	g_return_if_fail (NOLPHIN_IS_FILE (file));
+
+	nolphin_file_set_metadata_list (file, NOLPHIN_METADATA_KEY_EMBLEMS, keywords);
+}
+
+/**
+ * nolphin_file_get_rating
+ *
+ * §35: Bewertung (0-5 Sterne), über GVFS-Metadaten gespeichert.
+ * @file: NolphinFile representing the file in question.
+ *
+ * Returns: Bewertung von 0 (keine) bis 5.
+ **/
+int
+nolphin_file_get_rating (NolphinFile *file)
+{
+	int rating;
+
+	if (file == NULL) {
+		return 0;
+	}
+
+	g_return_val_if_fail (NOLPHIN_IS_FILE (file), 0);
+
+	rating = nolphin_file_get_integer_metadata (file, NOLPHIN_METADATA_KEY_RATING, 0);
+	if (rating < 0) {
+		rating = 0;
+	} else if (rating > 5) {
+		rating = 5;
+	}
+	return rating;
+}
+
+/**
+ * nolphin_file_set_rating
+ *
+ * §35: Bewertung (0-5 Sterne) setzen.
+ * @file: NolphinFile representing the file in question.
+ * @rating: Neue Bewertung, wird auf den Bereich 0-5 begrenzt.
+ **/
+void
+nolphin_file_set_rating (NolphinFile *file,
+			  int rating)
+{
+	g_return_if_fail (NOLPHIN_IS_FILE (file));
+
+	if (rating < 0) {
+		rating = 0;
+	} else if (rating > 5) {
+		rating = 5;
+	}
+
+	nolphin_file_set_integer_metadata (file, NOLPHIN_METADATA_KEY_RATING, 0, rating);
+}
+
+/**
+ * nolphin_file_get_comment
+ *
+ * §35: Kommentar der Datei lesen (über metadata::annotation, GVFS).
+ * @file: NolphinFile representing the file in question.
+ *
+ * Returns: Neu allozierter Kommentartext (ggf. leerer String), muss mit
+ * g_free() freigegeben werden.
+ **/
+char *
+nolphin_file_get_comment (NolphinFile *file)
+{
+	if (file == NULL) {
+		return g_strdup ("");
+	}
+
+	g_return_val_if_fail (NOLPHIN_IS_FILE (file), g_strdup (""));
+
+	return nolphin_file_get_metadata (file, NOLPHIN_METADATA_KEY_ANNOTATION, "");
+}
+
+/**
+ * nolphin_file_set_comment
+ *
+ * §35: Kommentar der Datei setzen (über metadata::annotation, GVFS).
+ * @file: NolphinFile representing the file in question.
+ * @comment: Neuer Kommentartext; NULL oder leerer String löscht den
+ * Kommentar.
+ **/
+void
+nolphin_file_set_comment (NolphinFile *file,
+			   const char *comment)
+{
+	g_return_if_fail (NOLPHIN_IS_FILE (file));
+
+	nolphin_file_set_metadata (file, NOLPHIN_METADATA_KEY_ANNOTATION, "", comment);
+}
+
+/**
  * nolphin_file_is_symbolic_link
  *
  * Check if this file is a symbolic link.

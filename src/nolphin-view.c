@@ -9015,6 +9015,282 @@ action_git_remote_add_callback (GtkAction *action, gpointer callback_data)
     gtk_widget_destroy (dialog);
 }
 
+/* §35 METADATEN UND TAGS: Benutzerdefinierte Tags/Emblems teilen sich den
+ * GVFS-Metadatenschlüssel "emblems" (NOLPHIN_METADATA_KEY_EMBLEMS) mit der
+ * schon bestehenden Emblem-Darstellung in nolphin_file_get_emblem_icons()
+ * (libnolphin-private/nolphin-file.c). Die hier auswählbaren Emblem-Namen
+ * sind der Emblems-Kontext der Freedesktop-Icon-Naming-Spezifikation,
+ * ohne die von Nolphin bereits automatisch vergebenen Namen (readonly,
+ * unreadable, symbolic-link, note, xapp-favorite, trash). */
+static const struct {
+    const char *keyword;
+    const char *label;
+} nolphin_emblem_choices[] = {
+    { "default",      N_("Standard") },
+    { "documents",    N_("Dokumente") },
+    { "downloads",    N_("Downloads") },
+    { "favorite",     N_("Favorit") },
+    { "important",    N_("Wichtig") },
+    { "mail",         N_("E-Mail") },
+    { "photos",       N_("Fotos") },
+    { "shared",       N_("Geteilt") },
+    { "synchronized", N_("Synchronisiert") },
+    { "system",       N_("System") },
+};
+
+static void
+show_tags_and_emblem_dialog (NolphinView *view, GList *selection, gboolean focus_emblems)
+{
+    NolphinFile *file;
+    GtkWidget *dialog, *vbox, *label, *tags_entry, *grid;
+    GtkWidget *emblem_checks[G_N_ELEMENTS (nolphin_emblem_choices)];
+    GList *current_keywords, *l;
+    GString *joined;
+    guint i;
+    int response;
+
+    if (g_list_length (selection) != 1) {
+        return;
+    }
+    file = NOLPHIN_FILE (selection->data);
+
+    current_keywords = nolphin_file_get_metadata_list (file, NOLPHIN_METADATA_KEY_EMBLEMS);
+
+    dialog = gtk_dialog_new_with_buttons (_("Tags und Emblem bearbeiten"),
+                                          nolphin_view_get_containing_window (view),
+                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                          NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+    gtk_window_set_default_size (GTK_WINDOW (dialog), 380, -1);
+
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+    g_object_set (vbox, "border-width", 12, NULL);
+
+    label = gtk_label_new (_("Tags (durch Komma getrennt):"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+    joined = g_string_new ("");
+    for (l = current_keywords; l != NULL; l = l->next) {
+        if (joined->len > 0) {
+            g_string_append (joined, ", ");
+        }
+        g_string_append (joined, (const char *) l->data);
+    }
+    tags_entry = gtk_entry_new ();
+    gtk_entry_set_text (GTK_ENTRY (tags_entry), joined->str);
+    g_string_free (joined, TRUE);
+    gtk_entry_set_activates_default (GTK_ENTRY (tags_entry), TRUE);
+    gtk_box_pack_start (GTK_BOX (vbox), tags_entry, FALSE, FALSE, 0);
+
+    label = gtk_label_new (_("Emblem (zusätzliches Symbol auf dem Dateisymbol):"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+    grid = gtk_grid_new ();
+    g_object_set (grid, "row-spacing", 4, "column-spacing", 12, NULL);
+    for (i = 0; i < G_N_ELEMENTS (nolphin_emblem_choices); i++) {
+        gboolean active = FALSE;
+
+        for (l = current_keywords; l != NULL; l = l->next) {
+            if (g_strcmp0 ((const char *) l->data, nolphin_emblem_choices[i].keyword) == 0) {
+                active = TRUE;
+                break;
+            }
+        }
+        emblem_checks[i] = gtk_check_button_new_with_label (_(nolphin_emblem_choices[i].label));
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (emblem_checks[i]), active);
+        gtk_grid_attach (GTK_GRID (grid), emblem_checks[i], i % 2, i / 2, 1, 1);
+    }
+    gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
+
+    gtk_widget_show_all (vbox);
+    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox);
+    gtk_widget_grab_focus (focus_emblems ? grid : tags_entry);
+
+    response = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (response == GTK_RESPONSE_OK) {
+        GList *new_keywords = NULL;
+        gchar **parts;
+        guint j;
+
+        parts = g_strsplit (gtk_entry_get_text (GTK_ENTRY (tags_entry)), ",", -1);
+        for (j = 0; parts[j] != NULL; j++) {
+            gchar *trimmed = g_strdup (g_strstrip (parts[j]));
+
+            if (trimmed[0] != '\0') {
+                new_keywords = g_list_prepend (new_keywords, trimmed);
+            } else {
+                g_free (trimmed);
+            }
+        }
+        g_strfreev (parts);
+
+        for (i = 0; i < G_N_ELEMENTS (nolphin_emblem_choices); i++) {
+            if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (emblem_checks[i]))) {
+                gboolean already = FALSE;
+                GList *nl;
+
+                for (nl = new_keywords; nl != NULL; nl = nl->next) {
+                    if (g_strcmp0 ((const char *) nl->data, nolphin_emblem_choices[i].keyword) == 0) {
+                        already = TRUE;
+                        break;
+                    }
+                }
+                if (!already) {
+                    new_keywords = g_list_prepend (new_keywords, g_strdup (nolphin_emblem_choices[i].keyword));
+                }
+            }
+        }
+
+        nolphin_file_set_keywords (file, new_keywords);
+        g_list_free_full (new_keywords, g_free);
+    }
+
+    g_list_free_full (current_keywords, g_free);
+    gtk_widget_destroy (dialog);
+}
+
+static void
+action_edit_tags_callback (GtkAction *action,
+                           gpointer callback_data)
+{
+    NolphinView *view = NOLPHIN_VIEW (callback_data);
+    GList *selection = nolphin_view_get_selection (view);
+
+    show_tags_and_emblem_dialog (view, selection, FALSE);
+    nolphin_file_list_free (selection);
+}
+
+static void
+action_edit_emblem_callback (GtkAction *action,
+                             gpointer callback_data)
+{
+    NolphinView *view = NOLPHIN_VIEW (callback_data);
+    GList *selection = nolphin_view_get_selection (view);
+
+    show_tags_and_emblem_dialog (view, selection, TRUE);
+    nolphin_file_list_free (selection);
+}
+
+static void
+action_edit_comment_callback (GtkAction *action,
+                              gpointer callback_data)
+{
+    NolphinView *view;
+    GList *selection;
+    NolphinFile *file;
+    GtkWidget *dialog, *vbox, *label, *scrolled, *text_view;
+    GtkTextBuffer *buffer;
+    gchar *current_comment;
+    int response;
+
+    view = NOLPHIN_VIEW (callback_data);
+    selection = nolphin_view_get_selection (view);
+    if (g_list_length (selection) != 1) {
+        nolphin_file_list_free (selection);
+        return;
+    }
+    file = NOLPHIN_FILE (selection->data);
+
+    dialog = gtk_dialog_new_with_buttons (_("Kommentar bearbeiten"),
+                                          nolphin_view_get_containing_window (view),
+                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                          NULL);
+    gtk_window_set_default_size (GTK_WINDOW (dialog), 420, 260);
+
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+    g_object_set (vbox, "border-width", 12, NULL);
+
+    label = gtk_label_new (_("Kommentar:"));
+    gtk_widget_set_halign (label, GTK_ALIGN_START);
+    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+
+    scrolled = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_vexpand (scrolled, TRUE);
+
+    text_view = gtk_text_view_new ();
+    gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD);
+    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+    current_comment = nolphin_file_get_comment (file);
+    gtk_text_buffer_set_text (buffer, current_comment, -1);
+    g_free (current_comment);
+
+    gtk_container_add (GTK_CONTAINER (scrolled), text_view);
+    gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
+
+    gtk_widget_show_all (vbox);
+    gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox);
+    gtk_widget_grab_focus (text_view);
+
+    response = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (response == GTK_RESPONSE_OK) {
+        GtkTextIter start, end;
+        gchar *new_text;
+
+        gtk_text_buffer_get_bounds (buffer, &start, &end);
+        new_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+        nolphin_file_set_comment (file, new_text);
+        g_free (new_text);
+    }
+
+    gtk_widget_destroy (dialog);
+    nolphin_file_list_free (selection);
+}
+
+static void
+apply_rating_to_selection (NolphinView *view, int rating)
+{
+    GList *selection, *l;
+
+    selection = nolphin_view_get_selection (view);
+    for (l = selection; l != NULL; l = l->next) {
+        nolphin_file_set_rating (NOLPHIN_FILE (l->data), rating);
+    }
+    nolphin_file_list_free (selection);
+}
+
+static void
+action_rating_0_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 0);
+}
+
+static void
+action_rating_1_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 1);
+}
+
+static void
+action_rating_2_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 2);
+}
+
+static void
+action_rating_3_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 3);
+}
+
+static void
+action_rating_4_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 4);
+}
+
+static void
+action_rating_5_callback (GtkAction *action, gpointer callback_data)
+{
+    apply_rating_to_selection (NOLPHIN_VIEW (callback_data), 5);
+}
+
 static void
 action_open_containing_folder_callback (GtkAction *action,
                                         gpointer callback_data)
@@ -10123,6 +10399,44 @@ static const GtkActionEntry directory_view_entries[] = {
   /* label, accelerator */       N_("_Remote hinzufügen …"), NULL,
   /* tooltip */                  N_("Ein entferntes Repository (z. B. auf GitHub) für Pull/Push eintragen"),
                  G_CALLBACK (action_git_remote_add_callback) },
+  /* name, stock id, label */  { NOLPHIN_ACTION_METADATA_MENU, NULL, N_("Me_tadaten") },
+  /* name, stock id */         { NOLPHIN_ACTION_EDIT_TAGS, NULL,
+  /* label, accelerator */       N_("_Tags bearbeiten …"), NULL,
+  /* tooltip */                  N_("Eigene Tags für dieses Objekt vergeben oder entfernen (über GVFS-Metadaten)"),
+                 G_CALLBACK (action_edit_tags_callback) },
+  /* name, stock id, label */  { NOLPHIN_ACTION_RATING_MENU, NULL, N_("_Bewertung") },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_0, NULL,
+  /* label, accelerator */       N_("Keine Bewertung"), NULL,
+  /* tooltip */                  N_("Bewertung entfernen"),
+                 G_CALLBACK (action_rating_0_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_1, NULL,
+  /* label, accelerator */       N_("★☆☆☆☆"), NULL,
+  /* tooltip */                  N_("Mit 1 Stern bewerten"),
+                 G_CALLBACK (action_rating_1_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_2, NULL,
+  /* label, accelerator */       N_("★★☆☆☆"), NULL,
+  /* tooltip */                  N_("Mit 2 Sternen bewerten"),
+                 G_CALLBACK (action_rating_2_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_3, NULL,
+  /* label, accelerator */       N_("★★★☆☆"), NULL,
+  /* tooltip */                  N_("Mit 3 Sternen bewerten"),
+                 G_CALLBACK (action_rating_3_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_4, NULL,
+  /* label, accelerator */       N_("★★★★☆"), NULL,
+  /* tooltip */                  N_("Mit 4 Sternen bewerten"),
+                 G_CALLBACK (action_rating_4_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_RATING_5, NULL,
+  /* label, accelerator */       N_("★★★★★"), NULL,
+  /* tooltip */                  N_("Mit 5 Sternen bewerten"),
+                 G_CALLBACK (action_rating_5_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_EDIT_COMMENT, NULL,
+  /* label, accelerator */       N_("_Kommentar …"), NULL,
+  /* tooltip */                  N_("Einen Kommentar für dieses Objekt schreiben oder ändern (über GVFS-Metadaten)"),
+                 G_CALLBACK (action_edit_comment_callback) },
+  /* name, stock id */         { NOLPHIN_ACTION_EDIT_EMBLEM, NULL,
+  /* label, accelerator */       N_("_Emblem …"), NULL,
+  /* tooltip */                  N_("Ein Emblem (zusätzliches Symbol auf dem Dateisymbol) zuweisen oder entfernen"),
+                 G_CALLBACK (action_edit_emblem_callback) },
   /* name, stock id */         { "OtherApplication1", NULL,
   /* label, accelerator */       N_("Andere _Anwendung …"), NULL,
   /* tooltip */                  N_("Eine andere Anwendung auswählen, mit der das gewählte Objekt geöffnet werden soll"),
@@ -11939,6 +12253,26 @@ real_update_menus (NolphinView *view)
         action = gtk_action_group_get_action (view->details->dir_action_group, NOLPHIN_ACTION_GIT_MENU);
         gtk_action_set_visible (action, show_git);
     }
+
+    /* §35 METADATEN UND TAGS: Menüpunkt sichtbar, sobald mindestens ein
+     * Objekt ausgewählt ist. Tags- und Emblem-Dialog bearbeiten genau
+     * ein Objekt gleichzeitig (siehe show_tags_and_emblem_dialog()),
+     * die Bewertung lässt sich dagegen auf die ganze Auswahl anwenden. */
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_METADATA_MENU);
+    gtk_action_set_visible (action, selection_count >= 1);
+
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_EDIT_TAGS);
+    gtk_action_set_sensitive (action, selection_count == 1);
+
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_EDIT_EMBLEM);
+    gtk_action_set_sensitive (action, selection_count == 1);
+
+    action = gtk_action_group_get_action (view->details->dir_action_group,
+                                          NOLPHIN_ACTION_EDIT_COMMENT);
+    gtk_action_set_sensitive (action, selection_count == 1);
 
     action = gtk_action_group_get_action (view->details->dir_action_group,
                                           NOLPHIN_ACTION_OPEN_CONTAINING_FOLDER);

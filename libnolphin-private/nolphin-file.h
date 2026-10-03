@@ -255,8 +255,16 @@ gboolean                nolphin_file_has_loaded_thumbnail              (NolphinF
 gboolean                nolphin_file_should_show_directory_item_count  (NolphinFile                   *file);
 gboolean                nolphin_file_should_show_type                  (NolphinFile                   *file);
 GList *                 nolphin_file_get_keywords                      (NolphinFile                   *file);
+void                    nolphin_file_set_keywords                      (NolphinFile                   *file,
+                                                                     GList                         *keywords);
 GList *                 nolphin_file_get_emblem_icons                  (NolphinFile                   *file,
                                                                      NolphinFile                   *view_file);
+int                     nolphin_file_get_rating                        (NolphinFile                   *file);
+void                    nolphin_file_set_rating                        (NolphinFile                   *file,
+                                                                     int                            rating);
+char *                  nolphin_file_get_comment                       (NolphinFile                   *file);
+void                    nolphin_file_set_comment                       (NolphinFile                   *file,
+                                                                     const char                    *comment);
 gboolean                nolphin_file_get_directory_item_mime_types     (NolphinFile                   *file,
 									 GList                         **mime_list);
 

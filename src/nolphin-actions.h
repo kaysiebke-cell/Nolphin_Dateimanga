@@ -178,6 +178,18 @@
 #define NOLPHIN_ACTION_GIT_COMPARE "GitCompare"
 #define NOLPHIN_ACTION_GIT_SYNC "GitSync"
 
+#define NOLPHIN_ACTION_METADATA_MENU "MetadataMenu"
+#define NOLPHIN_ACTION_EDIT_TAGS "EditTags"
+#define NOLPHIN_ACTION_EDIT_COMMENT "EditComment"
+#define NOLPHIN_ACTION_EDIT_EMBLEM "EditEmblem"
+#define NOLPHIN_ACTION_RATING_MENU "RatingMenu"
+#define NOLPHIN_ACTION_RATING_0 "Rating0"
+#define NOLPHIN_ACTION_RATING_1 "Rating1"
+#define NOLPHIN_ACTION_RATING_2 "Rating2"
+#define NOLPHIN_ACTION_RATING_3 "Rating3"
+#define NOLPHIN_ACTION_RATING_4 "Rating4"
+#define NOLPHIN_ACTION_RATING_5 "Rating5"
+
 #define NOLPHIN_ACTION_PLUGIN_MANAGER "NolphinPluginManager"
 
 #define NOLPHIN_ACTION_SHOW_THUMBNAILS "Show Thumbnails"

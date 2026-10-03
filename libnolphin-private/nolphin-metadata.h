@@ -66,6 +66,7 @@
 #define NOLPHIN_METADATA_KEY_SIDEBAR_BUTTONS			"nolphin-sidebar-buttons"
 
 #define NOLPHIN_METADATA_KEY_ANNOTATION                    "annotation"
+#define NOLPHIN_METADATA_KEY_RATING                        "nolphin-rating"
 
 #define NOLPHIN_METADATA_KEY_ICON_POSITION              	"nolphin-icon-position"
 #define NOLPHIN_METADATA_KEY_ICON_POSITION_TIMESTAMP		"nolphin-icon-position-timestamp"
