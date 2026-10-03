@@ -240,7 +240,6 @@
 	<menuitem name="ComputeChecksum" action="ComputeChecksum"/>
 	<menuitem name="Encrypt" action="Encrypt"/>
 	<menuitem name="Decrypt" action="Decrypt"/>
-	<menuitem name="Zugriffsrechte" action="EditAcl"/>
 	<separator name="Git separator"/>
 	<menu action="GitMenu">
 		<menuitem name="GitStatus" action="GitStatus"/>

@@ -22,6 +22,7 @@
 #include <glib/gi18n.h>
 #include <sys/stat.h>
 #include <libnolphin-private/nolphin-file-operations.h>
+#include <libnolphin-private/nolphin-acl.h>
 
 #define PANEL_ICON_SIZE 96
 
@@ -35,6 +36,15 @@ struct _NolphinPropertiesPanel
 	GtkWidget *status_label;
 	GtkWidget *name_entry;
 	GtkWidget *perm_checks[9];
+
+	/* ACL (weitere Benutzer/Gruppen) - ersetzt den früheren eigenen Dialog */
+	GFile *acl_file;
+	GtkWidget *acl_list;    /* Container für die geladenen Einträge */
+	GtkWidget *acl_kind_combo;
+	GtkWidget *acl_name_entry;
+	GtkWidget *acl_checks[3];
+	GtkWidget *acl_recursive_check;
+	guint acl_generation;   /* erhöht bei jedem Neuaufbau: verwirft späte Antworten */
 
 	GList *files;           /* NolphinFile*, jeweils referenziert */
 	NolphinFile *watched;   /* bei genau einer Datei: für "changed" */
@@ -379,6 +389,326 @@ build_permissions (NolphinPropertiesPanel *panel, NolphinFile *file)
 }
 
 /* ---------------------------------------------------------------------- */
+/* Weitere Benutzer und Gruppen (ACL)                                     */
+/* ---------------------------------------------------------------------- */
+
+typedef struct {
+	NolphinPropertiesPanel *panel;  /* referenziert */
+	guint generation;
+} AclContext;
+
+static AclContext *
+acl_context_new (NolphinPropertiesPanel *panel)
+{
+	AclContext *ctx = g_new0 (AclContext, 1);
+
+	ctx->panel = g_object_ref (panel);
+	ctx->generation = panel->acl_generation;
+	return ctx;
+}
+
+static void
+acl_context_free (AclContext *ctx)
+{
+	g_object_unref (ctx->panel);
+	g_free (ctx);
+}
+
+static void acl_load (NolphinPropertiesPanel *panel);
+
+static gboolean
+acl_recursive_wanted (NolphinPropertiesPanel *panel)
+{
+	return panel->acl_recursive_check != NULL &&
+	       gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (panel->acl_recursive_check));
+}
+
+static void
+acl_set_done (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+	AclContext *ctx = user_data;
+	GError *error = NULL;
+	gboolean ok = nolphin_acl_set_entry_finish (result, &error);
+
+	if (ctx->generation == ctx->panel->acl_generation) {
+		panel_set_status (ctx->panel, ok ? NULL : error->message);
+		acl_load (ctx->panel);
+	}
+	g_clear_error (&error);
+	acl_context_free (ctx);
+}
+
+static void
+acl_remove_done (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+	AclContext *ctx = user_data;
+	GError *error = NULL;
+	gboolean ok = nolphin_acl_remove_entry_finish (result, &error);
+
+	if (ctx->generation == ctx->panel->acl_generation) {
+		panel_set_status (ctx->panel, ok ? NULL : error->message);
+		acl_load (ctx->panel);
+	}
+	g_clear_error (&error);
+	acl_context_free (ctx);
+}
+
+/* Häkchen einer bestehenden Zeile geändert: Eintrag mit allen drei
+ * aktuellen Werten neu setzen. */
+static void
+on_acl_row_toggled (GtkToggleButton *button, gpointer user_data)
+{
+	NolphinPropertiesPanel *panel = user_data;
+	GtkWidget **checks = g_object_get_data (G_OBJECT (button), "row-checks");
+	NolphinAclEntryType type = (NolphinAclEntryType) GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "entry-type"));
+	const gchar *qualifier = g_object_get_data (G_OBJECT (button), "qualifier");
+
+	if (panel->acl_file == NULL || checks == NULL) {
+		return;
+	}
+
+	nolphin_acl_set_entry_async (panel->acl_file, type, qualifier,
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checks[0])),
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checks[1])),
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checks[2])),
+				     acl_recursive_wanted (panel), NULL, acl_set_done, acl_context_new (panel));
+}
+
+static void
+on_acl_remove_clicked (GtkButton *button, gpointer user_data)
+{
+	NolphinPropertiesPanel *panel = user_data;
+	NolphinAclEntryType type = (NolphinAclEntryType) GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "entry-type"));
+	const gchar *qualifier = g_object_get_data (G_OBJECT (button), "qualifier");
+
+	if (panel->acl_file == NULL) {
+		return;
+	}
+
+	nolphin_acl_remove_entry_async (panel->acl_file, type, qualifier, acl_recursive_wanted (panel),
+					NULL, acl_remove_done, acl_context_new (panel));
+}
+
+static void
+acl_loaded (GObject *source, GAsyncResult *result, gpointer user_data)
+{
+	AclContext *ctx = user_data;
+	NolphinPropertiesPanel *panel = ctx->panel;
+	GError *error = NULL;
+	GList *entries = nolphin_acl_get_entries_finish (result, &error);
+	GList *children, *l;
+	GtkWidget *grid = NULL;
+	gint row = 1, c;
+
+	if (ctx->generation != panel->acl_generation || panel->acl_list == NULL) {
+		nolphin_acl_entry_list_free (entries);
+		g_clear_error (&error);
+		acl_context_free (ctx);
+		return;
+	}
+
+	children = gtk_container_get_children (GTK_CONTAINER (panel->acl_list));
+	for (l = children; l != NULL; l = l->next) {
+		gtk_widget_destroy (GTK_WIDGET (l->data));
+	}
+	g_list_free (children);
+
+	if (entries == NULL && error != NULL) {
+		panel_set_status (panel, error->message);
+		g_clear_error (&error);
+		acl_context_free (ctx);
+		return;
+	}
+
+	for (l = entries; l != NULL; l = l->next) {
+		NolphinAclEntry *e = l->data;
+		GtkWidget *label, *remove_button;
+		GtkWidget **checks;
+		gchar *text;
+		const gboolean bits[3] = { e->can_read, e->can_write, e->can_execute };
+
+		/* Eigentümer, Gruppe und Andere stehen schon oben im Raster. */
+		if (e->type != NOLPHIN_ACL_ENTRY_USER && e->type != NOLPHIN_ACL_ENTRY_GROUP) {
+			continue;
+		}
+
+		if (grid == NULL) {
+			static const gchar *titles[3] = { N_("Lesen"), N_("Schreiben"), N_("Ausführen") };
+
+			grid = gtk_grid_new ();
+			gtk_grid_set_row_spacing (GTK_GRID (grid), 4);
+			gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+			for (c = 0; c < 3; c++) {
+				GtkWidget *title = gtk_label_new (_(titles[c]));
+
+				gtk_style_context_add_class (gtk_widget_get_style_context (title), "dim-label");
+				gtk_grid_attach (GTK_GRID (grid), title, c + 1, 0, 1, 1);
+			}
+			gtk_box_pack_start (GTK_BOX (panel->acl_list), grid, FALSE, FALSE, 0);
+		}
+
+		text = g_strdup_printf ("%s %s",
+					e->type == NOLPHIN_ACL_ENTRY_USER ? _("Benutzer") : _("Gruppe"),
+					e->qualifier != NULL ? e->qualifier : "");
+		label = gtk_label_new (text);
+		g_free (text);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
+		gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
+		gtk_widget_set_hexpand (label, TRUE);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, row, 1, 1);
+
+		checks = g_new0 (GtkWidget *, 3);
+		for (c = 0; c < 3; c++) {
+			checks[c] = gtk_check_button_new ();
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checks[c]), bits[c]);
+			gtk_widget_set_halign (checks[c], GTK_ALIGN_CENTER);
+			gtk_grid_attach (GTK_GRID (grid), checks[c], c + 1, row, 1, 1);
+		}
+		for (c = 0; c < 3; c++) {
+			g_object_set_data (G_OBJECT (checks[c]), "row-checks", checks);
+			g_object_set_data (G_OBJECT (checks[c]), "entry-type", GINT_TO_POINTER (e->type));
+			g_object_set_data_full (G_OBJECT (checks[c]), "qualifier", g_strdup (e->qualifier), g_free);
+			g_signal_connect (checks[c], "toggled", G_CALLBACK (on_acl_row_toggled), panel);
+		}
+		/* checks[] gehört der Zeile: mit dem ersten Häkchen freigeben. */
+		g_object_set_data_full (G_OBJECT (checks[0]), "row-checks-owner", checks, g_free);
+
+		remove_button = gtk_button_new_from_icon_name ("list-remove-symbolic", GTK_ICON_SIZE_BUTTON);
+		gtk_button_set_relief (GTK_BUTTON (remove_button), GTK_RELIEF_NONE);
+		gtk_widget_set_tooltip_text (remove_button, _("Diesen Eintrag entfernen"));
+		g_object_set_data (G_OBJECT (remove_button), "entry-type", GINT_TO_POINTER (e->type));
+		g_object_set_data_full (G_OBJECT (remove_button), "qualifier", g_strdup (e->qualifier), g_free);
+		g_signal_connect (remove_button, "clicked", G_CALLBACK (on_acl_remove_clicked), panel);
+		gtk_grid_attach (GTK_GRID (grid), remove_button, 4, row, 1, 1);
+
+		row++;
+	}
+
+	if (grid == NULL) {
+		GtkWidget *none = gtk_label_new (_("Keine weiteren Benutzer oder Gruppen eingetragen."));
+
+		gtk_label_set_xalign (GTK_LABEL (none), 0.0);
+		gtk_style_context_add_class (gtk_widget_get_style_context (none), "dim-label");
+		gtk_box_pack_start (GTK_BOX (panel->acl_list), none, FALSE, FALSE, 0);
+	}
+
+	gtk_widget_show_all (panel->acl_list);
+	nolphin_acl_entry_list_free (entries);
+	acl_context_free (ctx);
+}
+
+static void
+acl_load (NolphinPropertiesPanel *panel)
+{
+	if (panel->acl_file == NULL) {
+		return;
+	}
+	nolphin_acl_get_entries_async (panel->acl_file, NULL, acl_loaded, acl_context_new (panel));
+}
+
+static void
+on_acl_add_clicked (GtkButton *button, gpointer user_data)
+{
+	NolphinPropertiesPanel *panel = user_data;
+	const gchar *name = gtk_entry_get_text (GTK_ENTRY (panel->acl_name_entry));
+	NolphinAclEntryType type;
+
+	if (panel->acl_file == NULL) {
+		return;
+	}
+	if (name == NULL || name[0] == '\0') {
+		panel_set_status (panel, _("Bitte einen Benutzer- oder Gruppennamen eingeben."));
+		return;
+	}
+
+	type = (gtk_combo_box_get_active (GTK_COMBO_BOX (panel->acl_kind_combo)) == 0)
+		? NOLPHIN_ACL_ENTRY_USER : NOLPHIN_ACL_ENTRY_GROUP;
+
+	nolphin_acl_set_entry_async (panel->acl_file, type, name,
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (panel->acl_checks[0])),
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (panel->acl_checks[1])),
+				     gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (panel->acl_checks[2])),
+				     acl_recursive_wanted (panel), NULL, acl_set_done, acl_context_new (panel));
+	gtk_entry_set_text (GTK_ENTRY (panel->acl_name_entry), "");
+}
+
+/* Erweiterte Rechte für einzelne weitere Benutzer/Gruppen. Erscheint nur,
+ * wenn setfacl/getfacl vorhanden sind und die Datei lokal liegt. */
+static void
+build_acl (NolphinPropertiesPanel *panel, NolphinFile *file)
+{
+	GtkWidget *box = panel->content;
+	GtkWidget *hint, *form, *row, *button;
+	gint c;
+	static const gchar *check_labels[3] = { N_("Lesen"), N_("Schreiben"), N_("Ausführen") };
+
+	if (!nolphin_acl_is_available ()) {
+		return;
+	}
+
+	panel->acl_file = nolphin_file_get_location (file);
+	{
+		gchar *path = (panel->acl_file != NULL) ? g_file_get_path (panel->acl_file) : NULL;
+
+		if (path == NULL) {
+			g_clear_object (&panel->acl_file);
+			return;
+		}
+		g_free (path);
+	}
+
+	add_caption (box, _("Weitere Benutzer und Gruppen"));
+
+	hint = gtk_label_new (_("Zusätzliche Rechte für einzelne Personen oder Gruppen, über die oben genannten hinaus (ACL)."));
+	gtk_label_set_line_wrap (GTK_LABEL (hint), TRUE);
+	gtk_label_set_xalign (GTK_LABEL (hint), 0.0);
+	gtk_style_context_add_class (gtk_widget_get_style_context (hint), "dim-label");
+	gtk_box_pack_start (GTK_BOX (box), hint, FALSE, FALSE, 0);
+
+	panel->acl_list = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
+	gtk_widget_set_margin_top (panel->acl_list, 4);
+	gtk_box_pack_start (GTK_BOX (box), panel->acl_list, FALSE, FALSE, 0);
+
+	/* Formular zum Hinzufügen */
+	form = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	gtk_widget_set_margin_top (form, 6);
+	gtk_box_pack_start (GTK_BOX (box), form, FALSE, FALSE, 0);
+
+	row = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	gtk_box_pack_start (GTK_BOX (form), row, FALSE, FALSE, 0);
+
+	panel->acl_kind_combo = gtk_combo_box_text_new ();
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (panel->acl_kind_combo), _("Benutzer"));
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (panel->acl_kind_combo), _("Gruppe"));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (panel->acl_kind_combo), 0);
+	gtk_box_pack_start (GTK_BOX (row), panel->acl_kind_combo, FALSE, FALSE, 0);
+
+	panel->acl_name_entry = gtk_entry_new ();
+	gtk_entry_set_placeholder_text (GTK_ENTRY (panel->acl_name_entry), _("Name"));
+	gtk_box_pack_start (GTK_BOX (row), panel->acl_name_entry, TRUE, TRUE, 0);
+
+	row = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+	gtk_box_pack_start (GTK_BOX (form), row, FALSE, FALSE, 0);
+	for (c = 0; c < 3; c++) {
+		panel->acl_checks[c] = gtk_check_button_new_with_label (_(check_labels[c]));
+		gtk_box_pack_start (GTK_BOX (row), panel->acl_checks[c], FALSE, FALSE, 0);
+	}
+
+	button = gtk_button_new_with_label (_("Hinzufügen"));
+	gtk_button_set_image (GTK_BUTTON (button), gtk_image_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_BUTTON));
+	gtk_button_set_always_show_image (GTK_BUTTON (button), TRUE);
+	g_signal_connect (button, "clicked", G_CALLBACK (on_acl_add_clicked), panel);
+	gtk_box_pack_end (GTK_BOX (row), button, FALSE, FALSE, 0);
+
+	if (nolphin_file_is_directory (file)) {
+		panel->acl_recursive_check = gtk_check_button_new_with_label (_("Auch auf Inhalt anwenden"));
+		gtk_box_pack_start (GTK_BOX (form), panel->acl_recursive_check, FALSE, FALSE, 0);
+	}
+
+	acl_load (panel);
+}
+
+/* ---------------------------------------------------------------------- */
 /* Öffnen mit                                                             */
 /* ---------------------------------------------------------------------- */
 
@@ -548,6 +878,7 @@ build_single (NolphinPropertiesPanel *panel, NolphinFile *file)
 	g_free (text);
 
 	build_permissions (panel, file);
+	build_acl (panel, file);
 	build_open_with (panel, file);
 
 	if (is_dir) {
@@ -623,6 +954,13 @@ rebuild (NolphinPropertiesPanel *panel)
 	}
 	g_list_free (children);
 
+	panel->acl_generation++;
+	panel->acl_list = NULL;
+	panel->acl_kind_combo = NULL;
+	panel->acl_name_entry = NULL;
+	panel->acl_recursive_check = NULL;
+	memset (panel->acl_checks, 0, sizeof (panel->acl_checks));
+	g_clear_object (&panel->acl_file);
 	panel->name_entry = NULL;
 	memset (panel->perm_checks, 0, sizeof (panel->perm_checks));
 
@@ -707,6 +1045,8 @@ nolphin_properties_panel_dispose (GObject *object)
 	NolphinPropertiesPanel *panel = NOLPHIN_PROPERTIES_PANEL (object);
 
 	stop_watching (panel);
+	panel->acl_generation++;
+	g_clear_object (&panel->acl_file);
 	g_list_free_full (panel->files, (GDestroyNotify) nolphin_file_unref);
 	panel->files = NULL;
 
